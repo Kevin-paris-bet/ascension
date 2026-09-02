@@ -1,0 +1,65 @@
+{
+  "id": "fr-football",
+  "locale": "fr",
+  "sportLabel": "football",
+
+  "career": {
+    "startAge": 14,
+    "retirementMinAge": 33,
+    "noteCap": 96
+  },
+
+  "stats": {
+    "visible": [
+      { "id": "technique", "label": "TECHNIQUE", "start": 40 },
+      { "id": "physique", "label": "PHYSIQUE", "start": 40 },
+      { "id": "vista", "label": "VISTA", "start": 40 },
+      { "id": "mental", "label": "MENTAL", "start": 40 },
+      { "id": "aura", "label": "AURA", "start": 20 },
+      { "id": "compte", "label": "COMPTE EN BANQUE", "start": 0 }
+    ],
+    "hidden": [
+      { "id": "vestiaire", "label": "VESTIAIRE", "start": 50 }
+    ],
+    "note": {
+      "label": "NOTE",
+      "weights": { "technique": 1, "physique": 1, "vista": 1, "mental": 1, "aura": 0.5 }
+    }
+  },
+
+  "creation": {
+    "origines": [
+      { "id": "origine:cite", "label": "Cité de banlieue" },
+      { "id": "origine:village", "label": "Village de campagne" },
+      { "id": "origine:formation", "label": "Centre de formation à 13 ans" },
+      { "id": "origine:etranger", "label": "Étranger (Afrique de l'Ouest, Balkans…)" }
+    ],
+    "postes": [
+      { "id": "gardien", "label": "Gardien" },
+      { "id": "defenseur", "label": "Défenseur" },
+      { "id": "milieu", "label": "Milieu" },
+      { "id": "attaquant", "label": "Attaquant" }
+    ],
+    "dons": [
+      { "id": "don:technique", "label": "Technique" },
+      { "id": "don:vitesse", "label": "Vitesse" },
+      { "id": "don:vista", "label": "Vista" },
+      { "id": "don:mental", "label": "Mental" }
+    ]
+  },
+
+  "legacyTiers": [
+    { "min": 0, "label": "Oublié" },
+    { "min": 40, "label": "Solide" },
+    { "min": 55, "label": "Reconnu" },
+    { "min": 70, "label": "Élite" },
+    { "min": 85, "label": "Légende" },
+    { "min": 93, "label": "TOP 25" }
+  ],
+
+  "acts": {
+    "1": { "label": "Les débuts", "ageRange": [14, 18] },
+    "2": { "label": "La bascule", "ageRange": [18, 21] },
+    "3": { "label": "La carrière", "ageRange": [21, 40] }
+  }
+}

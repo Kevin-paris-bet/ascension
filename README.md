@@ -1,50 +1,40 @@
-# Ascension — moteur (semaine 1)
-
-Moteur de simulation de carrière, agnostique du sport (section 8 des specs).
-Aucun fichier de `/engine` ne contient de vocabulaire sportif.
+# Ascension — moteur + prototype jouable
 
 ## Structure
 
 ```
-engine/
-  schema.ts       schéma Zod agnostique (Event, Choice, Requires, Effects, Resolution)
-  rng.ts          PRNG déterministe par seed (mulberry32 + xmur3)
-  state.ts        machine à états de carrière (CareerState)
-  resolver.ts     sélection d'événement et de choix selon préconditions
-  progression.ts  application des effets, résolution probabiliste
-  legacy.ts       note finale, tier, citation de la carte
-  index.ts        exports groupés
-
-content/fr-football/
-  events/*.json   3 événements de référence (validés, testés)
-  pack.json       manifeste des callbacks obligatoires
-
-scripts/
-  validate-content.ts   validateur de contenu (casse le build, jamais le runtime)
-  smoke-test.ts         test de bout en bout du moteur
+engine/       moteur agnostique (aucun vocabulaire sportif — section 8)
+content/      pack fr-football : config.json (vocabulaire d'affichage), events/, pack.json
+lib/          pont entre le moteur et l'UI React (engineBridge.ts)
+app/          Next.js App Router — layout, page, styles
+scripts/      validate-content.ts, smoke-test.ts
 ```
 
 ## Commandes
 
 ```bash
 npm install
-npm run typecheck   # npx tsc --noEmit — obligatoire avant chaque push
-npm run validate     # valide le pack de contenu fr-football
-npm run test         # test de fumée : resolver + progression + callbacks + legacy
+npm run dev         # http://localhost:3000 — jouable
+npm run build        # build de production, vérifié OK
+npm run typecheck    # npx tsc --noEmit — avant chaque push
+npm run validate     # valide le pack de contenu
+npm run test          # smoke test du moteur
 ```
 
-## État actuel
+## État réel du prototype
 
-- ✅ Moteur complet et testé (resolver, progression, résolution probabiliste, locks/unlocks, callbacks, legacy)
-- ✅ Schéma Zod + validateur (récupérés d'une session précédente, déjà éprouvés sur 46 événements)
-- ⚠️ Seuls 3 événements de référence sont présents ici. Le contenu complet (43 carrefours, 242 branches, 13 callbacks) a été écrit dans une session précédente mais doit être reconverti en JSON et repoussé dans ce repo — c'est la prochaine étape (semaine 2 de la roadmap).
-- ⏳ Pas encore de `config.json` (vocabulaire d'affichage, stats, postes — section 8)
-- ⏳ Pas encore d'UI Next.js
+- ✅ Moteur complet (resolver, progression, résolution probabiliste, locks, callbacks, legacy)
+- ✅ `config.json` — vocabulaire d'affichage, stats, postes, tiers de légende (section 8, 10.3)
+- ✅ UI Next.js jouable : création → 3 écrans d'événements → carte de fin (note, tier, citation)
+- ✅ Build de production vérifié (`next build` passe, 4 pages statiques générées)
+- ⚠️ Seulement **3 événements de référence** sur les 43 carrefours prévus — le reste existe déjà (écrit dans une session précédente) mais reste à reconvertir en JSON
+- ⏳ Pas de carte finale en image (canvas/SVG → PNG, section 11) — pour l'instant c'est un écran texte
+- ⏳ Pas de `naming.json` (clubs fictifs)
+- ⏳ Pas de persistance Supabase, pas de défi du jour
 
-## Résolution probabiliste
+## Notes techniques importantes
 
-`P = pBase + (stat − 50) × 0,6`, bornée [8, 92]. Sans pilote (`pilot: null`), pBase seul s'applique.
-
-## Déterminisme
-
-Toute la carrière est reproductible : même seed + mêmes choix → même résultat. C'est le prérequis du défi du jour (section 9.4 / 12).
+- **TypeScript épinglé à 5.4.5.** `npm install typescript` sans version résout vers TS 7.x (une version expérimentale récente) qui casse `baseUrl` et n'est pas garantie compatible avec Next 14. Ne pas mettre à jour sans vérifier.
+- **`@types/react` en version 18**, pour matcher `react@18`. Une désynchronisation de version types/runtime produit des erreurs de typecheck qui n'ont rien à voir avec le vrai code.
+- **Imports internes sans extension `.js`.** Le webpack de Next.js ne résout pas les imports relatifs suffixés `.js` pointant vers des fichiers `.ts` (contrairement à `tsx`/Node en ESM strict). Tous les imports internes du moteur ont été adaptés en conséquence.
+- Le jeu tourne **entièrement côté client** (`"use client"` dans `lib/engineBridge.ts` et `app/page.tsx`), conformément à la section 15 — pas de dépendance serveur pour jouer une carrière.
