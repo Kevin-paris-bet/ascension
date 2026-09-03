@@ -1,11 +1,13 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import assert from "node:assert/strict";
 import { EventSchema, type Event } from "../engine/schema";
 import { createInitialState } from "../engine/state";
 import { resolveScriptedEvent, resolveRandomEvent, eligibleChoices, isEventEligible } from "../engine/resolver";
 import { applyChoice } from "../engine/progression";
 import { computeLegacy } from "../engine/legacy";
 import { createRng } from "../engine/rng";
+import { deserializeCareerState, serializeCareerState } from "../engine/serialization";
 
 const eventsDir = join("content/fr-football/events");
 const pool: Event[] = readdirSync(eventsDir)
@@ -13,6 +15,18 @@ const pool: Event[] = readdirSync(eventsDir)
   .map((f) => EventSchema.parse(JSON.parse(readFileSync(join(eventsDir, f), "utf8"))));
 
 console.log(`\n  Smoke test — ${pool.length} événements chargés\n`);
+
+// Une sauvegarde doit reprendre au tirage suivant, et non recommencer la seed.
+{
+  const first = createRng("resume-seed");
+  first.next();
+  const checkpoint = first.getState();
+  const expectedNext = first.next();
+  const restored = createRng("resume-seed", checkpoint);
+  assert.equal(restored.next(), expectedNext, "le PRNG restauré diverge après la sauvegarde");
+  assert.notEqual(checkpoint, createRng("resume-seed").getState(), "l'état du PRNG ne progresse pas");
+  console.log("  [save] reprise déterministe du PRNG vérifiée");
+}
 
 const rng = createRng("smoke-test-seed-001");
 
@@ -25,6 +39,14 @@ let state = createInitialState({
   // et exercer tout le cycle callback (pose en acte I, résolution en acte III).
   initialThreads: ["precarite_familiale"],
 });
+
+{
+  const roundTrip = deserializeCareerState(serializeCareerState(state));
+  assert.deepEqual([...roundTrip.threads], [...state.threads]);
+  assert.deepEqual([...roundTrip.played], [...state.played]);
+  assert.deepEqual(roundTrip.stats, state.stats);
+  console.log("  [save] sérialisation de carrière vérifiée");
+}
 
 function log(label: string, event: Event, choiceId: string, outcome: string, success?: boolean) {
   const tag = success === undefined ? "" : success ? " (réussite)" : " (échec)";

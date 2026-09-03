@@ -1,7 +1,5 @@
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
-
 /**
  * Fallback serveur pour les partages en lien (section 11). La carte principale
  * est rendue côté client en SVG ; celle-ci sert aux aperçus X / WhatsApp /
@@ -28,13 +26,13 @@ export async function GET(request: Request) {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#0b0b10",
+          background: "#07100d",
           padding: 64,
           fontFamily: "sans-serif",
         }}
       >
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ color: "#6a6a78", fontSize: 24, letterSpacing: 8 }}>ASCENSION</div>
+          <div style={{ color: "#38d996", fontSize: 24, letterSpacing: 8 }}>ASCENSION</div>
           <div style={{ color: "#ffffff", fontSize: 82, fontWeight: 700, marginTop: 16 }}>{name}</div>
           <div style={{ color: "#9a9aa8", fontSize: 32, marginTop: 8 }}>
             {position}
@@ -47,7 +45,7 @@ export async function GET(request: Request) {
             <div style={{ color: "#7a7a88", fontSize: 22, letterSpacing: 4 }}>RANG DE LÉGENDE</div>
             <div style={{ color: "#ffffff", fontSize: 68, fontWeight: 700 }}>{tier}</div>
           </div>
-          <div style={{ color: "#e63946", fontSize: 96, fontWeight: 700 }}>{note}</div>
+          <div style={{ color: "#f3c96b", fontSize: 96, fontWeight: 700 }}>{note}</div>
         </div>
       </div>
     ),

@@ -5,3 +5,4 @@ export * from "./resolver";
 export * from "./progression";
 export * from "./legacy";
 export * from "./retirement";
+export * from "./serialization";

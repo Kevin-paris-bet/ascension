@@ -35,37 +35,35 @@ function xmur3(str: string): () => number {
   };
 }
 
-function mulberry32(seed: number) {
-  let a = seed;
-  return () => {
-    a |= 0;
-    a = (a + 0x6d2b79f5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+/**
+ * Crée un générateur déterministe depuis une seed texte. `restoredState`
+ * permet de reprendre exactement au tirage suivant après une sauvegarde.
+ */
+export function createRng(seed: string, restoredState?: number): Rng {
+  const seedFn = xmur3(seed);
+  let state = restoredState ?? seedFn();
+
+  function next(): number {
+    state = (state + 0x6d2b79f5) | 0;
+    let t = Math.imul(state ^ (state >>> 15), 1 | state);
     t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-/** Crée un générateur déterministe à partir d'une seed texte (ex. le seed de la carrière). */
-export function createRng(seed: string): Rng {
-  const seedFn = xmur3(seed);
-  let state = seedFn();
-  const gen = mulberry32(state);
+  }
 
   return {
-    next: gen,
+    next,
     int(min: number, max: number) {
-      return min + Math.floor(gen() * (max - min + 1));
+      return min + Math.floor(next() * (max - min + 1));
     },
     chance(pPercent: number) {
-      return gen() * 100 < pPercent;
+      return next() * 100 < pPercent;
     },
     weightedPick<T>(items: T[], weights: number[]): T {
       const total = weights.reduce((a, b) => a + b, 0);
       if (total <= 0) {
         throw new Error("weightedPick: la somme des poids doit être > 0");
       }
-      let roll = gen() * total;
+      let roll = next() * total;
       for (let i = 0; i < items.length; i++) {
         roll -= weights[i];
         if (roll <= 0) return items[i];

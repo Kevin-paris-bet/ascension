@@ -1,7 +1,7 @@
 # Ascension
 
-Simulateur de carrière sportive narratif. Moteur agnostique + pack `fr-football`.
-52 événements, 230 branches, 8 callbacks, carte de partage 9:16.
+Simulateur de carrière sportive narratif, mobile-first. Moteur agnostique + pack `fr-football`.
+52 événements, 230 branches, 8 callbacks, sauvegarde Supabase et carte de partage 9:16.
 
 ## Installation
 
@@ -14,10 +14,12 @@ npm run dev        # localhost:3000
 
 ```bash
 npm run typecheck   # avant chaque push
+npm run lint        # qualité React / Next.js
 npm run validate    # 0 erreur attendu
 npm run test        # smoke test moteur
 npm run play        # 300 carrières, vérifie les callbacks
 npm run card        # 200 cartes, vérifie les stats
+npm run check       # exécute toute la CI locale
 ```
 
 ## Structure — ne pas réorganiser
@@ -43,8 +45,15 @@ En complément : `react-dom` est passé en dépendance de production (c'en est u
 
 Le build a été vérifié dans les deux modes, dont celui qui échouait (`npm ci` avec `NODE_ENV=production`).
 
+## Configuration Supabase
+
+Copier `.env.example` vers `.env.local`, puis renseigner l'URL et la clé
+**publishable** du projet. Ne jamais utiliser de clé `secret` dans le navigateur.
+La migration versionnée dans `supabase/migrations/` active RLS sur chaque table.
+
 ## Reste à faire
 
-- Persistance Supabase (projet `ascension`, ref `gaozhffmbvfmzvlgpoug`, vide)
+- Bibliothèque et comparaison des carrières terminées
+- Branchements réels des rewarded ads web puis AdMob natif
 - Défi du jour (le PRNG déterministe est prêt)
 - Mesure du taux de partage — métrique de survie, seuil 5 %
