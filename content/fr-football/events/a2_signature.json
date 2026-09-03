@@ -1,0 +1,41 @@
+{
+  "id": "a2_signature",
+  "act": 2,
+  "weight": 0,
+  "category": "core",
+  "kind": "outcome",
+  "theme": "signature",
+  "ageWindow": [20, 20],
+  "once": true,
+  "prompt": "Le bureau est petit. Il y a une plante en plastique et une photo de l'équipe de 1998.\n\nLe directeur sportif pose une chemise cartonnée sur la table et met un temps invraisemblable à l'ouvrir.\n\nTrois clubs t'ont regardé cette année.",
+  "choices": [
+    {
+      "id": "signe",
+      "label": "CONTRAT PRO — 3 ANS",
+      "outcome": "Ta main tremble sur la deuxième signature. Tu n'oublieras jamais les deux autres clubs.",
+      "forced": true,
+      "effects": { "stats": { "compte": 25, "aura": 14, "mental": 10 }, "threads": ["contrat_pro"] }
+    },
+    {
+      "id": "refus",
+      "label": "PAS DE CONTRAT",
+      "outcome": "La chemise cartonnée était vide. « On te garde un an de plus en formation. On verra. » Il regarde déjà son écran.",
+      "forced": true,
+      "effects": { "stats": { "mental": -10, "aura": -12 }, "threads": ["chemin_amateur"] }
+    },
+    {
+      "id": "seconde_chance",
+      "label": "▶ Tenter un dernier essai devant un autre club",
+      "outcome": "Un club de division inférieure accepte de te voir. Une séance. Une seule.",
+      "rewarded": true,
+      "resolution": {
+        "pilot": "mental",
+        "pBase": 55,
+        "textSuccess": "Contrat de deux ans, salaire minimum, division inférieure. C'est un contrat professionnel quand même.",
+        "textFailure": "Ils te remercient poliment à la fin de la séance. Le trajet retour dure quatre heures.",
+        "onSuccess": { "stats": { "compte": 12, "mental": 12 }, "threads": ["contrat_pro:fragile", "chemin_long"] },
+        "onFailure": { "stats": { "mental": -8 }, "threads": ["chemin_amateur", "regret_definitif"] }
+      }
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "id": "a1_recruteur",
+  "act": 1,
+  "weight": 0,
+  "category": "core",
+  "theme": "corps",
+  "ageWindow": [15, 15],
+  "once": true,
+  "prompt": "Un recruteur est dans les tribunes. Tu le sais parce que le coach n'a pas arrêté de regarder vers le haut depuis l'échauffement.\n\nTa cheville est en compote depuis trois semaines. Tu es passé à côté de tes trois derniers matchs.",
+  "choices": [
+    {
+      "id": "jouer_sur_une_jambe",
+      "label": "Jouer sur une jambe.",
+      "outcome": "Tu serres la chaussure d'un cran de plus et tu entres quand même.",
+      "resolution": {
+        "pilot": "mental",
+        "pBase": 40,
+        "textSuccess": "Tu marques d'un extérieur du pied à la 71e. Le recruteur est déjà debout. Tu ne sens plus rien.",
+        "textFailure": "Tu tiens vingt minutes. Puis la cheville lâche pour de bon devant tout le monde.",
+        "onSuccess": { "stats": { "aura": 16, "physique": -12 }, "threadIncrement": { "corps_sacrifie": 1 }, "threads": ["recruteur_reviendra"] },
+        "onFailure": { "stats": { "physique": -14, "aura": -6 }, "threadIncrement": { "corps_sacrifie": 2 }, "threads": ["occasion_ratee"] }
+      }
+    },
+    {
+      "id": "forfait",
+      "label": "Déclarer forfait et protéger la cheville.",
+      "outcome": "Tu regardes le match en survêtement. Le recruteur part à la mi-temps sans se retourner.",
+      "effects": { "stats": { "physique": 6, "aura": -10 }, "threads": ["occasion_ratee", "prudent"] }
+    },
+    {
+      "id": "cacher",
+      "label": "Cacher la blessure au staff et tout donner en seconde période.",
+      "outcome": "Tu mens au kiné. Tu mens au coach. Tu prends deux anti-inflammatoires dans les toilettes.",
+      "resolution": {
+        "pilot": "physique",
+        "pBase": 35,
+        "textSuccess": "Quarante-cinq minutes énormes. Personne n'a rien vu. Tu boites pendant six semaines après.",
+        "textFailure": "Le staff s'en aperçoit à la 60e. Tu es sorti devant tout le monde, et le mensonge est su.",
+        "onSuccess": { "stats": { "aura": 12, "physique": -10 }, "threadIncrement": { "corps_sacrifie": 2 }, "threads": ["tout_ou_rien"] },
+        "onFailure": { "stats": { "vestiaire": -14, "physique": -8 }, "threadIncrement": { "corps_sacrifie": 1 }, "threads": ["echec:deni"] }
+      }
+    },
+    {
+      "id": "parler_recruteur",
+      "label": "Aller lui parler après le match, sans avoir joué.",
+      "outcome": "Tu l'attends à la sortie du parking. Tu lui expliques. Il t'écoute jusqu'au bout, ce qui est déjà rare.",
+      "effects": { "stats": { "mental": 8, "aura": 4 }, "threads": ["recruteur_reviendra", "honnetete_brutale"] }
+    },
+    {
+      "id": "piston_pere",
+      "label": "Laisser ton père régler ça avec lui.",
+      "outcome": "Ils se connaissent. Bien sûr qu'ils se connaissent. Tu n'as même pas eu besoin d'être bon.",
+      "requires": { "threads": ["origine:heritier"] },
+      "effects": { "stats": { "vestiaire": -8 }, "threads": ["recruteur_reviendra", "piston_percu"] }
+    },
+    {
+      "id": "jouer_pour_manger",
+      "label": "Jouer. Il n'y a pas de deuxième chance chez toi.",
+      "outcome": "Tu penses au loyer. Tu penses à ta mère. Tu ne penses pas à ta cheville.",
+      "requires": { "threads": ["precarite_familiale"] },
+      "resolution": {
+        "pilot": "mental",
+        "pBase": 45,
+        "textSuccess": "Tu joues comme si ta vie en dépendait, parce que c'est le cas. Le recruteur note ton nom.",
+        "textFailure": "Le corps ne suit pas la volonté. Il ne suit jamais.",
+        "onSuccess": { "stats": { "aura": 14, "physique": -12 }, "threadIncrement": { "corps_sacrifie": 2 }, "threads": ["recruteur_reviendra", "sans_filet"] },
+        "onFailure": { "stats": { "physique": -16, "mental": 6 }, "threadIncrement": { "corps_sacrifie": 2 }, "threads": ["occasion_ratee", "sans_filet"] }
+      }
+    }
+  ]
+}
