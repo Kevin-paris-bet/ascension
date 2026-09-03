@@ -1,0 +1,38 @@
+{
+  "id": "a3_promesse",
+  "act": 3,
+  "weight": 85,
+  "category": "offstage",
+  "theme": "famille",
+  "ageWindow": [24, 38],
+  "once": true,
+  "requires": { "threads": ["promesse_famille"] },
+  "resolvesCallback": "promesse_famille",
+  "prompt": "Tu as les clés dans la main. Une vraie maison, avec un jardin et un garage, à quarante minutes de l'appartement où tu as grandi.\n\nTu l'as achetée sans le dire à personne.\n\nTa mère refuse de quitter son quartier. Elle te l'a dit trois fois cette semaine.",
+  "choices": [
+    {
+      "id": "insister",
+      "label": "Insister jusqu'à ce qu'elle accepte.",
+      "outcome": "Elle emménage un dimanche de novembre. Elle met deux ans à ne plus parler de son ancien immeuble.",
+      "effects": { "stats": { "mental": 10, "compte": -20 }, "threads": ["promesse_tenue"], "threadsResolve": ["promesse_famille"] }
+    },
+    {
+      "id": "respecter",
+      "label": "Respecter son choix et rénover son appartement à la place.",
+      "outcome": "Cuisine neuve, fenêtres neuves, ascenseur réparé pour tout l'immeuble. Les voisins savent qui a payé.",
+      "effects": { "stats": { "compte": -12, "aura": 8, "mental": 12 }, "threads": ["promesse_tenue", "heritage_social"], "threadsResolve": ["promesse_famille"] }
+    },
+    {
+      "id": "revendre",
+      "label": "Revendre la maison et lui virer l'argent.",
+      "outcome": "Elle ne touche pas au virement pendant quatre ans. Tu le découvres par hasard.",
+      "effects": { "stats": { "compte": 8, "mental": -6 }, "threads": ["promesse_amere"], "threadsResolve": ["promesse_famille"] }
+    },
+    {
+      "id": "trop_tard",
+      "label": "Tu as attendu trop longtemps pour l'acheter.",
+      "outcome": "Elle est partie il y a huit mois. Tu as les clés d'une maison que personne n'habitera.",
+      "effects": { "stats": { "mental": -14, "aura": 6 }, "threads": ["promesse_amere", "regret_definitif"], "threadsResolve": ["promesse_famille"] }
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "labels": {
+    "seasons": "saisons",
+    "matches": "matchs",
+    "goals": "buts",
+    "assists": "passes d.",
+    "caps": "sélections",
+    "legacyRank": "RANG DE LÉGENDE",
+    "cleanSheets": "clean sheets"
+  },
+  "positionLabels": {
+    "poste:gardien": "Gardien",
+    "poste:defenseur": "Défenseur",
+    "poste:milieu": "Milieu",
+    "poste:attaquant": "Attaquant"
+  },
+  "originLabels": {
+    "origine:cite": "Banlieue",
+    "origine:village": "Campagne",
+    "origine:formation": "Formation",
+    "origine:etranger": "Étranger",
+    "origine:heritier": "Fils de pro"
+  },
+  "honours": [
+    {
+      "thread": "champion_europe",
+      "label": "COUPE D'EUROPE",
+      "priority": 1
+    },
+    {
+      "thread": "chasseur_titres",
+      "label": "TITRE DE CHAMPION",
+      "priority": 2
+    },
+    {
+      "thread": "international",
+      "label": "INTERNATIONAL A",
+      "priority": 3
+    },
+    {
+      "thread": "capitaine_selection",
+      "label": "CAPITAINE",
+      "priority": 4
+    },
+    {
+      "thread": "icone_club",
+      "label": "ICÔNE DU CLUB",
+      "priority": 5
+    },
+    {
+      "thread": "grand_club",
+      "label": "PASSÉ PAR UN GRAND",
+      "priority": 6
+    },
+    {
+      "thread": "generation",
+      "label": "GÉNÉRATION DORÉE",
+      "priority": 7
+    },
+    {
+      "thread": "redemption",
+      "label": "RETOUR AU SOMMET",
+      "priority": 8
+    },
+    {
+      "thread": "transmission",
+      "label": "FORMATEUR",
+      "priority": 9
+    },
+    {
+      "thread": "boucle_bouclee",
+      "label": "BOUCLE BOUCLÉE",
+      "priority": 10
+    },
+    {
+      "thread": "heritage_social",
+      "label": "FIDÈLE AUX SIENS",
+      "priority": 11
+    },
+    {
+      "thread": "martyr",
+      "label": "JOUÉ SUR UNE JAMBE",
+      "priority": 12
+    },
+    {
+      "thread": "finale_perdue",
+      "label": "FINALE PERDUE",
+      "priority": 13
+    },
+    {
+      "thread": "carriere_brisee",
+      "label": "CARRIÈRE BRISÉE",
+      "priority": 14
+    },
+    {
+      "thread": "chemin_amateur",
+      "label": "JAMAIS PASSÉ PRO",
+      "priority": 15
+    },
+    {
+      "thread": "scandale_imminent",
+      "label": "SCANDALE",
+      "priority": 16
+    },
+    {
+      "thread": "mercenaire",
+      "label": "MERCENAIRE",
+      "priority": 17
+    },
+    {
+      "thread": "refus_historique",
+      "label": "A DIT NON",
+      "priority": 18
+    }
+  ],
+  "postureLabels": {
+    "martyr": "le Guerrier",
+    "icone_club": "la Légende locale",
+    "carburant_colere": "la Colère",
+    "solitaire": "le Solitaire",
+    "gens_davant": "le Fidèle",
+    "mediatique": "la Star",
+    "professionnel": "le Pro",
+    "posture:taiseux": "le Taiseux",
+    "posture:revanchard": "le Revanchard",
+    "posture:humble": "le Discret"
+  }
+}

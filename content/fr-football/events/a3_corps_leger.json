@@ -1,0 +1,94 @@
+{
+  "id": "a3_corps_leger",
+  "act": 3,
+  "weight": 80,
+  "category": "offstage",
+  "theme": "corps",
+  "ageWindow": [
+    26,
+    38
+  ],
+  "once": true,
+  "requires": {
+    "threadLevel": {
+      "corps_sacrifie": [
+        "<=",
+        2
+      ]
+    }
+  },
+  "resolvesCallback": "corps_sacrifie",
+  "prompt": "Visite médicale annuelle. Le médecin passe vingt minutes de plus que d'habitude sur ton dossier.\n\n« Rien de grave. Mais vous avez tiré sur la corde deux ou trois fois de trop, à des moments précis. Ça ne se voit pas encore. Ça se verra à quarante ans. »\n\nIl te tend une feuille avec trois exercices dessus.",
+  "choices": [
+    {
+      "id": "prendre_au_serieux",
+      "label": "Prendre la feuille au sérieux.",
+      "outcome": "Vingt minutes chaque matin, avant tout le monde, pendant huit ans. Personne ne t'a jamais vu les faire.",
+      "effects": {
+        "stats": {
+          "physique": 12,
+          "mental": 6
+        },
+        "threads": [
+          "professionnel"
+        ],
+        "threadsResolve": [
+          "corps_sacrifie"
+        ]
+      }
+    },
+    {
+      "id": "oublier_feuille",
+      "label": "La ranger et l'oublier.",
+      "outcome": "Tu la retrouves quatre ans plus tard dans une poche de sac. Tu la jettes sans la relire.",
+      "effects": {
+        "stats": {
+          "physique": -8,
+          "aura": 4
+        },
+        "threads": [
+          "echec:deni"
+        ],
+        "threadsResolve": [
+          "corps_sacrifie"
+        ]
+      }
+    },
+    {
+      "id": "specialiste",
+      "label": "Payer un préparateur physique personnel.",
+      "outcome": "Cher, discret, présent en déplacement. Le club trouve ça vaguement insultant.",
+      "effects": {
+        "stats": {
+          "physique": 16,
+          "compte": -14,
+          "vestiaire": -4
+        },
+        "threads": [
+          "professionnel",
+          "organise"
+        ],
+        "threadsResolve": [
+          "corps_sacrifie"
+        ]
+      }
+    },
+    {
+      "id": "prevenir_jeunes",
+      "label": "En parler aux jeunes du groupe.",
+      "outcome": "Tu leur racontes le match où tu as joué sur une jambe à quinze ans. Deux d'entre eux changent leur façon de faire.",
+      "effects": {
+        "stats": {
+          "vestiaire": 12,
+          "physique": 4
+        },
+        "threads": [
+          "transmission"
+        ],
+        "threadsResolve": [
+          "corps_sacrifie"
+        ]
+      }
+    }
+  ]
+}

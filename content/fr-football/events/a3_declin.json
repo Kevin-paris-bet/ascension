@@ -1,0 +1,43 @@
+{
+  "id": "a3_declin",
+  "act": 3,
+  "weight": 75,
+  "category": "core",
+  "theme": "declin",
+  "ageWindow": [31, 36],
+  "once": true,
+  "prompt": "Le préparateur physique t'a montré tes données de la saison sans commentaire. Tu as compris tout seul.\n\nVitesse de pointe en baisse de huit pour cent. Distance parcourue en baisse. Temps de récupération doublé.\n\nIl n'y a rien à discuter. Ce sont des chiffres.",
+  "choices": [
+    {
+      "id": "reinventer",
+      "label": "Réinventer complètement ta façon de jouer.",
+      "outcome": "Moins de courses, plus de placement. Tu apprends à jouer avec ta tête ce que tu jouais avec tes jambes.",
+      "resolution": {
+        "pilot": "vista",
+        "pBase": 55,
+        "textSuccess": "Tu joues jusqu'à trente-sept ans. Les cinq dernières saisons sont les plus intelligentes de ta carrière.",
+        "textFailure": "Tu n'arrives pas à changer. Le corps ne suit plus et la tête ne compense pas encore.",
+        "onSuccess": { "stats": { "vista": 20, "physique": -6 }, "threads": ["cerveau_avant_jambes", "professionnel"] },
+        "onFailure": { "stats": { "aura": -12, "physique": -10 }, "threads": ["declin_visible"] }
+      }
+    },
+    {
+      "id": "forcer_physique",
+      "label": "Doubler le travail physique pour rattraper.",
+      "outcome": "Deux heures de plus par jour à trente-trois ans. Ton corps te le fait payer chaque matin.",
+      "effects": { "stats": { "physique": 8, "mental": 10 }, "threadIncrement": { "corps_sacrifie": 2 }, "threads": ["martyr", "surregime"] }
+    },
+    {
+      "id": "accepter_declin",
+      "label": "Accepter et jouer moins.",
+      "outcome": "Vingt matchs par saison au lieu de trente-cinq. Tu es meilleur sur les vingt.",
+      "effects": { "stats": { "vista": 10, "aura": -8, "physique": 6 }, "threads": ["pragmatique", "statut:rotation"] }
+    },
+    {
+      "id": "cacher_donnees",
+      "label": "Demander à ce que ces données ne sortent pas du staff.",
+      "outcome": "Il accepte. Elles fuitent quand même, six semaines plus tard, en pleine négociation de contrat.",
+      "effects": { "stats": { "compte": -12, "mental": -6, "aura": -6 }, "threads": ["echec:deni", "declin_visible"] }
+    }
+  ]
+}

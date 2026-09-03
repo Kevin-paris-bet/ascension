@@ -1,0 +1,50 @@
+{
+  "id": "a1_ecole",
+  "act": 1,
+  "weight": 0,
+  "category": "core",
+  "theme": "double_projet",
+  "ageWindow": [16, 16],
+  "once": true,
+  "prompt": "Le proviseur et le responsable de la formation sont assis du même côté de la table. Mauvais signe.\n\n« Il faut choisir. Les horaires ne sont plus tenables. »\n\nTes parents attendent dans le couloir.",
+  "choices": [
+    {
+      "id": "tout_foot",
+      "label": "Le football, uniquement.",
+      "outcome": "Tu signes le papier sans le lire. Ta mère met trois jours à te reparler normalement.",
+      "effects": { "stats": { "technique": 12, "physique": 6, "mental": -4 }, "threads": ["foot_avant_tout", "tout_ou_rien"] }
+    },
+    {
+      "id": "double",
+      "label": "Tenir les deux, quitte à dormir cinq heures.",
+      "outcome": "Devoirs dans le bus, révisions après les étirements. Tu tiens. Tu es fatigué en permanence.",
+      "effects": { "stats": { "mental": 12, "vista": 6, "physique": -8 }, "threads": ["double_projet", "organise"] }
+    },
+    {
+      "id": "amenagement",
+      "label": "Négocier un aménagement sur mesure.",
+      "outcome": "Trois réunions, deux compromis, un emploi du temps que personne d'autre n'a. Ça se remarque.",
+      "resolution": {
+        "pilot": "vista",
+        "pBase": 50,
+        "textSuccess": "L'arrangement tient toute l'année. Tu as gagné du temps que les autres n'ont pas.",
+        "textFailure": "L'arrangement saute au deuxième trimestre. Tu as perdu du temps et de la crédibilité.",
+        "onSuccess": { "stats": { "vista": 10, "mental": 8 }, "threads": ["double_projet", "adaptable"] },
+        "onFailure": { "stats": { "mental": -6, "vestiaire": -6 }, "threads": ["foot_avant_tout"] }
+      }
+    },
+    {
+      "id": "ecole_dabord",
+      "label": "L'école d'abord. Le foot passe après.",
+      "outcome": "Tu perds ta place de titulaire en trois semaines. Tu as un plan B, ce qui est rare et suspect ici.",
+      "effects": { "stats": { "vista": 10, "aura": -10, "technique": -4 }, "threads": ["double_projet", "projet_apres"] }
+    },
+    {
+      "id": "pas_le_choix",
+      "label": "Il n'y a pas de plan B chez toi. Tout sur le foot.",
+      "outcome": "Personne dans ta famille n'a de diplôme à faire valoir. Ce n'est pas un choix, c'est une constatation.",
+      "requires": { "threads": ["precarite_familiale"] },
+      "effects": { "stats": { "technique": 10, "mental": 10 }, "threads": ["foot_avant_tout", "sans_filet"] }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "a2_premier_salaire",
+  "act": 2,
+  "weight": 0,
+  "category": "offstage",
+  "theme": "argent",
+  "ageWindow": [20, 20],
+  "once": true,
+  "requires": { "threads": ["contrat_pro"] },
+  "prompt": "Premier vrai virement. Le chiffre sur l'écran ne correspond à rien de ce que tu as connu.\n\nTrois personnes t'ont déjà appelé cette semaine pour te dire ce qu'il faut en faire.",
+  "choices": [
+    {
+      "id": "famille_dabord",
+      "label": "Régler les dettes de la maison.",
+      "outcome": "Tu vires tout le premier mois. Ta mère pleure au téléphone et raccroche sans rien dire d'autre.",
+      "effects": { "stats": { "compte": -10, "mental": 14 }, "threads": ["promesse_tenue", "heritage_social"] }
+    },
+    {
+      "id": "epargner",
+      "label": "Tout mettre de côté.",
+      "outcome": "Tu continues à vivre en colocation avec un joueur du centre. Personne ne comprend.",
+      "effects": { "stats": { "compte": 18, "aura": -6 }, "threads": ["prudent", "professionnel"] }
+    },
+    {
+      "id": "voiture",
+      "label": "La voiture. Celle dont tu rêves depuis douze ans.",
+      "outcome": "Tu la gares en évidence sur le parking du club. Le capitaine te dit une phrase que tu n'oublieras pas.",
+      "effects": { "stats": { "compte": -14, "aura": 12, "vestiaire": -8 }, "threads": ["mediatique"] }
+    },
+    {
+      "id": "investir",
+      "label": "Le placer sur les conseils de ton agent.",
+      "outcome": "Il parle de diversification, de rendement, de fiscalité. Tu signes sans tout comprendre.",
+      "resolution": {
+        "pilot": null,
+        "pBase": 55,
+        "textSuccess": "Placement solide. Dans dix ans, tu ne dépendras plus du football pour vivre.",
+        "textFailure": "Le montage était bancal. Tu perds la moitié en dix-huit mois.",
+        "onSuccess": { "stats": { "compte": 24 }, "threads": ["projet_apres", "organise"] },
+        "onFailure": { "stats": { "compte": -18, "mental": -6 }, "threads": ["occasion_ratee"] }
+      }
+    }
+  ]
+}

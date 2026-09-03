@@ -1,0 +1,98 @@
+{
+  "id": "a1_sacrifice",
+  "act": 1,
+  "weight": 0,
+  "category": "core",
+  "theme": "famille",
+  "ageWindow": [14, 14],
+  "once": true,
+  "prompt": "Le centre de formation te prend.\n\nC'est à 400 km. Internat, chambre partagée, retour une fois par mois. Le directeur a dit « c'est une chance qui ne se représentera pas » en regardant tes parents, pas toi.\n\nTa mère pleure dans la cuisine. Elle dit que c'est de joie.",
+  "choices": [
+    {
+      "id": "partir",
+      "label": "Partir.",
+      "outcome": "Tu fais ton sac le soir même. Elle t'aide à plier tes affaires sans rien dire. Sur le quai, elle te tient la nuque une seconde de trop.",
+      "effects": {
+        "stats": { "technique": 10, "vestiaire": 4 },
+        "threads": ["deracine"]
+      }
+    },
+    {
+      "id": "rester",
+      "label": "Rester au club du quartier.",
+      "outcome": "Le directeur ne comprend pas. Il te laisse sa carte quand même. Tu la gardes dans ton portefeuille pendant six ans.",
+      "effects": {
+        "stats": { "mental": 10, "aura": -5 },
+        "threads": ["fidelite"]
+      }
+    },
+    {
+      "id": "compromis",
+      "label": "Partir, mais rentrer tous les week-ends.",
+      "outcome": "Six heures de train par semaine. Tu dors dans les vestiaires le samedi matin parce que tu arrives trop tôt.",
+      "effects": {
+        "stats": { "technique": 5, "mental": 4, "physique": -4 },
+        "threads": ["compromis"]
+      }
+    },
+    {
+      "id": "seul",
+      "label": "Refuser, arrêter les études, t'entraîner seul.",
+      "outcome": "Personne ne comprend. Tu te lèves à 6h, tu cours, tu répètes le même geste 400 fois par jour. Personne ne te regarde.",
+      "resolution": {
+        "pilot": "mental",
+        "pBase": 30,
+        "textSuccess": "Huit mois plus tard, un club te reprend à l'essai. Tu es méconnaissable.",
+        "textFailure": "Tu t'entraînes seul pendant deux ans. Personne ne vient jamais te voir.",
+        "onSuccess": {
+          "stats": { "technique": 18, "mental": 12 },
+          "threads": ["parcours_atypique"]
+        },
+        "onFailure": {
+          "stats": { "technique": -6, "mental": -10 },
+          "threads": ["parcours_atypique", "carriere_brisee"]
+        }
+      }
+    },
+    {
+      "id": "surclasse",
+      "label": "Demander à passer surclassé avec les plus âgés.",
+      "outcome": "Ils ont deux ans et douze kilos de plus. Le premier duel, tu finis dans la publicité du panneau.",
+      "requires": { "threads": ["origine:formation"] },
+      "effects": {
+        "stats": { "technique": 8, "physique": -5, "vestiaire": -8 },
+        "threads": ["surclasse"]
+      }
+    },
+    {
+      "id": "exil_total",
+      "label": "Partir seul. Ta famille reste au pays.",
+      "outcome": "Tu appelles le dimanche. La connexion est mauvaise. Ta petite sœur a grandi de dix centimètres entre deux appels.",
+      "requires": { "threads": ["origine:etranger"] },
+      "effects": {
+        "stats": { "technique": 10, "mental": -8 },
+        "threads": ["deracine", "exil_total"]
+      }
+    },
+    {
+      "id": "piston",
+      "label": "Ton père appelle le directeur pour négocier tes conditions.",
+      "outcome": "Chambre individuelle, aménagement d'horaires, un entraîneur référent. Tout le monde le sait avant ton arrivée.",
+      "requires": { "threads": ["origine:heritier"] },
+      "effects": {
+        "stats": { "vestiaire": -12 },
+        "threads": ["piston_percu"]
+      }
+    },
+    {
+      "id": "sans_choix",
+      "label": "Le centre paie tout. C'est ça ou rien.",
+      "outcome": "Ce n'est pas vraiment un choix. Ta mère fait semblant que c'en est un.",
+      "requires": { "threads": ["precarite_familiale"] },
+      "effects": {
+        "stats": { "mental": 8 },
+        "threads": ["deracine", "sans_filet"]
+      }
+    }
+  ]
+}

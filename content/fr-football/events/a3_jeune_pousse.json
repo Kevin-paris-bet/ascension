@@ -1,0 +1,43 @@
+{
+  "id": "a3_jeune_pousse",
+  "act": 3,
+  "weight": 60,
+  "category": "core",
+  "theme": "transmission",
+  "ageWindow": [30, 36],
+  "once": true,
+  "prompt": "Un joueur de dix-huit ans arrive de la formation. Il a exactement ton profil, ton poste, et une confiance en lui qui frôle l'insolence.\n\nEn conférence de presse, un journaliste lui demande à qui il se compare. Il donne ton nom, puis ajoute : « en plus rapide ».",
+  "choices": [
+    {
+      "id": "former",
+      "label": "Le prendre en main malgré tout.",
+      "outcome": "Tu lui montres tout, y compris ce qui te rend encore utile à trente-quatre ans. Il apprend vite. Trop vite.",
+      "effects": { "stats": { "vestiaire": 16, "vista": 8, "aura": 4 }, "threads": ["transmission", "generation"] }
+    },
+    {
+      "id": "remettre_place",
+      "label": "Le remettre à sa place à l'entraînement.",
+      "outcome": "Un contre un, à l'ancienne, devant le groupe.",
+      "resolution": {
+        "pilot": "technique",
+        "pBase": 40,
+        "textSuccess": "Tu lui donnes une leçon d'intelligence de jeu. Il ferme sa bouche pendant deux ans et il apprend.",
+        "textFailure": "Il te met dans le vent trois fois. Le vestiaire regarde ailleurs par politesse.",
+        "onSuccess": { "stats": { "aura": 12, "vestiaire": 8 }, "threads": ["transmission", "cerveau_avant_jambes"] },
+        "onFailure": { "stats": { "aura": -14, "mental": -6 }, "threads": ["declin_visible"] }
+      }
+    },
+    {
+      "id": "ignorer_jeune",
+      "label": "L'ignorer complètement.",
+      "outcome": "Tu ne lui adresses pas la parole de la saison. Il raconte ça en interview dix ans plus tard, sans méchanceté, ce qui est pire.",
+      "effects": { "stats": { "vestiaire": -10, "mental": 4 }, "threads": ["solitaire"] }
+    },
+    {
+      "id": "changer_role",
+      "label": "Accepter de reculer et de devenir son relais sur le terrain.",
+      "outcome": "Tu joues quinze mètres plus bas et tu lui donnes vingt ballons par match. Il en marque la moitié.",
+      "effects": { "stats": { "vista": 14, "aura": -6, "vestiaire": 14 }, "threads": ["poste_identite", "transmission", "adaptable"] }
+    }
+  ]
+}

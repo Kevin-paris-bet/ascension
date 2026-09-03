@@ -1,0 +1,119 @@
+{
+  "id": "fr-football",
+  "note": "Villes réelles partout (libres de droit). Clubs identifiés par couleur historique / surnom populaire descriptif / région — jamais le nom de marque déposé du club (section 14 des specs).",
+  "competitions": {
+    "national": "Élite 1",
+    "cupDomestic": "Coupe Nationale",
+    "continental": "Coupe d'Europe",
+    "world": "Championnat du Monde"
+  },
+  "individualTrophies": {
+    "ballon": "Joueur d'Or",
+    "topScorer": "Soulier de Diamant",
+    "goalkeeper": "Gardien de l'Année"
+  },
+  "clubs": {
+    "FR": [
+      { "city": "Paris", "club": "Paris Capitale" },
+      { "city": "Marseille", "club": "Marseille Phocéen" },
+      { "city": "Lyon", "club": "Lyon Rhodia" },
+      { "city": "Lille", "club": "Lille Dogues" },
+      { "city": "Lens", "club": "Lens Sang et Or" },
+      { "city": "Saint-Étienne", "club": "Saint-Étienne Verts" },
+      { "city": "Nantes", "club": "Nantes Canaris" },
+      { "city": "Nice", "club": "Nice Aiglons" },
+      { "city": "Rennes", "club": "Rennes Rouge et Noir" },
+      { "city": "Strasbourg", "club": "Strasbourg Rhénan" },
+      { "city": "Bordeaux", "club": "Bordeaux Marine et Blanc" },
+      { "city": "Toulouse", "club": "Toulouse Violet" },
+      { "city": "Montpellier", "club": "Montpellier Paillade" },
+      { "city": "Monaco", "club": "Monaco Rouge et Blanc" },
+      { "city": "Le Havre", "club": "Le Havre Céans" },
+      { "city": "Metz", "club": "Metz Lorrain" },
+      { "city": "Reims", "club": "Reims Champenois" },
+      { "city": "Brest", "club": "Brest Finistère" },
+      { "city": "Angers", "club": "Angers Angevin" },
+      { "city": "Clermont", "club": "Clermont Auvergnat" },
+      { "city": "Bastia", "club": "Bastia Corsu" }
+    ],
+    "EN": [
+      { "city": "Manchester", "club": "Manchester Rouge" },
+      { "city": "Manchester", "club": "Manchester Ciel" },
+      { "city": "Liverpool", "club": "Liverpool Kop" },
+      { "city": "Liverpool", "club": "Liverpool Toffees" },
+      { "city": "Londres (Chelsea)", "club": "Chelsea Bleu" },
+      { "city": "Londres (Nord)", "club": "Londres Canonniers" },
+      { "city": "Londres (Nord)", "club": "Londres Coq" },
+      { "city": "Newcastle", "club": "Newcastle Pies" },
+      { "city": "Leeds", "club": "Leeds Blanc" },
+      { "city": "Birmingham", "club": "Birmingham Claret" }
+    ],
+    "ES": [
+      { "city": "Madrid", "club": "Madrid Blancos" },
+      { "city": "Madrid", "club": "Madrid Colchonero" },
+      { "city": "Barcelone", "club": "Barcelone Grenat et Bleu" },
+      { "city": "Séville", "club": "Séville Sévillan" },
+      { "city": "Bilbao", "club": "Bilbao Basque" },
+      { "city": "Valence", "club": "Valence Chauve-souris" }
+    ],
+    "IT": [
+      { "city": "Turin", "club": "Turin Zébré" },
+      { "city": "Turin", "club": "Turin Granata" },
+      { "city": "Milan", "club": "Milan Rossonero" },
+      { "city": "Milan", "club": "Milan Nerazzurro" },
+      { "city": "Naples", "club": "Naples Azzurro" },
+      { "city": "Rome", "club": "Rome Giallorosso" }
+    ],
+    "DE": [
+      { "city": "Munich", "club": "Munich Bavarois" },
+      { "city": "Dortmund", "club": "Dortmund Jaune et Noir" },
+      { "city": "Berlin", "club": "Berlin Capitale" },
+      { "city": "Leipzig", "club": "Leipzig Saxon" },
+      { "city": "Gelsenkirchen", "club": "Gelsenkirchen Royal Bleu" }
+    ],
+    "PT": [
+      { "city": "Lisbonne", "club": "Lisbonne Vert et Rouge" },
+      { "city": "Lisbonne", "club": "Lisbonne Lion" },
+      { "city": "Porto", "club": "Porto Dragon" },
+      { "city": "Braga", "club": "Braga Guerrier" }
+    ],
+    "NL": [
+      { "city": "Amsterdam", "club": "Amsterdam Rouge et Blanc" },
+      { "city": "Eindhoven", "club": "Eindhoven Rouge et Blanc" },
+      { "city": "Rotterdam", "club": "Rotterdam Portuaire" }
+    ],
+    "BE": [
+      { "city": "Bruxelles", "club": "Bruxelles Mauve" },
+      { "city": "Anvers", "club": "Anvers Royal" },
+      { "city": "Bruges", "club": "Bruges Bleu et Noir" }
+    ],
+    "TR": [
+      { "city": "Istanbul", "club": "Istanbul Jaune et Rouge" },
+      { "city": "Istanbul", "club": "Istanbul Aigle" },
+      { "city": "Istanbul", "club": "Istanbul Rive d'Asie" }
+    ],
+    "BR": [
+      { "city": "Rio de Janeiro", "club": "Rio Noir et Blanc" },
+      { "city": "Rio de Janeiro", "club": "Rio Flamme" },
+      { "city": "São Paulo", "club": "São Paulo Tricolore" },
+      { "city": "Belo Horizonte", "club": "Belo Horizonte Galo" },
+      { "city": "Porto Alegre", "club": "Porto Alegre Gaúcho" }
+    ],
+    "AR": [
+      { "city": "Buenos Aires", "club": "Buenos Aires Bleu et Or" },
+      { "city": "Buenos Aires", "club": "Buenos Aires Diable" },
+      { "city": "Rosario", "club": "Rosario Canaille" },
+      { "city": "Rosario", "club": "Rosario Léproso" },
+      { "city": "La Plata", "club": "La Plata Pincharatas" }
+    ],
+    "SA": [
+      { "city": "Riyad", "club": "Riyad Faucon" },
+      { "city": "Djeddah", "club": "Djeddah Corniche" },
+      { "city": "Dammam", "club": "Dammam Est" }
+    ]
+  },
+  "regional": {
+    "note": "Génériques générés dynamiquement depuis le lieu de naissance choisi en création — pas de liste figée.",
+    "patterns": ["US {lieu}", "AS {lieu}", "FC {lieu} Jeunes"]
+  }
+}

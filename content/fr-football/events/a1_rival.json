@@ -1,0 +1,50 @@
+{
+  "id": "a1_rival",
+  "act": 1,
+  "weight": 0,
+  "category": "core",
+  "theme": "rivalite",
+  "ageWindow": [15, 15],
+  "once": true,
+  "prompt": "Il joue à ton poste. Il a six mois de moins que toi et tout le monde le sait.\n\nLe coach les compare à voix haute, devant le groupe : « Lui, au moins, il défend. »\n\nCe soir-là, {RIVAL} te tend la main dans le vestiaire. Tu ne sais pas si c'est de la sportivité ou de la provocation.",
+  "choices": [
+    {
+      "id": "serrer",
+      "label": "Serrer la main. Faire de lui un allié.",
+      "outcome": "Vous rentrez à pied ensemble. Il parle beaucoup. Il est moins sûr de lui qu'il en a l'air.",
+      "effects": { "stats": { "vestiaire": 10, "mental": 4 }, "threads": ["rivalite:saine"] }
+    },
+    {
+      "id": "ignorer",
+      "label": "L'ignorer et te servir de lui comme carburant.",
+      "outcome": "Tu passes devant sans le regarder. Tu t'entraînes deux heures de plus le lendemain. Et le surlendemain.",
+      "effects": { "stats": { "technique": 8, "vestiaire": -8 }, "threads": ["rivalite:toxique", "carburant_colere"] }
+    },
+    {
+      "id": "humilier",
+      "label": "L'humilier publiquement au prochain entraînement.",
+      "outcome": "Petit pont, puis un deuxième dans la foulée. Les autres rient. Il ne rit pas.",
+      "resolution": {
+        "pilot": "technique",
+        "pBase": 50,
+        "textSuccess": "Le geste fait le tour du club. Tu as gagné un statut et un ennemi le même jour.",
+        "textFailure": "Il te reprend le ballon et te met au sol. Le silence dure trop longtemps.",
+        "onSuccess": { "stats": { "aura": 12, "vestiaire": -12 }, "threads": ["rivalite:toxique", "video_circule"] },
+        "onFailure": { "stats": { "aura": -10, "vestiaire": -10 }, "threads": ["rivalite:toxique"] }
+      }
+    },
+    {
+      "id": "changer_poste",
+      "label": "Demander à changer de poste pour ne plus être en concurrence.",
+      "outcome": "Le coach hausse les épaules et te met ailleurs. Tu y découvres un jeu que tu ne connaissais pas.",
+      "effects": { "stats": { "vista": 10, "aura": -4 }, "threads": ["poste_identite", "fuite_conflit"] }
+    },
+    {
+      "id": "rival_frere",
+      "label": "Lui proposer de bosser ensemble le mercredi.",
+      "outcome": "Deux ans plus tard, vous vous appelez encore tous les dimanches soir.",
+      "requires": { "threads": ["origine:cite"] },
+      "effects": { "stats": { "technique": 10, "vestiaire": 12 }, "threads": ["rivalite:saine", "gens_davant"] }
+    }
+  ]
+}

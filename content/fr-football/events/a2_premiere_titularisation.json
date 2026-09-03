@@ -1,0 +1,36 @@
+{
+  "id": "a2_premiere_titularisation",
+  "act": 2,
+  "weight": 0,
+  "category": "core",
+  "theme": "seuil",
+  "ageWindow": [21, 21],
+  "once": true,
+  "prompt": "La feuille de match est affichée. Ton nom est dans les onze.\n\nTu as trois heures devant toi. Le stade est à vingt minutes. Ta famille arrive dans deux heures. Ton téléphone n'arrête pas de vibrer.",
+  "choices": [
+    {
+      "id": "silence_total",
+      "label": "Couper le téléphone et dormir une heure.",
+      "outcome": "Tu ne dors pas, évidemment. Mais tu es dans le noir, au calme, et ça suffit.",
+      "effects": { "stats": { "mental": 12, "technique": 4 }, "threads": ["professionnel", "posture:taiseux"] }
+    },
+    {
+      "id": "repondre_tous",
+      "label": "Répondre à tout le monde.",
+      "outcome": "Quarante messages, six appels, deux cousins que tu n'as pas vus depuis dix ans. Tu arrives au stade déjà vidé.",
+      "effects": { "stats": { "aura": 8, "mental": -8, "vestiaire": 4 }, "threads": ["mediatique"] }
+    },
+    {
+      "id": "appeler_mere",
+      "label": "Un seul appel. Ta mère.",
+      "outcome": "Elle parle de la circulation, du parking, de la météo. Elle ne parle pas du match une seule fois. C'est exactement ce qu'il te fallait.",
+      "effects": { "stats": { "mental": 14, "aura": 4 }, "threads": ["promesse_famille", "heritage_social"] }
+    },
+    {
+      "id": "routine_ancien",
+      "label": "Suivre à la lettre la routine d'un ancien.",
+      "outcome": "Même repas, même horaire, même playlist que lui. Tu copies quelqu'un jusqu'à trouver ta propre façon.",
+      "effects": { "stats": { "mental": 10, "vestiaire": 8 }, "threads": ["transmission", "professionnel"] }
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "id": "a1_mentor",
+  "act": 1,
+  "weight": 0,
+  "category": "core",
+  "theme": "transmission",
+  "ageWindow": [17, 17],
+  "once": true,
+  "prompt": "Il a joué en pro pendant onze ans. Personne ne s'en souvient vraiment. Il entraîne les U15 le mercredi et répare des chaudières le reste du temps.\n\n« Le mardi et le jeudi, 18h. Tu viens ou tu viens pas. Je le dirai pas deux fois. »",
+  "choices": [
+    {
+      "id": "accepter",
+      "label": "Y aller.",
+      "outcome": "Il ne te fait pas toucher un ballon avant la troisième séance. Que de la marche, des appuis, du regard.",
+      "effects": { "stats": { "vista": 12, "mental": 6 }, "threads": ["mentore"] }
+    },
+    {
+      "id": "refuser",
+      "label": "Refuser. Tu as déjà un coach.",
+      "outcome": "Il hoche la tête sans insister. Il ne te reproposera pas.",
+      "effects": { "stats": { "mental": 8 }, "threads": ["solitaire"] }
+    },
+    {
+      "id": "essayer",
+      "label": "Y aller une fois, pour voir.",
+      "outcome": "Tu y vas trois semaines. Puis les copains, puis la fatigue, puis plus rien. Il ne dit rien quand tu croises son regard au club.",
+      "effects": { "stats": { "vista": 5 }, "threads": ["mentore:tiede"] }
+    },
+    {
+      "id": "conditions",
+      "label": "Accepter, mais lui demander ce qu'il veut en échange.",
+      "outcome": "« Que tu appelles ta mère le dimanche. C'est tout. » Tu penses qu'il plaisante. Il ne plaisante pas.",
+      "effects": { "stats": { "vista": 10, "mental": 8 }, "threads": ["mentore", "promesse_mentor"] }
+    }
+  ]
+}

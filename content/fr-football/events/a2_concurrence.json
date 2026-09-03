@@ -1,0 +1,43 @@
+{
+  "id": "a2_concurrence",
+  "act": 2,
+  "weight": 0,
+  "category": "core",
+  "theme": "vestiaire",
+  "ageWindow": [20, 20],
+  "once": true,
+  "prompt": "Le club recrute à ton poste. Un joueur de vingt-huit ans, deux fois ton salaire, quatre-vingt-dix matchs de première division.\n\nLe directeur sportif te dit que c'est « pour t'aider à progresser ». Il ne te regarde pas en le disant.",
+  "choices": [
+    {
+      "id": "apprendre",
+      "label": "Coller à lui et tout lui voler.",
+      "outcome": "Tu t'assieds à côté de lui dans le bus, tous les déplacements, pendant un an. Il finit par parler.",
+      "effects": { "stats": { "vista": 14, "technique": 8, "aura": -4 }, "threads": ["transmission", "travailleur"] }
+    },
+    {
+      "id": "guerre",
+      "label": "Lui déclarer la guerre à l'entraînement.",
+      "outcome": "Tu ne lui laisses rien. Deux tacles limites en trois séances. Le vestiaire choisit un camp.",
+      "resolution": {
+        "pilot": "mental",
+        "pBase": 45,
+        "textSuccess": "Le coach tranche en ta faveur au bout de six semaines. Tu as gagné ta place au forceps.",
+        "textFailure": "Tu passes pour un gamin ingérable. Tu joues quatre matchs dans la saison.",
+        "onSuccess": { "stats": { "aura": 14, "vestiaire": -8 }, "threads": ["rivalite:toxique", "carburant_colere"] },
+        "onFailure": { "stats": { "vestiaire": -16, "aura": -8 }, "threads": ["statut:rotation", "rivalite:toxique"] }
+      }
+    },
+    {
+      "id": "demander_pret",
+      "label": "Demander à partir en prêt pour jouer.",
+      "outcome": "Le club accepte en trois jours. Trop vite pour que ce soit flatteur.",
+      "effects": { "stats": { "mental": 8, "aura": -4 }, "threads": ["pret:formateur"] }
+    },
+    {
+      "id": "accepter_rotation",
+      "label": "Accepter la rotation et attendre ton heure.",
+      "outcome": "Vingt minutes par-ci, une titularisation en coupe par-là. Tu apprends la patience, ce qui ne se voit sur aucune statistique.",
+      "effects": { "stats": { "mental": 10, "vestiaire": 8 }, "threads": ["statut:rotation", "professionnel"] }
+    }
+  ]
+}
