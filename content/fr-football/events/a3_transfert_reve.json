@@ -1,0 +1,50 @@
+{
+  "id": "a3_transfert_reve",
+  "act": 3,
+  "weight": 75,
+  "category": "core",
+  "theme": "carriere",
+  "ageWindow": [24, 29],
+  "once": true,
+  "prompt": "L'offre est arrivée un jeudi soir. Le club auquel tu pensais tous les soirs quand tu avais douze ans.\n\nMais ils te veulent comme doublure, sur un poste qui n'est pas exactement le tien, dans un championnat où tu ne parles pas la langue.",
+  "choices": [
+    {
+      "id": "y_aller_quand_meme",
+      "label": "Y aller. On ne refuse pas ça.",
+      "outcome": "Tu signes en trente-six heures. Tu joues neuf cents minutes en deux ans.",
+      "resolution": {
+        "pilot": "mental",
+        "pBase": 40,
+        "textSuccess": "Une blessure devant toi, six matchs pour convaincre, et tu ne rends plus jamais le maillot.",
+        "textFailure": "Deux ans de banc dans le plus beau stade du monde. Tu as vu ta carrière passer depuis un siège chauffant.",
+        "onSuccess": { "stats": { "aura": 24, "technique": 10, "compte": 18 }, "threads": ["grand_club", "champion_europe"] },
+        "onFailure": { "stats": { "aura": -12, "compte": 20, "technique": -8 }, "threads": ["grand_club_rate", "occasion_ratee"] }
+      }
+    },
+    {
+      "id": "refuser_reve",
+      "label": "Refuser. Tu veux jouer, pas collectionner les maillots.",
+      "outcome": "Ton agent met deux jours à te reparler. Tu joues trente-quatre matchs ailleurs cette saison-là.",
+      "effects": { "stats": { "technique": 12, "mental": 12, "aura": -6 }, "threads": ["refus_historique", "intransigeant"] }
+    },
+    {
+      "id": "negocier_temps",
+      "label": "Négocier un temps de jeu garanti avant de signer.",
+      "outcome": "Ils acceptent vingt matchs minimum par écrit. C'est inhabituel, donc c'est cher payé ailleurs.",
+      "effects": { "stats": { "aura": 14, "compte": 8, "technique": 6 }, "threads": ["grand_club", "organise"] }
+    },
+    {
+      "id": "reporter",
+      "label": "Leur demander de revenir dans deux ans.",
+      "outcome": "Tu paries sur toi contre le marché. Personne ne fait ça.",
+      "effects": { "stats": { "mental": 14, "aura": -4 }, "threads": ["pari:audace", "occasion_ratee"] }
+    },
+    {
+      "id": "sans_negocier",
+      "label": "Signer sans rien négocier, par pure loyauté au maillot.",
+      "outcome": "Tu acceptes leur premier chiffre. Le directeur sportif te le rappellera à chaque renouvellement.",
+      "requires": { "threads": ["icone_club"] },
+      "effects": { "stats": { "aura": 16, "compte": -10 }, "threads": ["grand_club", "fidelite"] }
+    }
+  ]
+}

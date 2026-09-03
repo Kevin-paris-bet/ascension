@@ -1,0 +1,50 @@
+{
+  "id": "a1_selection_jeunes",
+  "act": 1,
+  "weight": 0,
+  "category": "core",
+  "theme": "selection",
+  "ageWindow": [18, 18],
+  "once": true,
+  "prompt": "Convocation en sélection nationale de jeunes. Un stage de dix jours, à l'autre bout du pays.\n\nLe même week-end, ton club joue le match qui décide de la montée. Le coach t'a dit, sans te regarder : « Fais ce que tu as à faire. »",
+  "choices": [
+    {
+      "id": "aller_selection",
+      "label": "Partir en sélection.",
+      "outcome": "Tu croises quatre joueurs qui seront pros dans deux ans. Ton club perd le match sans toi.",
+      "effects": { "stats": { "technique": 10, "aura": 12, "vestiaire": -10 }, "threads": ["selection:formation", "generation"] }
+    },
+    {
+      "id": "rester_club",
+      "label": "Rester avec ton club.",
+      "outcome": "Vous montez. Le vestiaire te porte littéralement. La sélection ne te rappellera pas avant trois ans.",
+      "effects": { "stats": { "vestiaire": 16, "aura": -6 }, "threads": ["fidelite", "regret_selection"] }
+    },
+    {
+      "id": "blesse_faux",
+      "label": "Te déclarer blessé pour éviter de choisir.",
+      "outcome": "Personne n'est dupe des deux côtés. Tu as déçu tout le monde à moitié.",
+      "effects": { "stats": { "mental": -8, "vestiaire": -6, "aura": -6 }, "threads": ["fuite_conflit"] }
+    },
+    {
+      "id": "negocier_deux",
+      "label": "Tenter de faire les deux.",
+      "outcome": "Un vol de nuit, trois heures de sommeil, et tu es sur le terrain à 15h.",
+      "resolution": {
+        "pilot": "physique",
+        "pBase": 35,
+        "textSuccess": "Tu joues les deux. Tu es cuit pendant un mois, mais personne ne peut rien te reprocher.",
+        "textFailure": "Tu es à côté de la plaque dans les deux. On retient ça, pas l'effort.",
+        "onSuccess": { "stats": { "aura": 14, "vestiaire": 10, "physique": -12 }, "threadIncrement": { "corps_sacrifie": 1 }, "threads": ["selection:formation", "double_front"] },
+        "onFailure": { "stats": { "aura": -10, "physique": -10 }, "threads": ["occasion_ratee"] }
+      }
+    },
+    {
+      "id": "selection_famille",
+      "label": "Partir. C'est la première fois que ta famille pourra dire ton nom à la télé.",
+      "outcome": "Ta mère enregistre les dix minutes de résumé sur une clé USB. Elle l'a toujours.",
+      "requires": { "threads": ["promesse_famille"] },
+      "effects": { "stats": { "aura": 14, "mental": 8, "vestiaire": -8 }, "threads": ["selection:formation", "promesse_famille"] }
+    }
+  ]
+}

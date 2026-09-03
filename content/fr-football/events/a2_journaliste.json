@@ -1,0 +1,43 @@
+{
+  "id": "a2_journaliste",
+  "act": 2,
+  "weight": 0,
+  "category": "core",
+  "theme": "media",
+  "ageWindow": [20, 20],
+  "once": true,
+  "prompt": "Première vraie interview. Le journaliste est sympathique pendant douze minutes, puis il pose sa question :\n\n« Qu'est-ce que vous répondez à ceux qui n'ont pas cru en vous ? »\n\nIl y a un micro, une caméra, et une phrase qui va vivre dix ans.",
+  "choices": [
+    {
+      "id": "humble",
+      "label": "« Je pense juste à travailler. »",
+      "outcome": "Réponse parfaite, oubliée en douze heures. Le journaliste range son carnet, un peu déçu.",
+      "effects": { "stats": { "vestiaire": 8, "aura": 2 }, "threads": ["posture:humble"] }
+    },
+    {
+      "id": "revanchard",
+      "label": "« Ils vont s'en rendre compte. »",
+      "outcome": "Le titre sort le lendemain, sorti de son contexte, en gras. Tu as une cible dans le dos pour la saison.",
+      "effects": { "stats": { "aura": 18, "vestiaire": -8 }, "threads": ["posture:revanchard", "ennemi_nomme"] }
+    },
+    {
+      "id": "taiseux",
+      "label": "Ne rien dire et partir.",
+      "outcome": "Tu enlèves le micro-cravate et tu te lèves. Ça devient ton personnage pour toujours.",
+      "effects": { "stats": { "aura": 10, "mental": 8 }, "threads": ["posture:taiseux"] }
+    },
+    {
+      "id": "nommer",
+      "label": "Citer nommément celui qui t'a lâché à seize ans.",
+      "outcome": "Tu donnes son nom, son club, et la date. En direct. Le journaliste n'en revient pas de sa chance.",
+      "effects": { "stats": { "aura": 22, "vestiaire": -14 }, "threads": ["ennemi_nomme", "posture:revanchard", "mediatique"] }
+    },
+    {
+      "id": "remercier_mere",
+      "label": "Parler d'elle, pas d'eux.",
+      "outcome": "Tu racontes les factures sur la table de la cuisine. La séquence fait deux millions de vues en trois jours.",
+      "requires": { "threads": ["promesse_famille"] },
+      "effects": { "stats": { "aura": 16, "vestiaire": 6, "mental": 6 }, "threads": ["posture:humble", "moment_carte", "heritage_social"] }
+    }
+  ]
+}

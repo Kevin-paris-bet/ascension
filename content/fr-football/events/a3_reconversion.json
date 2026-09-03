@@ -1,0 +1,36 @@
+{
+  "id": "a3_reconversion",
+  "act": 3,
+  "weight": 85,
+  "category": "offstage",
+  "theme": "fin",
+  "ageWindow": [34, 40],
+  "once": true,
+  "prompt": "Trois mois que tu as arrêté. Le téléphone sonne beaucoup moins vite que prévu.\n\nQuatre propositions sur la table, et une question que personne ne pose jamais aux joueurs : qu'est-ce que tu sais faire, à part ça ?",
+  "choices": [
+    {
+      "id": "entraineur",
+      "label": "Passer les diplômes et entraîner.",
+      "outcome": "Tu recommences en bas, avec des U17, pour un salaire ridicule. C'est le seul endroit où tu te sens à ta place.",
+      "effects": { "stats": { "vista": 16, "compte": -8, "mental": 12 }, "threads": ["reconverti:naturel", "transmission"] }
+    },
+    {
+      "id": "consultant",
+      "label": "Consultant télé.",
+      "outcome": "Costume, oreillette, quatre-vingt-dix secondes pour dire quelque chose d'intelligent. Tu es bon. Tu détestes ça.",
+      "effects": { "stats": { "compte": 22, "aura": 16, "mental": -6 }, "threads": ["mediatique", "reconverti"] }
+    },
+    {
+      "id": "loin_du_foot",
+      "label": "T'éloigner complètement du football.",
+      "outcome": "Tu n'entres plus dans un stade pendant six ans. Personne ne comprend, et tu n'expliques à personne.",
+      "effects": { "stats": { "mental": 10, "aura": -14 }, "threads": ["vie_parallele", "reconverti"] }
+    },
+    {
+      "id": "club_formateur_role",
+      "label": "Revenir au club qui t'a formé, à un poste dans l'ombre.",
+      "outcome": "Recruteur, puis responsable de la formation. Tu signes des gamins de quatorze ans et tu penses à ta mère dans la cuisine à chaque fois.",
+      "effects": { "stats": { "vista": 12, "vestiaire": 14, "compte": -4 }, "threads": ["retour_racines", "transmission", "boucle_bouclee", "heritage_social"] }
+    }
+  ]
+}

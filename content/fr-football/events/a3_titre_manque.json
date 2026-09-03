@@ -1,0 +1,36 @@
+{
+  "id": "a3_titre_manque",
+  "act": 3,
+  "weight": 70,
+  "category": "core",
+  "theme": "sommet",
+  "ageWindow": [26, 35],
+  "once": true,
+  "prompt": "Dernière journée. Vous menez le championnat depuis huit mois.\n\nVous perdez chez le dernier, sur un but contre son camp à la 91e minute. Le titre part ailleurs, à un point.\n\nDans le vestiaire, personne ne parle. Le coach entre, regarde le groupe, et ressort sans un mot.",
+  "choices": [
+    {
+      "id": "prendre_parole",
+      "label": "Prendre la parole devant le groupe.",
+      "outcome": "Tu montes sur un banc et tu dis quatre phrases. Trois joueurs pleurent. Vous gagnez le titre l'année suivante.",
+      "effects": { "stats": { "vestiaire": 20, "aura": 12, "mental": 12 }, "threads": ["capitaine_selection", "finale_perdue", "redemption"] }
+    },
+    {
+      "id": "silence_vestiaire",
+      "label": "Ne rien dire. Il n'y a rien à dire.",
+      "outcome": "Tu restes assis vingt minutes en tenue, la tête dans les mains. Quelqu'un prend une photo depuis le couloir. Elle fait le tour du pays.",
+      "effects": { "stats": { "mental": -8, "aura": 10 }, "threads": ["finale_perdue", "moment_carte"] }
+    },
+    {
+      "id": "accuser_public",
+      "label": "Pointer publiquement les responsabilités.",
+      "outcome": "Tu parles du recrutement, du calendrier, de l'arbitrage. Tout est vrai. Tout est mal reçu.",
+      "effects": { "stats": { "aura": 8, "vestiaire": -16 }, "threads": ["finale_perdue", "honnetete_brutale", "rivalite:politique"] }
+    },
+    {
+      "id": "transformer",
+      "label": "Faire de cette défaite ton carburant pour trois ans.",
+      "outcome": "Tu gardes le maillot de ce match dans ton casier jusqu'à la fin de ta carrière. Tu le regardes avant chaque grand rendez-vous.",
+      "effects": { "stats": { "mental": 16, "technique": 8 }, "threads": ["finale_perdue", "carburant_colere", "redemption"] }
+    }
+  ]
+}

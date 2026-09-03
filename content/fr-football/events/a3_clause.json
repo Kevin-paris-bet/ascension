@@ -1,0 +1,45 @@
+{
+  "id": "a3_clause",
+  "act": 3,
+  "weight": 100,
+  "category": "core",
+  "theme": "argent",
+  "ageWindow": [26, 27],
+  "once": true,
+  "requires": { "threads": ["contrat_piege"] },
+  "resolvesCallback": "contrat_piege",
+  "prompt": "Un grand club active la clause. Celle de l'article 14, celle que ton agent n'avait pas lue.\n\nLe montant est dérisoire pour eux. Ton club actuel ne peut rien refuser. Tu n'as pas voix au chapitre — sauf que le club acheteur, lui, veut ton accord.\n\nTu as quarante-huit heures.",
+  "choices": [
+    {
+      "id": "partir_grand_club",
+      "label": "Partir. C'est le club dont tu rêvais à quatorze ans.",
+      "outcome": "Visite médicale le lendemain, photo avec l'écharpe, quarante mille personnes qui scandent un nom qu'ils écorchent.",
+      "effects": { "stats": { "aura": 20, "compte": 20, "vestiaire": -6 }, "threads": ["grand_club"], "threadsResolve": ["contrat_piege"] }
+    },
+    {
+      "id": "refuser_partir",
+      "label": "Refuser. Par loyauté.",
+      "outcome": "Ton club te fait une ovation. Ils ne te proposeront jamais de meilleur contrat pour autant.",
+      "effects": { "stats": { "vestiaire": 18, "aura": 8, "compte": -8 }, "threads": ["fidelite", "icone_club", "refus_historique"], "threadsResolve": ["contrat_piege"] }
+    },
+    {
+      "id": "negocier_trois",
+      "label": "Utiliser l'offre pour faire monter les enchères ailleurs.",
+      "outcome": "Ton agent passe onze coups de fil en deux jours. Deux autres clubs entrent dans la danse.",
+      "resolution": {
+        "pilot": "aura",
+        "pBase": 45,
+        "textSuccess": "Tu pars dans un meilleur club, mieux payé, dans un meilleur projet. Le coup parfait.",
+        "textFailure": "Tout le monde se retire. Tu restes, et la relation avec ton club est abîmée pour de bon.",
+        "onSuccess": { "stats": { "compte": 26, "aura": 16 }, "threads": ["grand_club", "mercenaire"], "threadsResolve": ["contrat_piege"] },
+        "onFailure": { "stats": { "vestiaire": -16, "aura": -6 }, "threads": ["grand_club_rate"], "threadsResolve": ["contrat_piege"] }
+      }
+    },
+    {
+      "id": "exiger_conditions",
+      "label": "Accepter, mais exiger d'être titulaire par écrit.",
+      "outcome": "Ils refusent la clause écrite. Ils promettent oralement. Tu signes quand même, en le sachant.",
+      "effects": { "stats": { "aura": 14, "compte": 16, "mental": -4 }, "threads": ["grand_club", "pari:audace"], "threadsResolve": ["contrat_piege"] }
+    }
+  ]
+}

@@ -1,0 +1,192 @@
+{
+  "id": "fr-football",
+  "locale": "fr",
+  "sportLabel": "football",
+  "career": {
+    "startAge": 14,
+    "retirementMinAge": 33,
+    "noteCap": 96,
+    "retirement": {
+      "minAge": 33,
+      "maxAge": 39,
+      "baseChance": 18,
+      "chancePerYear": 14,
+      "acceleratingThreads": {
+        "carriere_brisee": 45,
+        "carriere_menacee": 25,
+        "reconverti": 60,
+        "reconversion_reportee": 20,
+        "surregime": 12,
+        "chemin_amateur": 30
+      },
+      "delayingThreads": {
+        "professionnel": 10,
+        "cerveau_avant_jambes": 14,
+        "rebond": 8,
+        "confort": 6
+      },
+      "fitnessStat": "physique",
+      "fitnessFloor": 45
+    }
+  },
+  "stats": {
+    "visible": [
+      {
+        "id": "technique",
+        "label": "TECHNIQUE",
+        "start": 40
+      },
+      {
+        "id": "physique",
+        "label": "PHYSIQUE",
+        "start": 40
+      },
+      {
+        "id": "vista",
+        "label": "VISTA",
+        "start": 40
+      },
+      {
+        "id": "mental",
+        "label": "MENTAL",
+        "start": 40
+      },
+      {
+        "id": "aura",
+        "label": "AURA",
+        "start": 20
+      },
+      {
+        "id": "compte",
+        "label": "COMPTE EN BANQUE",
+        "start": 0
+      }
+    ],
+    "hidden": [
+      {
+        "id": "vestiaire",
+        "label": "VESTIAIRE",
+        "start": 50
+      }
+    ],
+    "note": {
+      "label": "NOTE",
+      "weights": {
+        "technique": 1,
+        "physique": 1,
+        "vista": 1,
+        "mental": 1,
+        "aura": 0.5
+      }
+    }
+  },
+  "creation": {
+    "origines": [
+      {
+        "id": "origine:cite",
+        "label": "Cité de banlieue"
+      },
+      {
+        "id": "origine:village",
+        "label": "Village de campagne"
+      },
+      {
+        "id": "origine:formation",
+        "label": "Centre de formation à 13 ans"
+      },
+      {
+        "id": "origine:etranger",
+        "label": "Étranger (Afrique de l'Ouest, Balkans…)"
+      }
+    ],
+    "postes": [
+      {
+        "id": "gardien",
+        "label": "Gardien"
+      },
+      {
+        "id": "defenseur",
+        "label": "Défenseur"
+      },
+      {
+        "id": "milieu",
+        "label": "Milieu"
+      },
+      {
+        "id": "attaquant",
+        "label": "Attaquant"
+      }
+    ],
+    "dons": [
+      {
+        "id": "don:technique",
+        "label": "Technique"
+      },
+      {
+        "id": "don:vitesse",
+        "label": "Vitesse"
+      },
+      {
+        "id": "don:vista",
+        "label": "Vista"
+      },
+      {
+        "id": "don:mental",
+        "label": "Mental"
+      }
+    ]
+  },
+  "legacyTiers": [
+    {
+      "min": 0,
+      "label": "Oublié"
+    },
+    {
+      "min": 60,
+      "label": "Honnête"
+    },
+    {
+      "min": 72,
+      "label": "Solide"
+    },
+    {
+      "min": 80,
+      "label": "Reconnu"
+    },
+    {
+      "min": 86,
+      "label": "Élite"
+    },
+    {
+      "min": 91,
+      "label": "Légende"
+    },
+    {
+      "min": 94,
+      "label": "TOP 25"
+    }
+  ],
+  "acts": {
+    "1": {
+      "label": "Les débuts",
+      "ageRange": [
+        14,
+        18
+      ]
+    },
+    "2": {
+      "label": "La bascule",
+      "ageRange": [
+        18,
+        21
+      ]
+    },
+    "3": {
+      "label": "La carrière",
+      "ageRange": [
+        21,
+        40
+      ]
+    }
+  }
+}

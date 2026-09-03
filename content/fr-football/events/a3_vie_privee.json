@@ -1,0 +1,36 @@
+{
+  "id": "a3_vie_privee",
+  "act": 3,
+  "weight": 60,
+  "category": "offstage",
+  "theme": "vie",
+  "ageWindow": [26, 34],
+  "once": true,
+  "prompt": "Ton premier enfant naît un mercredi, pendant un déplacement européen.\n\nTu l'apprends dans le vestiaire, à la mi-temps, par un membre du staff qui hésite à te le dire maintenant ou après.",
+  "choices": [
+    {
+      "id": "rentrer_immediatement",
+      "label": "Rentrer immédiatement, tant pis pour la deuxième mi-temps.",
+      "outcome": "Tu prends un vol commercial à 23h. Tu la vois à 6h du matin. Le club te met à l'amende.",
+      "effects": { "stats": { "mental": 16, "aura": -8, "compte": -6 }, "threads": ["vie_parallele", "promesse_famille"] }
+    },
+    {
+      "id": "finir_match",
+      "label": "Finir le match, puis rentrer.",
+      "outcome": "Tu joues quarante-cinq minutes sans savoir ce que tu fais. Tu marques. Tu ne célèbres pas.",
+      "effects": { "stats": { "aura": 10, "mental": -6 }, "threads": ["foot_avant_tout", "moment_carte"] }
+    },
+    {
+      "id": "amenager_carriere",
+      "label": "Réorganiser toute ta carrière autour de ta famille.",
+      "outcome": "Tu refuses deux transferts en trois ans pour ne pas déraciner les enfants. Ton agent devient fou.",
+      "effects": { "stats": { "mental": 14, "aura": -10, "vestiaire": 6 }, "threads": ["vie_parallele", "confort"] }
+    },
+    {
+      "id": "separer",
+      "label": "Séparer complètement les deux vies.",
+      "outcome": "Personne au club ne connaît le prénom de tes enfants. Personne à la maison ne parle de football.",
+      "effects": { "stats": { "mental": 10, "technique": 6 }, "threads": ["vie_parallele", "professionnel"] }
+    }
+  ]
+}

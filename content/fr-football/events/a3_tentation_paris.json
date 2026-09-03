@@ -1,0 +1,43 @@
+{
+  "id": "a3_tentation_paris",
+  "act": 3,
+  "weight": 50,
+  "category": "offstage",
+  "theme": "integrite",
+  "ageWindow": [25, 34],
+  "once": true,
+  "prompt": "Un homme que tu ne connais pas te croise deux fois en quinze jours. La deuxième, il connaît le prénom de ta fille.\n\nLa proposition est simple : un carton jaune, à un moment précis, dans un match sans enjeu. Le montant équivaut à deux ans de salaire.",
+  "choices": [
+    {
+      "id": "refuser_signaler",
+      "label": "Refuser et signaler immédiatement.",
+      "outcome": "Tu appelles le club, la ligue et un avocat dans l'heure. La procédure dure deux ans et te coûte des nuits.",
+      "effects": { "stats": { "mental": 14, "aura": 10, "compte": -8 }, "threads": ["integrite:publique", "professionnel"] }
+    },
+    {
+      "id": "refuser_silence_paris",
+      "label": "Refuser sans rien dire à personne.",
+      "outcome": "Tu changes de numéro et de trajet. Il ne revient pas. Tu y penses encore chaque fois que tu prends un carton.",
+      "effects": { "stats": { "mental": 6 }, "threads": ["integrite:silencieuse"] }
+    },
+    {
+      "id": "accepter_paris",
+      "label": "Accepter. Un carton jaune, ce n'est rien.",
+      "outcome": "Tu le prends à la 23e, exactement comme demandé. Personne ne remarque rien. C'est ça le pire.",
+      "effects": { "stats": { "compte": 30, "mental": -14 }, "threads": ["zone_grise", "scandale_imminent"] }
+    },
+    {
+      "id": "menacer",
+      "label": "Le menacer et lui faire comprendre que tu sais qui il est.",
+      "outcome": "Tu bluffes complètement. Ça marche, ou du moins il disparaît.",
+      "resolution": {
+        "pilot": "mental",
+        "pBase": 50,
+        "textSuccess": "Il ne réapparaît jamais. Tu n'as jamais su si c'était grâce à toi.",
+        "textFailure": "La semaine suivante, une photo de ta maison arrive par message. Tu déménages en trois semaines.",
+        "onSuccess": { "stats": { "mental": 12, "aura": 6 }, "threads": ["integrite:silencieuse"] },
+        "onFailure": { "stats": { "mental": -16, "compte": -14 }, "threads": ["zone_grise", "vie_parallele"] }
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "a3_selection_a",
+  "act": 3,
+  "weight": 70,
+  "category": "core",
+  "theme": "selection",
+  "ageWindow": [23, 31],
+  "once": true,
+  "prompt": "Première convocation en sélection A. À vingt-six ans, ce qui est tard, ce que tout le monde souligne.\n\nLe sélectionneur t'annonce en conférence de presse comme « une solution intéressante ». Pas comme un titulaire. Comme une solution.",
+  "choices": [
+    {
+      "id": "accepter_selection",
+      "label": "Y aller et prendre ce qu'on te donne.",
+      "outcome": "Douze minutes contre une équipe de deuxième rang. Tu touches le ballon six fois. Tu ranges le maillot dans une vitrine.",
+      "effects": { "stats": { "aura": 14, "mental": 8 }, "threads": ["international", "selection:assume"] }
+    },
+    {
+      "id": "refuser_selection",
+      "label": "Refuser d'y aller pour un rôle de figurant.",
+      "outcome": "La presse te démolit pendant une semaine. Tu ne seras plus jamais rappelé.",
+      "effects": { "stats": { "aura": -14, "mental": 12 }, "threads": ["intransigeant", "regret_selection"] }
+    },
+    {
+      "id": "tout_donner_selection",
+      "label": "Y aller et transformer douze minutes en évidence.",
+      "outcome": "Tu entres à la 78e à 1-1.",
+      "resolution": {
+        "pilot": "technique",
+        "pBase": 40,
+        "textSuccess": "Passe décisive à la 86e. Tu es titulaire au match suivant et tu ne lâches plus la place.",
+        "textFailure": "Tu forces trois gestes en douze minutes. Le sélectionneur retient l'empressement.",
+        "onSuccess": { "stats": { "aura": 22, "technique": 8 }, "threads": ["international", "generation", "moment_carte"] },
+        "onFailure": { "stats": { "aura": -8 }, "threads": ["selection:assume", "occasion_ratee"] }
+      }
+    },
+    {
+      "id": "selection_famille_pays",
+      "label": "Choisir la sélection du pays de tes parents.",
+      "outcome": "Tu joues pour le pays que tu as quitté à huit ans. Ton père pleure devant la télévision d'un salon à quatre mille kilomètres.",
+      "requires": { "threads": ["origine:etranger"] },
+      "effects": { "stats": { "aura": 16, "mental": 16 }, "threads": ["international", "retour_racines", "heritage_social"] }
+    }
+  ]
+}

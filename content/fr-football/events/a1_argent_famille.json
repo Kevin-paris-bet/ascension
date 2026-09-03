@@ -1,0 +1,43 @@
+{
+  "id": "a1_argent_famille",
+  "act": 1,
+  "weight": 0,
+  "category": "core",
+  "theme": "famille",
+  "ageWindow": [16, 16],
+  "once": true,
+  "prompt": "Ta mère a posé les factures sur la table de la cuisine et elle est sortie fumer.\n\nTu n'as pas seize ans et demi. Tu ne gagnes rien. Mais tu as compris ce que ça voulait dire.\n\nQuand elle revient, tu lui dis quelque chose. Une seule phrase, que tu vas porter vingt ans.",
+  "choices": [
+    {
+      "id": "promesse_maison",
+      "label": "« Je te sortirai d'ici. »",
+      "outcome": "Elle sourit et te dit de faire tes devoirs. Elle n'y croit pas. Toi, si.",
+      "effects": { "stats": { "mental": 12 }, "threads": ["promesse_famille"] }
+    },
+    {
+      "id": "arreter_ecole",
+      "label": "« J'arrête l'école et je prends un boulot le week-end. »",
+      "outcome": "Trois services par week-end dans un entrepôt. Tu t'endors dans le bus de l'équipe.",
+      "effects": { "stats": { "physique": -8, "mental": 10, "compte": 6 }, "threads": ["promesse_famille", "double_front"] }
+    },
+    {
+      "id": "rien_dire",
+      "label": "Ne rien dire. Ranger les factures.",
+      "outcome": "Tu remets la pile en ordre et tu montes dans ta chambre. Vous n'en parlerez plus jamais.",
+      "effects": { "stats": { "mental": 6, "aura": -4 }, "threads": ["solitaire"] }
+    },
+    {
+      "id": "demander_aide",
+      "label": "Demander au club s'il peut aider.",
+      "outcome": "Le président te reçoit dix minutes. Il trouve un arrangement discret. Tu lui devras ça.",
+      "effects": { "stats": { "compte": 10, "vestiaire": 4 }, "threads": ["promesse_famille", "dette_morale"] }
+    },
+    {
+      "id": "promesse_pere",
+      "label": "« Je ne finirai pas comme toi. »",
+      "outcome": "Ton père ne répond pas. Il repose sa fourchette et quitte la table. Ça met onze ans à se réparer.",
+      "requires": { "threads": ["origine:heritier"] },
+      "effects": { "stats": { "mental": 14, "aura": 6 }, "threads": ["promesse_famille", "rupture_pere"] }
+    }
+  ]
+}

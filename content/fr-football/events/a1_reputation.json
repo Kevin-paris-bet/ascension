@@ -1,0 +1,50 @@
+{
+  "id": "a1_reputation",
+  "act": 1,
+  "weight": 0,
+  "category": "core",
+  "theme": "statut",
+  "ageWindow": [18, 18],
+  "once": true,
+  "prompt": "Dernière année de formation. Six joueurs pour deux contrats professionnels.\n\nLe directeur du centre passe dans le vestiaire et dit une phrase qu'il répète tous les ans : « À partir de maintenant, tout compte. Même la façon dont vous rangez vos affaires. »",
+  "choices": [
+    {
+      "id": "irreprochable",
+      "label": "Devenir irréprochable en tout.",
+      "outcome": "Premier arrivé, dernier parti, jamais un mot plus haut que l'autre. Le staff te cite en exemple. Le vestiaire te trouve ennuyeux.",
+      "effects": { "stats": { "mental": 10, "physique": 8, "vestiaire": -4 }, "threads": ["professionnel", "statut:apprenti"] }
+    },
+    {
+      "id": "briller",
+      "label": "Tout miser sur le spectaculaire.",
+      "outcome": "Tu tentes le geste à chaque fois. Quand ça passe, c'est magnifique. Quand ça rate, c'est très visible.",
+      "resolution": {
+        "pilot": "technique",
+        "pBase": 45,
+        "textSuccess": "Trois gestes marquants en deux mois. Le directeur sportif retient ton nom pour la mauvaise raison, mais il le retient.",
+        "textFailure": "On te colle l'étiquette « fantaisiste ». Elle mettra huit ans à partir.",
+        "onSuccess": { "stats": { "aura": 16, "technique": 8 }, "threads": ["mediatique", "moment_carte"] },
+        "onFailure": { "stats": { "aura": -8, "vestiaire": -6 }, "threads": ["statut:apprenti"] }
+      }
+    },
+    {
+      "id": "collectif",
+      "label": "Te rendre indispensable au groupe, pas au staff.",
+      "outcome": "Tu portes les sacs, tu couvres les retards, tu écoutes ceux qui craquent. Ils voteraient tous pour toi.",
+      "effects": { "stats": { "vestiaire": 18, "aura": -4 }, "threads": ["solidaire", "statut:silencieux"] }
+    },
+    {
+      "id": "travail_ombre",
+      "label": "Travailler en silence et laisser parler les matchs.",
+      "outcome": "Tu ne dis rien à personne pendant six mois. Tu marques neuf buts.",
+      "effects": { "stats": { "technique": 10, "mental": 8 }, "threads": ["travailleur", "statut:silencieux"] }
+    },
+    {
+      "id": "reputation_nom",
+      "label": "Te servir du nom de ton père une dernière fois.",
+      "outcome": "Un coup de fil, un déjeuner. Ça marche. Ça marche toujours. C'est bien ça le problème.",
+      "requires": { "threads": ["origine:heritier"] },
+      "effects": { "stats": { "vestiaire": -14, "aura": 8 }, "threads": ["piston_percu", "statut:apprenti"] }
+    }
+  ]
+}

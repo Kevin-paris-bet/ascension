@@ -1,0 +1,45 @@
+{
+  "id": "a3_ennemi",
+  "act": 3,
+  "weight": 85,
+  "category": "offstage",
+  "theme": "media",
+  "ageWindow": [25, 32],
+  "once": true,
+  "requires": { "threads": ["ennemi_nomme"] },
+  "resolvesCallback": "ennemi_nomme",
+  "prompt": "Il est consultant maintenant. Grande chaîne, prime time, deux millions de téléspectateurs le dimanche soir.\n\nDepuis six ans, il ne laisse pas passer un match sans placer une phrase sur toi. Ce soir, il est allé plus loin : il a parlé de ta famille.\n\nTon téléphone n'arrête plus.",
+  "choices": [
+    {
+      "id": "repondre_public",
+      "label": "Répondre publiquement, tout de suite.",
+      "outcome": "Tu écris quatre lignes à 23h47. Elles sont reprises partout en quarante minutes.",
+      "resolution": {
+        "pilot": "aura",
+        "pBase": 50,
+        "textSuccess": "Le ton est juste. L'opinion bascule de ton côté. Il présente des excuses en direct la semaine suivante.",
+        "textFailure": "Tu en fais trop. On retient ta réaction, pas son attaque.",
+        "onSuccess": { "stats": { "aura": 18, "mental": 8 }, "threads": ["boucle_bouclee"], "threadsResolve": ["ennemi_nomme"] },
+        "onFailure": { "stats": { "aura": -12, "mental": -8 }, "threads": ["mediatique"], "threadsResolve": ["ennemi_nomme"] }
+      }
+    },
+    {
+      "id": "avocat_ennemi",
+      "label": "Passer par un avocat.",
+      "outcome": "Mise en demeure, droit de réponse, procédure. C'est long, froid, et ça marche.",
+      "effects": { "stats": { "compte": -12, "mental": 10, "aura": -4 }, "threads": ["professionnel"], "threadsResolve": ["ennemi_nomme"] }
+    },
+    {
+      "id": "silence_ennemi",
+      "label": "Ne rien répondre. Jamais.",
+      "outcome": "Six ans de silence total. À la fin, c'est lui qui a l'air petit, et tout le monde le voit.",
+      "effects": { "stats": { "mental": 14, "aura": 8 }, "threads": ["posture:taiseux", "boucle_bouclee"], "threadsResolve": ["ennemi_nomme"] }
+    },
+    {
+      "id": "inviter",
+      "label": "L'inviter à déjeuner. En privé.",
+      "outcome": "Il accepte, ce qui est déjà une surprise. Il t'explique que ce n'est « pas personnel ». Tu comprends que c'est pire.",
+      "effects": { "stats": { "mental": 12, "vista": 8 }, "threads": ["dialogue", "boucle_bouclee"], "threadsResolve": ["ennemi_nomme"] }
+    }
+  ]
+}
