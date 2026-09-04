@@ -15,6 +15,7 @@ import {
   getClubs,
   getLeague,
   getLeagues,
+  normalizeFootballCareer,
   returnFromLoanIfDue,
   simulateSeason,
   startFootballCareer,
@@ -25,6 +26,7 @@ const leagues = getLeagues();
 const clubs = getClubs();
 assert.equal(leagues.length, 26, "le monde doit proposer 26 championnats");
 assert.equal(clubs.length, 156, "le monde doit proposer 156 clubs");
+assert(leagues.every((league) => league.tableSize === 20), "tous les championnats doivent simuler exactement 20 équipes");
 assert.equal(new Set(leagues.map((league) => league.id)).size, leagues.length, "les ids de championnats doivent être uniques");
 assert.equal(new Set(clubs.map((club) => club.id)).size, clubs.length, "les ids de clubs doivent être uniques");
 const legacyClubIdFingerprint = createHash("sha256").update(clubs.map((club) => club.id).join("\n")).digest("hex");
@@ -83,10 +85,14 @@ const seasonB = simulateSeason(seasonState, started.career, createRng("season-re
 assert.deepEqual(seasonA, seasonB, "une saison doit être reproductible avec la même seed");
 const summary = seasonA.seasons[0];
 assert(summary.appearances >= summary.starts, "les apparitions ne peuvent pas être inférieures aux titularisations");
+assert.equal(summary.tableSize, 20, "un bilan de saison doit toujours afficher un classement sur 20 équipes");
 assert(summary.tableFinish >= 1 && summary.tableFinish <= summary.tableSize, "le classement doit rester dans les bornes");
 assert(summary.averageRating >= 5.2 && summary.averageRating <= 9.4, "la note moyenne doit rester réaliste");
 assert(summary.domesticCup.appearances >= 1, "la coupe nationale doit être simulée");
 assert(Array.isArray(summary.individualAwards), "les distinctions individuelles doivent être calculées");
+const migratedCareer = normalizeFootballCareer({ ...seasonA, seasons: [{ ...summary, tableFinish: 5, tableSize: 6 }] }, "mali");
+assert.equal(migratedCareer.seasons[0].tableSize, 20, "une ancienne sauvegarde à 6 clubs doit migrer vers 20 équipes");
+assert.equal(migratedCareer.seasons[0].tableFinish, 16, "le rang d'une ancienne sauvegarde doit être recalibré proportionnellement");
 
 const callUpState = { ...seasonState, stats: { technique: 82, physique: 80, vista: 84, mental: 82, aura: 75, vestiaire: 70 } };
 const eligibleCareer = {
@@ -134,4 +140,4 @@ const returned = returnFromLoanIfDue({ ...seasonState, season: seasonState.seaso
 assert(returned.returned, "le joueur doit revenir automatiquement après son prêt");
 assert.equal(returned.career.currentClubId, started.career.currentClubId);
 
-console.log(`  ✓ football : ${leagues.length} championnats, ${clubs.length} clubs, ${displayedFlagCodes.size} drapeaux SVG, saisons et mercato déterministes`);
+console.log(`  ✓ football : ${leagues.length} championnats à 20 équipes, ${clubs.length} clubs majeurs, ${displayedFlagCodes.size} drapeaux SVG, saisons et mercato déterministes`);

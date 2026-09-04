@@ -151,42 +151,61 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .full-button { width: 100%; margin-top: 7px; }
 
 .dossier-column { display: grid; gap: 9px; align-content: start; }
-.player-dossier { overflow: hidden; border: 1px solid rgba(255,255,255,.52); border-radius: 25px; background: var(--paper); }
-.dossier-head { display: grid; grid-template-columns: 84px minmax(0,1fr) 67px; align-items: center; gap: 11px; padding: 18px 16px 12px; }
-.dossier-avatar { width: 84px; height: 94px; }
+.player-dossier { position: relative; isolation: isolate; overflow: hidden; border: 1px solid rgba(239,209,109,.48); border-radius: 28px; background: linear-gradient(156deg,#0b2925 0%,#071b1b 48%,#071316 100%); color: #fff; box-shadow: 0 28px 70px rgba(0,24,19,.38), inset 0 1px rgba(255,255,255,.08); }
+.player-dossier::after { position: absolute; z-index: -1; inset: 0; background-image: linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px); background-size: 34px 34px; content: ""; mask-image: linear-gradient(to bottom,#000,transparent 58%); }
+.dossier-glow { position: absolute; z-index: -1; top: -105px; left: -72px; width: 290px; height: 290px; border-radius: 50%; background: radial-gradient(circle,rgba(20,174,119,.38),rgba(20,174,119,0) 68%); }
+.dossier-topline { display: flex; align-items: center; justify-content: space-between; gap: 8px; border-bottom: 1px solid rgba(255,255,255,.09); color: rgba(255,255,255,.46); padding: 12px 16px 10px; font-size: 7px; font-weight: 900; letter-spacing: .18em; }
+.dossier-topline em { border: 1px solid rgba(95,221,166,.3); border-radius: 999px; background: rgba(45,190,126,.09); color: #77d9ad; padding: 4px 7px; font-style: normal; letter-spacing: .1em; }
+.dossier-head { display: grid; grid-template-columns: 104px minmax(0,1fr) 66px; align-items: center; gap: 12px; padding: 16px; }
+.dossier-avatar { width: 104px; height: 116px; filter: drop-shadow(0 12px 16px rgba(0,0,0,.3)); }
 .dossier-identity { min-width: 0; }
-.dossier-kicker { color: var(--muted); font-size: 8px; font-weight: 900; letter-spacing: .13em; }
-.dossier-identity h2 { overflow: hidden; margin: 5px 0 2px; font-family: var(--font-display),sans-serif; font-size: 24px; line-height: 1; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
-.dossier-identity p { margin: 0; color: var(--muted); font-size: 11px; }
-.rating-badge { display: grid; width: 67px; height: 72px; place-items: center; align-content: center; border-radius: 17px; background: linear-gradient(145deg,#f2d675,#c99a28); color: #553f0d; }
-.rating-badge span { font-size: 8px; font-weight: 900; letter-spacing: .08em; }
-.rating-badge strong { font-family: var(--font-display),sans-serif; font-size: 33px; line-height: 1; }
-.dossier-tags { display: flex; flex-wrap: wrap; gap: 7px; padding: 0 16px 13px; }
-.dossier-tags span, .talent-chip { border: 1px solid #bdc9c2; border-radius: 999px; background: #fff; color: #365248; padding: 6px 10px; font-size: 10px; font-weight: 800; }
-.club-line { display: flex; align-items: center; justify-content: space-between; gap: 10px; border-top: 1px solid var(--line); padding: 13px 16px 9px; color: var(--muted); font-size: 10px; }
-.club-line strong { color: var(--text); }
+.dossier-kicker { color: #e9c968; font-size: 7px; font-weight: 900; letter-spacing: .18em; }
+.dossier-identity h2 { overflow: hidden; margin: 7px 0 6px; font-family: var(--font-display),sans-serif; font-size: 27px; line-height: .94; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+.dossier-identity p { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 7px; margin: 0; color: rgba(255,255,255,.62); font-size: 9px; }
+.dossier-identity p strong { color: #fff; font-size: 12px; }
+.dossier-identity p span + span::before { margin-right: 7px; color: rgba(255,255,255,.22); content: "·"; }
+.rating-badge { display: grid; width: 66px; height: 78px; place-items: center; align-content: center; border: 1px solid rgba(255,238,175,.54); border-radius: 19px; background: linear-gradient(145deg,#f9e49c 0%,#c89522 75%); color: #2e280f; box-shadow: 0 12px 30px rgba(199,151,31,.22), inset 0 1px 1px rgba(255,255,255,.75); }
+.rating-badge span { font-size: 7px; font-weight: 950; letter-spacing: .12em; }
+.rating-badge strong { font-family: var(--font-display),sans-serif; font-size: 36px; line-height: .9; }
+.rating-badge small { font-size: 6px; font-weight: 900; opacity: .58; }
+.dossier-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+.dossier-tags span { border: 1px solid rgba(255,255,255,.12); border-radius: 999px; background: rgba(255,255,255,.06); color: rgba(255,255,255,.75); padding: 5px 7px; font-size: 7px; font-weight: 800; }
+.dossier-club-panel { margin: 0 14px 12px; overflow: hidden; border: 1px solid rgba(255,255,255,.1); border-radius: 17px; background: rgba(255,255,255,.055); }
+.club-line { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px; color: rgba(255,255,255,.58); font-size: 9px; }
+.club-line strong { color: #fff; }
 .club-line-rich { justify-content: initial; }
-.club-line-rich > span:nth-child(2) { display: grid; min-width: 0; margin-right: auto; }
-.club-line-rich > span:nth-child(2) strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.club-line-rich small { margin-top: 2px; color: var(--muted); font-size: 8px; }
-.contract-line { display: flex; justify-content: space-between; gap: 7px; padding: 0 16px 11px; color: var(--muted); font-size: 8px; font-weight: 750; }
-.international-line { display: grid; grid-template-columns: 32px minmax(0,1fr) auto; align-items: center; gap: 8px; margin: 0 16px 12px; border: 1px solid var(--line); border-radius: 12px; background: #fff; padding: 8px 10px; }
-.international-line.active { border-color: #d7b94e; background: #fffaf0; }
+.club-line-rich > span:nth-child(2), .club-line-rich > span:first-child:last-of-type { display: grid; min-width: 0; margin-right: auto; }
+.club-line-rich > span:nth-child(2) strong, .club-line-rich > span:first-child:last-of-type strong { overflow: hidden; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.club-line-rich small { color: #e9c968; font-size: 6px; font-weight: 900; letter-spacing: .12em; }
+.club-line-rich em { overflow: hidden; margin-top: 2px; color: rgba(255,255,255,.48); font-size: 7px; font-style: normal; text-overflow: ellipsis; white-space: nowrap; }
+.season-chip { border: 1px solid rgba(255,255,255,.12); border-radius: 8px; background: rgba(255,255,255,.07); padding: 6px 7px; font-size: 8px; }
+.contract-line { display: flex; justify-content: space-between; gap: 7px; border-top: 1px solid rgba(255,255,255,.08); color: rgba(255,255,255,.5); padding: 8px 12px 9px; font-size: 7px; font-weight: 750; }
+.dossier-highlights { display: grid; grid-template-columns: repeat(4,1fr); margin: 0 14px 13px; overflow: hidden; border: 1px solid rgba(255,255,255,.09); border-radius: 15px; background: rgba(1,9,10,.22); }
+.dossier-highlights div { min-width: 0; border-right: 1px solid rgba(255,255,255,.08); padding: 10px 7px; }
+.dossier-highlights div:last-child { border: 0; }
+.dossier-highlights small { display: block; overflow: hidden; color: rgba(255,255,255,.39); font-size: 5px; font-weight: 900; letter-spacing: .07em; text-overflow: ellipsis; white-space: nowrap; }
+.dossier-highlights strong { display: block; overflow: hidden; margin-top: 4px; color: #f4d779; font-family: var(--font-display),sans-serif; font-size: 17px; text-overflow: ellipsis; white-space: nowrap; }
+.international-line { display: grid; grid-template-columns: 32px minmax(0,1fr) auto; align-items: center; gap: 8px; margin: 0 14px 13px; border: 1px solid rgba(255,255,255,.1); border-radius: 13px; background: rgba(255,255,255,.045); padding: 8px 10px; }
+.international-line.active { border-color: rgba(226,188,74,.52); background: rgba(201,154,40,.09); }
 .international-flag { width: 27px; height: 20px; }
 .international-line > span:nth-child(2) { display: grid; gap: 2px; }
-.international-line small { color: var(--muted); font-size: 7px; font-weight: 850; text-transform: uppercase; }
-.international-line strong { overflow: hidden; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
-.international-line em { border-radius: 99px; background: var(--gold); color: #fff; padding: 4px 6px; font-size: 7px; font-style: normal; font-weight: 900; }
-.career-progress { height: 7px; margin: 0 16px 18px; overflow: hidden; border-radius: 99px; background: #dfe4df; }
-.career-progress span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg,var(--gold),#f2d675,var(--pitch)); }
-.dossier-section-title { margin: 0 16px 9px; text-align: center; font-size: 12px; font-weight: 900; }
-.dossier-stats { display: grid; grid-template-columns: repeat(3,1fr); border-block: 1px solid var(--line); padding: 12px 16px; }
-.dossier-stats div { border-right: 1px solid var(--line); padding: 6px 8px; }
-.dossier-stats div:nth-child(3n) { border-right: 0; }
-.dossier-stats span { display: block; color: var(--muted); font-size: 8px; }
-.dossier-stats strong { display: block; margin-top: 2px; color: var(--pitch); font-size: 17px; }
-.talent-chip { width: max-content; max-width: calc(100% - 32px); margin: 15px auto; border-color: #b59add; background: #f7f0ff; color: #7452a9; }
-.dossier-foot { display: flex; justify-content: space-between; gap: 8px; background: var(--paper-2); color: var(--muted); padding: 11px 16px; font-size: 8px; }
+.international-line small { color: rgba(255,255,255,.39); font-size: 6px; font-weight: 850; }
+.international-line strong { overflow: hidden; color: rgba(255,255,255,.84); font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
+.international-line em { border-radius: 99px; background: #d1a32e; color: #1d210e; padding: 4px 6px; font-size: 6px; font-style: normal; font-weight: 950; }
+.dossier-attributes-head, .career-progress-copy { display: flex; align-items: center; justify-content: space-between; margin: 0 16px 8px; color: rgba(255,255,255,.4); font-size: 6px; font-weight: 900; letter-spacing: .14em; }
+.dossier-attributes-head strong { color: #e9c968; font-size: 7px; letter-spacing: .04em; }
+.dossier-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 9px 13px; padding: 0 16px 15px; }
+.dossier-stats div { display: grid; gap: 5px; }
+.dossier-stats div > span { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.dossier-stats small { color: rgba(255,255,255,.52); font-size: 7px; }
+.dossier-stats strong { color: #fff; font-size: 10px; }
+.dossier-stats i { display: block; height: 4px; overflow: hidden; border-radius: 99px; background: rgba(255,255,255,.09); }
+.dossier-stats b { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg,#0ca06b,#6dd4a6 64%,#f0d16e); }
+.career-progress-copy { margin-bottom: 6px; }
+.career-progress-copy strong { color: #e9c968; font-size: 7px; }
+.career-progress { height: 5px; margin: 0 16px 16px; overflow: hidden; border-radius: 99px; background: rgba(255,255,255,.09); }
+.career-progress span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg,#c89522,#f6dc8b,#20b879); box-shadow: 0 0 12px rgba(75,211,151,.35); }
+.dossier-foot { display: flex; justify-content: space-between; gap: 8px; border-top: 1px solid rgba(255,255,255,.08); background: rgba(0,0,0,.16); color: rgba(255,255,255,.43); padding: 11px 16px; font-size: 6px; font-weight: 850; letter-spacing: .08em; }
 .save-status { margin: 0; color: rgba(255,255,255,.78); font-size: 10px; text-align: center; }
 
 .auth-wrap { display: grid; min-height: calc(100dvh - 100px); place-items: center; }
@@ -265,6 +284,7 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .dossier-country { display: inline-flex !important; align-items: center; gap: 5px; }
 .league-board-head { display: flex; align-items: end; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line); padding: 20px 22px; }
 .league-board-head h2 { margin: 0; font-family: var(--font-display),sans-serif; font-size: 29px; text-transform: uppercase; }
+.league-board-head div > small { display: block; margin-top: 5px; color: var(--muted); font-size: 8px; font-weight: 750; }
 .league-board-head > span { color: var(--muted); font-size: 9px; font-weight: 850; text-transform: uppercase; }
 .club-table { display: grid; }
 .club-table > div { display: grid; grid-template-columns: 28px 40px minmax(0,1fr) 50px; align-items: center; gap: 11px; border-bottom: 1px solid var(--line); padding: 11px 22px; }
@@ -290,11 +310,8 @@ button:disabled { cursor: not-allowed; opacity: .55; }
   .app-nav { order: 3; width: 100%; }
   .app-nav button { flex: 1; }
   .dossier-column { order: -1; }
-  .player-dossier { border-radius: 22px; }
-  .dossier-stats { grid-template-columns: repeat(6,1fr); overflow: auto; }
-  .dossier-stats div { min-width: 55px; border-right: 1px solid var(--line) !important; }
-  .dossier-stats div:last-child { border-right: 0 !important; }
-  .dossier-foot, .talent-chip, .dossier-section-title { display: none; }
+  .player-dossier { border-radius: 24px; }
+  .dossier-foot { display: none; }
   .career-progress { margin-bottom: 12px; }
   .library-heading { align-items: start; flex-direction: column; }
   .library-tools { grid-template-columns: 1fr 1fr; }
@@ -318,11 +335,15 @@ button:disabled { cursor: not-allowed; opacity: .55; }
   .league-board-head, .club-table > div { padding-inline: 15px; }
 }
 @media (max-width: 420px) {
-  .dossier-head { grid-template-columns: 70px minmax(0,1fr) 60px; padding-inline: 12px; }
-  .dossier-avatar { width: 70px; height: 78px; }
-  .dossier-identity h2 { font-size: 21px; }
-  .rating-badge { width: 60px; height: 64px; }
-  .rating-badge strong { font-size: 29px; }
+  .dossier-topline { padding-inline: 12px; }
+  .dossier-head { grid-template-columns: 84px minmax(0,1fr) 58px; gap: 9px; padding-inline: 12px; }
+  .dossier-avatar { width: 84px; height: 94px; }
+  .dossier-identity h2 { font-size: 22px; }
+  .rating-badge { width: 58px; height: 69px; border-radius: 16px; }
+  .rating-badge strong { font-size: 30px; }
+  .dossier-club-panel, .dossier-highlights, .international-line { margin-inline: 11px; }
+  .dossier-stats { padding-inline: 13px; }
+  .dossier-attributes-head, .career-progress-copy, .career-progress { margin-inline: 13px; }
   .stage-content { padding-inline: 18px; }
   .season-hero { grid-template-columns: 68px minmax(0,1fr) 55px; gap: 10px; }
   .club-crest.large { width: 66px; height: 74px; font-size: 17px; }

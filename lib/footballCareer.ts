@@ -14,6 +14,7 @@ export type League = {
   flag: string;
   flagCode: string;
   tier: number;
+  tableSize: number;
 };
 
 export type Club = {
@@ -146,7 +147,7 @@ type RawClub = {
   name: string;
 };
 
-type RawLeague = League & { strengthBase: number; clubs: RawClub[] };
+type RawLeague = Omit<League, "flagCode" | "tableSize"> & { strengthBase: number; clubs: RawClub[] };
 
 const CLUB_PALETTES: Array<[string, string]> = [
   ["#173f8a", "#e4b83f"], ["#aa1f32", "#ffffff"], ["#0c6f52", "#f1d05c"],
@@ -155,6 +156,7 @@ const CLUB_PALETTES: Array<[string, string]> = [
   ["#7d152a", "#e7ae32"], ["#245139", "#ffffff"], ["#3d3d3d", "#cfb04d"],
 ];
 const STRENGTH_DROPS = [0, 3, 7, 11, 16, 21];
+const STANDARD_LEAGUE_SIZE = 20;
 
 function shortName(value: string): string {
   const words = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").split(/\s+/).filter(Boolean);
@@ -163,7 +165,7 @@ function shortName(value: string): string {
 
 const rawLeagues = worldData.leagues as RawLeague[];
 const world: { leagues: League[]; clubs: Club[] } = {
-  leagues: rawLeagues.map((league) => ({ id: league.id, name: league.name, country: league.country, flag: league.flag, flagCode: getCountryFlagCode(league.country), tier: league.tier })),
+  leagues: rawLeagues.map((league) => ({ id: league.id, name: league.name, country: league.country, flag: league.flag, flagCode: getCountryFlagCode(league.country), tier: league.tier, tableSize: STANDARD_LEAGUE_SIZE })),
   clubs: rawLeagues.flatMap((league, leagueIndex) => league.clubs.map((rawClub, clubIndex) => {
     const strength = Math.max(48, league.strengthBase - (STRENGTH_DROPS[clubIndex] ?? clubIndex * 4));
     return {
@@ -410,10 +412,11 @@ export function simulateSeason(state: CareerState, career: FootballCareer, rng: 
   const averageRating = Number(Math.max(5.2, Math.min(9.4, 6.1 + (overall - 55) / 36 + (rng.next() - 0.5) * 0.8)).toFixed(1));
 
   const sortedStrength = [...tableClubs].sort((a, b) => b.strength - a.strength);
-  const expected = Math.max(1, sortedStrength.findIndex((item) => item.id === club.id) + 1);
-  const playerLift = Math.round((overall - club.strength) / 9);
-  const tableFinish = Math.max(1, Math.min(tableClubs.length, expected - playerLift + rng.int(-1, 1)));
-  const objective = objectiveFor(club, tableClubs.length);
+  const representativeRank = Math.max(0, sortedStrength.findIndex((item) => item.id === club.id));
+  const expected = 1 + Math.round((representativeRank / Math.max(1, sortedStrength.length - 1)) * (activeLeague.tableSize - 1));
+  const playerLift = Math.round((overall - club.strength) / 6);
+  const tableFinish = Math.max(1, Math.min(activeLeague.tableSize, expected - playerLift + rng.int(-2, 2)));
+  const objective = objectiveFor(club, activeLeague.tableSize);
   const domesticCup = simulateCup(state, club, activeLeague, rng, "domestic_cup");
   const previousSeason = career.seasons.at(-1);
   const qualifiedForContinent = activeLeague.tier === 1 && (previousSeason
@@ -433,10 +436,10 @@ export function simulateSeason(state: CareerState, career: FootballCareer, rng: 
 
   let nextLeagueId = activeLeagueId;
   let divisionChange: SeasonSummary["divisionChange"];
-  if (activeLeague.tier === 2 && tableFinish === 1) {
+  if (activeLeague.tier === 2 && tableFinish <= 3) {
     const promotedLeague = world.leagues.find((league) => league.country === activeLeague.country && league.tier === 1);
     if (promotedLeague) { nextLeagueId = promotedLeague.id; divisionChange = "promotion"; trophies.push(`Promotion en ${promotedLeague.name}`); }
-  } else if (activeLeague.tier === 1 && tableFinish === tableClubs.length) {
+  } else if (activeLeague.tier === 1 && tableFinish >= activeLeague.tableSize - 2) {
     const relegatedLeague = world.leagues.find((league) => league.country === activeLeague.country && league.tier === 2);
     if (relegatedLeague) { nextLeagueId = relegatedLeague.id; divisionChange = "relegation"; }
   }
@@ -462,7 +465,7 @@ export function simulateSeason(state: CareerState, career: FootballCareer, rng: 
     cleanSheets,
     averageRating,
     tableFinish,
-    tableSize: leagueClubs.length,
+    tableSize: activeLeague.tableSize,
     objective: objective.label,
     objectiveMet: tableFinish <= objective.maxFinish,
     trophies,
@@ -491,20 +494,29 @@ export function shouldOpenTransferWindow(state: CareerState, career: FootballCar
 }
 
 export function normalizeFootballCareer(career: FootballCareer, nationalTeamId: string): FootballCareer {
-  const seasons = career.seasons.map((season) => ({
-    ...season,
-    cleanSheets: season.cleanSheets ?? 0,
-    individualAwards: season.individualAwards ?? [],
-    domesticCup: season.domesticCup ?? {
-      name: `Coupe de ${getLeague(season.leagueId).country}`,
-      type: "domestic_cup" as const,
-      stage: "Non disputée",
-      appearances: 0,
-      goals: 0,
-      assists: 0,
-      won: false,
-    },
-  }));
+  const seasons = career.seasons.map((season) => {
+    const tableSize = getLeague(season.leagueId).tableSize;
+    const previousSize = Math.max(2, season.tableSize ?? 6);
+    const tableFinish = previousSize === tableSize
+      ? Math.max(1, Math.min(tableSize, season.tableFinish))
+      : 1 + Math.round(((Math.max(1, season.tableFinish) - 1) / (previousSize - 1)) * (tableSize - 1));
+    return {
+      ...season,
+      tableFinish,
+      tableSize,
+      cleanSheets: season.cleanSheets ?? 0,
+      individualAwards: season.individualAwards ?? [],
+      domesticCup: season.domesticCup ?? {
+        name: `Coupe de ${getLeague(season.leagueId).country}`,
+        type: "domestic_cup" as const,
+        stage: "Non disputée",
+        appearances: 0,
+        goals: 0,
+        assists: 0,
+        won: false,
+      },
+    };
+  });
   return {
     ...career,
     seasons,

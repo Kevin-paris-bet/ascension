@@ -4,7 +4,7 @@ Audit réalisé le 4 septembre 2026 à partir du jeu public Destiny Eleven et de
 
 ## Ce que le socle Ascension couvre maintenant
 
-- 26 championnats, 21 pays, 156 clubs aux noms réels et 34 sélections nationales ; les écussons restent des créations Ascension.
+- 26 championnats, 21 pays, classements standardisés à 20 équipes, 156 clubs majeurs aux noms réels et 34 sélections nationales ; les écussons restent des créations Ascension.
 - Nationalité choisie séparément du pays du club.
 - Convocation A conditionnée par le niveau, le temps de jeu et la note moyenne.
 - Refus temporaire : délai explicite, puis nouvelle convocation possible si le niveau reste suffisant.

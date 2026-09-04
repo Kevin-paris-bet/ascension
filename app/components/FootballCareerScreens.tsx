@@ -91,7 +91,7 @@ export function SeasonReview({ summary, onContinue }: { summary: SeasonSummary; 
       {summary.cleanSheets > 0 && <SeasonStat value={summary.cleanSheets} label="Clean sheets" />}
     </div>
     <div className="season-objective">
-      <div><span>Championnat</span><strong>{summary.tableFinish}<sup>e</sup> / {summary.tableSize}</strong></div>
+      <div><span>Championnat · 20 équipes</span><strong>{summary.tableFinish}<sup>e</sup> / {summary.tableSize}</strong></div>
       <div><span>Objectif du club</span><strong className={summary.objectiveMet ? "success-text" : "danger-text"}>{summary.objectiveMet ? "Atteint" : "Manqué"}</strong><small>{summary.objective}</small></div>
     </div>
     <div className="competition-grid">
@@ -131,7 +131,7 @@ export function FootballWorld({ currentClubId, onPlay }: { currentClubId?: strin
 
   return <section className="world-page">
     <header className="world-heading">
-      <div><p className="eyebrow">Le monde d’Ascension</p><h1 className="display-title">Clubs &<br />sélections.</h1><p>{leagues.length} compétitions · {countryCount} pays · {clubs.length} clubs · {getNationalTeams().length} sélections</p></div>
+      <div><p className="eyebrow">Le monde d’Ascension</p><h1 className="display-title">Clubs &<br />sélections.</h1><p>{leagues.length} compétitions · {countryCount} pays · 20 équipes par championnat · {getNationalTeams().length} sélections</p></div>
       <button className="primary-button" onClick={onPlay}>Reprendre ma carrière</button>
     </header>
     <div className="world-tabs"><button className={worldView === "clubs" ? "active" : ""} onClick={() => setWorldView("clubs")}>Championnats & clubs</button><button className={worldView === "nations" ? "active" : ""} onClick={() => setWorldView("nations")}>Sélections nationales</button></div>
@@ -139,7 +139,7 @@ export function FootballWorld({ currentClubId, onPlay }: { currentClubId?: strin
       {leagues.map((league) => <button key={league.id} className={selectedLeagueId === league.id ? "active" : ""} onClick={() => setSelectedLeagueId(league.id)}><CountryFlag code={league.flagCode} label={league.country} className="league-country-flag" /><strong>{league.name}</strong><small>{league.country} · D{league.tier}</small></button>)}
     </div>
     <article className="league-board">
-      <div className="league-board-head"><div><p className="eyebrow"><CountryFlag code={selectedLeague.flagCode} label={selectedLeague.country} className="inline-country-flag" /> {selectedLeague.country}</p><h2>{selectedLeague.name}</h2></div><span>Indice club</span></div>
+      <div className="league-board-head"><div><p className="eyebrow"><CountryFlag code={selectedLeague.flagCode} label={selectedLeague.country} className="inline-country-flag" /> {selectedLeague.country}</p><h2>{selectedLeague.name}</h2><small>{selectedLeague.tableSize} équipes simulées · clubs majeurs détaillés</small></div><span>Indice club</span></div>
       <div className="club-table">
         {leagueClubs.map((club, index) => <div className={club.id === currentClubId ? "current" : ""} key={club.id}>
           <span className="table-rank">{index + 1}</span><ClubCrest clubId={club.id} size="small" /><span className="table-club"><strong>{club.name}</strong><small>{club.id === currentClubId ? "Ton club actuel" : `Prestige ${club.prestige}`}</small></span><strong className="strength-score">{club.strength}</strong>

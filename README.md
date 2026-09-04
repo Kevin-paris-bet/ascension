@@ -1,7 +1,7 @@
 # Ascension
 
 Simulateur de carrière sportive narratif, mobile-first. Moteur agnostique + pack `fr-football`.
-52 événements, 230 branches, 8 callbacks, 26 championnats, 156 clubs, 34 sélections nationales, sauvegarde Supabase et carte de partage 4:5.
+52 événements, 230 branches, 8 callbacks, 26 championnats à 20 équipes, 156 clubs majeurs, 34 sélections nationales, sauvegarde Supabase et carte de partage 4:5.
 
 ## Installation
 
@@ -59,7 +59,7 @@ dans l'environnement **Preview** pour activer la connexion par lien e-mail.
 
 - Connexion par lien e-mail et consentement marketing séparé
 - Sauvegarde locale + cloud d'une carrière en cours
-- Monde football : 26 championnats dans 21 pays et 156 clubs aux noms réels
+- Monde football : 26 championnats dans 21 pays, tous simulés sur 20 équipes, et 156 clubs majeurs aux noms réels
 - Choix parmi 34 nationalités et carrière internationale réellement simulée
 - Choix parmi trois centres de formation au début de la carrière
 - Bilan saisonnier : championnat, coupe nationale, coupe continentale, matchs, clean sheets, note, objectif, trophées, distinctions et valeur

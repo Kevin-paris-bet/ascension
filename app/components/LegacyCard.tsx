@@ -29,21 +29,26 @@ function wrap(text: string, maxChars: number, maxLines: number): string[] {
 function fitName(raw: string): { value: string; size: number } {
   const full = raw.trim().toUpperCase().replace(/\s+/g, " ") || "SANS NOM";
   const parts = full.split(" ");
-  const abbreviated = full.length > 16 && parts.length > 1
+  const abbreviated = full.length > 18 && parts.length > 1
     ? `${parts.slice(0, -1).map((part) => `${part[0]}.`).join("")} ${parts.at(-1)}`
     : full;
-  const value = abbreviated.length > 18 ? `${abbreviated.slice(0, 17)}…` : abbreviated;
-  return { value, size: Math.max(40, Math.min(62, Math.floor(610 / value.length))) };
+  const value = abbreviated.length > 20 ? `${abbreviated.slice(0, 19)}…` : abbreviated;
+  return { value, size: Math.max(39, Math.min(63, Math.floor(650 / value.length))) };
+}
+
+function fitLine(raw: string, max = 31): string {
+  const clean = raw.trim();
+  return clean.length > max ? `${clean.slice(0, max - 1)}…` : clean;
 }
 
 type Props = { data: LegacyCardData; id?: string };
 
-/** Carte sociale 4:5 : lisible dans un feed et exportable sans police externe. */
+/** Carte sociale 4:5, pensée comme un objet de collection premium. */
 export function LegacyCard({ data, id = "legacy-card" }: Props) {
   const name = fitName(data.name);
-  const lastClub = data.lastClub && data.lastClub.length > 18 ? `${data.lastClub.slice(0, 17)}…` : data.lastClub;
-  const quote = wrap(data.quote, 52, 3);
-  const honours = data.honours.length > 0 ? data.honours.slice(0, 3) : ["AUCUN TROPHÉE MAJEUR"];
+  const lastClub = data.lastClub ? fitLine(data.lastClub, 28) : "Libre";
+  const quote = wrap(data.quote, 48, 2);
+  const honours = data.honours.length > 0 ? data.honours.slice(0, 3).map((honour) => fitLine(honour)) : ["Aucun trophée majeur"];
   const stats: Array<[number, string]> = data.position === "Gardien"
     ? [[data.matches, "MATCHS"], [data.cleanSheets, "CLEAN SHEETS"], [data.caps, "SÉLECTIONS"], [data.seasons, "SAISONS"]]
     : [[data.matches, "MATCHS"], [data.goals, "BUTS"], [data.assists, "PASSES D."], [data.caps, "SÉLECTIONS"]];
@@ -51,49 +56,84 @@ export function LegacyCard({ data, id = "legacy-card" }: Props) {
   return (
     <svg id={id} viewBox={`0 0 ${CARD_WIDTH} ${CARD_HEIGHT}`} xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "auto", display: "block", borderRadius: 22 }}>
       <defs>
-        <linearGradient id="social-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#07583f" /><stop offset="1" stopColor="#0b8a5a" /></linearGradient>
-        <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#f6dc8b" /><stop offset="1" stopColor="#c99a28" /></linearGradient>
+        <linearGradient id="legacy-bg" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#0d4f40" /><stop offset=".42" stopColor="#061f1d" /><stop offset="1" stopColor="#030d11" /></linearGradient>
+        <linearGradient id="legacy-panel" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#102c2a" /><stop offset="1" stopColor="#071719" /></linearGradient>
+        <linearGradient id="legacy-gold" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#fff0b1" /><stop offset=".42" stopColor="#e5bd53" /><stop offset="1" stopColor="#a66f12" /></linearGradient>
+        <radialGradient id="legacy-light" cx="30%" cy="12%" r="72%"><stop stopColor="#2fb881" stopOpacity=".4" /><stop offset="1" stopColor="#2fb881" stopOpacity="0" /></radialGradient>
+        <filter id="legacy-shadow" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="18" stdDeviation="22" floodColor="#000" floodOpacity=".52" /></filter>
+        <pattern id="legacy-grid" width="46" height="46" patternUnits="userSpaceOnUse"><path d="M46 0H0v46" fill="none" stroke="#fff" strokeOpacity=".025" /></pattern>
       </defs>
-      <rect width="1080" height="1350" fill="url(#social-bg)" />
-      <path d="M0 300 1080 0v190L0 495Z" fill="#0b694a" opacity=".7" />
-      <path d="M0 1110 1080 805v210L0 1320Z" fill="#064a36" opacity=".55" />
-      <circle cx="950" cy="245" r="250" fill="none" stroke="#ffffff" strokeOpacity=".06" strokeWidth="70" />
 
-      <text x="62" y="70" fill="#fff" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="30" letterSpacing="8">ASCENSION</text>
-      <text x="1018" y="70" textAnchor="end" fill="#b8ddcd" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="21" letterSpacing="3">CARTE DE LÉGENDE</text>
+      <rect width="1080" height="1350" fill="url(#legacy-bg)" />
+      <rect width="1080" height="1350" fill="url(#legacy-light)" />
+      <rect width="1080" height="1350" fill="url(#legacy-grid)" />
+      <path d="M-80 350 1160 10M-80 1300l1240-340" fill="none" stroke="#efcc69" strokeOpacity=".1" strokeWidth="170" />
+      <path d="M540 1350V1040M90 1280h900M245 1280c0-128 590-128 590 0" fill="none" stroke="#fff" strokeOpacity=".045" strokeWidth="3" />
+      <ellipse cx="540" cy="1270" rx="500" ry="220" fill="none" stroke="#fff" strokeOpacity=".035" strokeWidth="70" />
 
-      <rect x="50" y="105" width="980" height="1090" rx="44" fill="#fbfaf4" />
-      <PlayerAvatar seed={data.seed || data.name} x="84" y="150" width="220" height="244" />
-      <text x="335" y="205" fill="#66736d" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="24" letterSpacing="3">FIN DE CARRIÈRE</text>
-      <text x="335" y="278" fill="#17382d" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize={name.size}>{name.value}</text>
-      <text x="335" y="328" fill="#6d7973" fontFamily="Arial, Helvetica, sans-serif" fontSize="26">#{data.number}  ·  {data.position}{data.nationality ? `  ·  ${data.nationality}` : ""}</text>
-      {lastClub ? <text x="335" y="362" fill="#8a948f" fontFamily="Arial, Helvetica, sans-serif" fontSize="21">Dernier club · {lastClub}</text> : null}
-      {data.nickname ? <text x="335" y="397" fill="#8d6a12" fontFamily="Georgia, serif" fontStyle="italic" fontWeight="700" fontSize="27">« {data.nickname} »</text> : null}
+      <g filter="url(#legacy-shadow)">
+        <rect x="42" y="38" width="996" height="1274" rx="46" fill="url(#legacy-panel)" stroke="#d9ae45" strokeOpacity=".55" strokeWidth="2" />
+      </g>
+      <path d="M87 39h350L365 54H87c-18 0-32 13-32 31v1040" fill="none" stroke="#fff2b5" strokeOpacity=".85" strokeWidth="4" />
+      <path d="M993 1311H700l70-15h223c17 0 31-13 31-30V230" fill="none" stroke="#9a6918" strokeOpacity=".7" strokeWidth="4" />
 
-      <rect x="842" y="154" width="140" height="140" rx="30" fill="url(#gold)" />
-      <text x="912" y="195" textAnchor="middle" fill="#604810" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="18" letterSpacing="2">NOTE</text>
-      <text x="912" y="263" textAnchor="middle" fill="#17382d" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="70">{data.note}</text>
+      <g transform="translate(76 73)">
+        <rect width="48" height="48" rx="13" fill="url(#legacy-gold)" />
+        <text x="24" y="36" textAnchor="middle" fill="#09241f" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="34">A</text>
+        <text x="68" y="23" fill="#fff" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="25" letterSpacing="7">ASCENSION</text>
+        <text x="69" y="47" fill="#72ad98" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="11" letterSpacing="4">SÉRIE LÉGENDE</text>
+      </g>
+      <text x="998" y="96" textAnchor="end" fill="#6f9a8c" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="14" letterSpacing="3">CARRIÈRE TERMINÉE</text>
+      <text x="998" y="119" textAnchor="end" fill="#d9b657" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="15">#{String(data.number).padStart(2, "0")}</text>
 
-      <line x1="90" y1="430" x2="990" y2="430" stroke="#d9ddd8" strokeWidth="2" />
-      <text x="90" y="485" fill="#17382d" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="27" letterSpacing="2">STATISTIQUES</text>
+      <rect x="76" y="153" width="306" height="342" rx="34" fill="#071817" stroke="#fff" strokeOpacity=".1" />
+      <PlayerAvatar seed={data.seed || data.name} x="86" y="163" width="286" height="322" />
+      <path d="M98 475h262" stroke="url(#legacy-gold)" strokeWidth="5" strokeLinecap="round" />
+
+      <text x="418" y="187" fill="#d9b657" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="15" letterSpacing="4">CARTE DE LÉGENDE</text>
+      <text x="418" y="257" fill="#fff" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize={name.size}>{name.value}</text>
+      <text x="418" y="302" fill="#83a398" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="21">{data.position.toUpperCase()} · {data.nationality?.replace(/^[^\p{L}\p{N}]+/u, "") || data.origin.toUpperCase()}</text>
+      {data.nickname ? <text x="418" y="343" fill="#e3c46e" fontFamily="Georgia, serif" fontStyle="italic" fontWeight="700" fontSize="25">« {fitLine(data.nickname, 23)} »</text> : null}
+
+      <rect x="836" y="162" width="162" height="170" rx="32" fill="url(#legacy-gold)" />
+      <path d="M853 182h128v130H853Z" fill="none" stroke="#fff" strokeOpacity=".35" />
+      <text x="917" y="207" textAnchor="middle" fill="#4e3b10" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="14" letterSpacing="3">GÉN.</text>
+      <text x="917" y="287" textAnchor="middle" fill="#09241f" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="78">{data.note}</text>
+      <text x="917" y="313" textAnchor="middle" fill="#4e3b10" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="12">SUR 100</text>
+
+      <rect x="418" y="377" width="580" height="118" rx="23" fill="#fff" fillOpacity=".045" stroke="#fff" strokeOpacity=".08" />
+      <text x="447" y="409" fill="#6f9a8c" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="12" letterSpacing="3">DERNIER CLUB</text>
+      <text x="447" y="452" fill="#fff" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="27">{lastClub.toUpperCase()}</text>
+      <text x="970" y="450" textAnchor="end" fill="#d9b657" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="19">{data.seasons} SAISONS</text>
+
+      <text x="76" y="552" fill="#739c8f" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="13" letterSpacing="4">CHIFFRES DE CARRIÈRE</text>
       {stats.map(([value, label], index) => {
-        const x = 90 + index * 225;
-        return <g key={label} transform={`translate(${x}, 535)`}><text fill="#17382d" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="51">{value}</text><text y="36" fill="#7a857f" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="17" letterSpacing="1">{label}</text></g>;
+        const x = 76 + index * 236;
+        return <g key={label} transform={`translate(${x}, 574)`}>
+          <rect width="218" height="132" rx="22" fill="#fff" fillOpacity=".042" stroke="#fff" strokeOpacity=".075" />
+          <text x="20" y="72" fill="#fff" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="48">{value}</text>
+          <text x="20" y="103" fill="#74a18f" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="12" letterSpacing="2">{label}</text>
+          <rect x="20" y="116" width="78" height="3" rx="2" fill="url(#legacy-gold)" />
+        </g>;
       })}
 
-      <rect x="80" y="630" width="920" height="190" rx="26" fill="#eef3ef" />
-      <text x="110" y="680" fill="#607069" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="18" letterSpacing="3">PALMARÈS</text>
-      {honours.map((honour, index) => <g key={honour} transform={`translate(110, ${728 + index * 39})`}><circle cx="7" cy="-7" r="7" fill="#c99a28" /><text x="28" fill="#17382d" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="24">{honour}</text></g>)}
+      <rect x="76" y="742" width="928" height="224" rx="30" fill="#fff" fillOpacity=".04" stroke="#fff" strokeOpacity=".08" />
+      <text x="107" y="787" fill="#d9b657" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="14" letterSpacing="4">PALMARÈS</text>
+      {honours.map((honour, index) => <g key={`${honour}-${index}`} transform={`translate(108, ${839 + index * 48})`}>
+        <circle cx="13" cy="-8" r="13" fill="url(#legacy-gold)" />
+        <path d="m8-8 3 3 7-8" fill="none" stroke="#183229" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" />
+        <text x="43" fill="#eef7f3" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="23">{honour}</text>
+      </g>)}
+      <text x="965" y="787" textAnchor="end" fill="#648a7d" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="12">TOP 3</text>
 
-      <text x="90" y="890" fill="#6b7771" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="18" letterSpacing="3">RANG DE LÉGENDE</text>
-      <text x="90" y="975" fill="#0a7a52" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="74">{data.tier.toUpperCase()}</text>
-      <text x="990" y="970" textAnchor="end" fill="#d0a434" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="40">{data.seasons} SAISONS</text>
-      <line x1="90" y1="1010" x2="990" y2="1010" stroke="#d9ddd8" strokeWidth="2" />
-      {quote.map((line, index) => <text key={line} x="90" y={1060 + index * 36} fill="#606b66" fontFamily="Georgia, serif" fontStyle="italic" fontSize="26">{index === 0 ? `« ${line}` : line}{index === quote.length - 1 ? " »" : ""}</text>)}
+      <text x="76" y="1027" fill="#709789" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="13" letterSpacing="4">RANG DE LÉGENDE</text>
+      <text x="76" y="1102" fill="url(#legacy-gold)" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="68">{data.tier.toUpperCase()}</text>
+      <path d="M77 1128h927" stroke="#fff" strokeOpacity=".09" />
+      {quote.map((line, index) => <text key={`${line}-${index}`} x="76" y={1172 + index * 34} fill="#a9c0b8" fontFamily="Georgia, serif" fontStyle="italic" fontSize="24">{index === 0 ? `« ${line}` : line}{index === quote.length - 1 ? " »" : ""}</text>)}
 
-      <rect x="50" y="1225" width="980" height="82" rx="27" fill="#083e2f" />
-      <text x="90" y="1277" fill="#ffffff" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="27">J’AI OBTENU {data.note}/100. TU PEUX FAIRE MIEUX ?</text>
-      <text x="990" y="1277" textAnchor="end" fill="#f1cf69" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="18" letterSpacing="2">#ASCENSION</text>
+      <rect x="76" y="1239" width="928" height="52" rx="16" fill="url(#legacy-gold)" />
+      <text x="100" y="1273" fill="#09241f" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="19">J’AI OBTENU {data.note}/100. TU PEUX FAIRE MIEUX ?</text>
+      <text x="978" y="1273" textAnchor="end" fill="#17382d" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="14" letterSpacing="2">#ASCENSION</text>
     </svg>
   );
 }
