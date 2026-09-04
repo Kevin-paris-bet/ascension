@@ -11,7 +11,8 @@
     "check": "npm run lint && npm run typecheck && npm run validate && npm run test && npm run build",
     "validate": "node --import tsx scripts/validate-content.ts",
     "typecheck": "tsc --noEmit",
-    "test": "node --import tsx scripts/smoke-test.ts",
+    "test": "node --import tsx scripts/smoke-test.ts && node --import tsx scripts/football-career-test.ts",
+    "test:football": "node --import tsx scripts/football-career-test.ts",
     "play": "node --import tsx scripts/playthrough.ts",
     "card": "node --import tsx scripts/card-test.ts",
     "render-card": "node --import tsx scripts/render-card.tsx"

@@ -1,7 +1,7 @@
 # Ascension
 
 Simulateur de carrière sportive narratif, mobile-first. Moteur agnostique + pack `fr-football`.
-52 événements, 230 branches, 8 callbacks, sauvegarde Supabase et carte de partage 9:16.
+52 événements, 230 branches, 8 callbacks, 7 championnats, 42 clubs, sauvegarde Supabase et carte de partage 4:5.
 
 ## Installation
 
@@ -26,8 +26,8 @@ npm run check       # exécute toute la CI locale
 
 ```
 engine/               moteur agnostique (aucun vocabulaire sportif)
-content/fr-football/  config, création, nommage, callbacks, 52 événements
-lib/                  pont moteur ↔ UI, carte, partage
+content/fr-football/  config, monde football, callbacks, 52 événements
+lib/                  pont moteur ↔ UI, saisons, mercato, carte, partage
 app/                  Next.js App Router
 types/                déclarations globales (imports CSS)
 scripts/              validateur, tests, simulations
@@ -59,6 +59,11 @@ dans l'environnement **Preview** pour activer la connexion par lien e-mail.
 
 - Connexion par lien e-mail et consentement marketing séparé
 - Sauvegarde locale + cloud d'une carrière en cours
+- Monde football original : 7 championnats dans 6 pays et 42 clubs fictifs
+- Choix parmi trois centres de formation au début de la carrière
+- Bilan saisonnier : matchs, titularisations, buts, passes, note, classement, objectif, trophées et valeur
+- Mercato : prolongation et trois offres externes, avec rôle, salaire, durée, prêt ou transfert
+- Parcours des clubs et statistiques réelles repris dans la carte sociale finale
 - Bibliothèque des carrières terminées avec recherche, filtres, tri et comparaison
 - Interface responsive et manifeste PWA, préparant l'enveloppe mobile
 - Emplacements de publicité récompensée sans attribution de récompense factice
@@ -66,5 +71,7 @@ dans l'environnement **Preview** pour activer la connexion par lien e-mail.
 ## Reste à faire
 
 - Branchements réels des rewarded ads web puis AdMob natif
+- Sélections nationales, coupes continentales et calendrier de compétitions
+- Classements complets saison par saison et fiches détaillées de clubs
 - Défi du jour (le PRNG déterministe est prêt)
 - Mesure du taux de partage — métrique de survie, seuil 5 %

@@ -41,6 +41,7 @@ type Props = { data: LegacyCardData; id?: string };
 /** Carte sociale 4:5 : lisible dans un feed et exportable sans police externe. */
 export function LegacyCard({ data, id = "legacy-card" }: Props) {
   const name = fitName(data.name);
+  const lastClub = data.lastClub && data.lastClub.length > 18 ? `${data.lastClub.slice(0, 17)}…` : data.lastClub;
   const quote = wrap(data.quote, 52, 3);
   const honours = data.honours.length > 0 ? data.honours.slice(0, 3) : ["AUCUN TROPHÉE MAJEUR"];
   const stats: Array<[number, string]> = data.position === "Gardien"
@@ -65,7 +66,7 @@ export function LegacyCard({ data, id = "legacy-card" }: Props) {
       <PlayerAvatar seed={data.seed || data.name} x="84" y="150" width="220" height="244" />
       <text x="335" y="205" fill="#66736d" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="24" letterSpacing="3">FIN DE CARRIÈRE</text>
       <text x="335" y="278" fill="#17382d" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize={name.size}>{name.value}</text>
-      <text x="335" y="328" fill="#6d7973" fontFamily="Arial, Helvetica, sans-serif" fontSize="28">#{data.number}  ·  {data.position}{data.origin ? `  ·  ${data.origin}` : ""}</text>
+      <text x="335" y="328" fill="#6d7973" fontFamily="Arial, Helvetica, sans-serif" fontSize="26">#{data.number}  ·  {data.position}{lastClub ? `  ·  ${lastClub}` : data.origin ? `  ·  ${data.origin}` : ""}</text>
       {data.nickname ? <text x="335" y="378" fill="#8d6a12" fontFamily="Georgia, serif" fontStyle="italic" fontWeight="700" fontSize="29">« {data.nickname} »</text> : null}
 
       <rect x="842" y="154" width="140" height="140" rx="30" fill="url(#gold)" />

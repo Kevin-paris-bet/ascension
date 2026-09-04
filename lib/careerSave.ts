@@ -5,8 +5,10 @@ import {
   type SerializedCareerState,
 } from "@/engine/serialization";
 import type { CareerState } from "@/engine/state";
+import type { ClubOffer, FootballCareer, SeasonSummary } from "@/lib/footballCareer";
 
-export type PersistedScreen = "playing" | "outcome" | "retirement";
+export type PersistedScreen = "club_choice" | "playing" | "outcome" | "season_summary" | "transfer_market" | "retirement";
+export type PendingStepKind = "event" | "retirement" | "over";
 
 export type CareerSave = {
   version: typeof CAREER_SAVE_VERSION;
@@ -20,6 +22,11 @@ export type CareerSave = {
   lastOutcome: string;
   lastSuccess?: boolean;
   lastDeltas: Record<string, number>;
+  football?: FootballCareer;
+  initialClubOffers?: ClubOffer[];
+  seasonSummary?: SeasonSummary;
+  transferOffers?: ClubOffer[];
+  pendingKind?: PendingStepKind;
 };
 
 export function createCareerSave(input: Omit<CareerSave, "version" | "savedAt" | "state"> & { state: CareerState }): CareerSave {

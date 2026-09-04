@@ -1,0 +1,61 @@
+{
+  "leagues": [
+    { "id": "fr-elite", "name": "Hexagone Élite", "country": "France", "flag": "🇫🇷", "tier": 1 },
+    { "id": "fr-pro2", "name": "Hexagone 2", "country": "France", "flag": "🇫🇷", "tier": 2 },
+    { "id": "en-crown", "name": "Crown League", "country": "Angleterre", "flag": "🏴", "tier": 1 },
+    { "id": "es-sol", "name": "Liga del Sol", "country": "Espagne", "flag": "🇪🇸", "tier": 1 },
+    { "id": "it-supremo", "name": "Calcio Supremo", "country": "Italie", "flag": "🇮🇹", "tier": 1 },
+    { "id": "de-meister", "name": "Meisterliga", "country": "Allemagne", "flag": "🇩🇪", "tier": 1 },
+    { "id": "pt-atlantica", "name": "Liga Atlântica", "country": "Portugal", "flag": "🇵🇹", "tier": 1 }
+  ],
+  "clubs": [
+    { "id": "paris-athletique", "name": "Paris Athlétique", "short": "PAR", "leagueId": "fr-elite", "strength": 91, "prestige": 93, "colors": ["#102a67", "#e6b84a"] },
+    { "id": "olympique-massilia", "name": "Olympique Massilia", "short": "MAS", "leagueId": "fr-elite", "strength": 85, "prestige": 88, "colors": ["#159bd7", "#ffffff"] },
+    { "id": "racing-riviera", "name": "Racing Riviera", "short": "RIV", "leagueId": "fr-elite", "strength": 80, "prestige": 78, "colors": ["#d7242e", "#111111"] },
+    { "id": "lille-metropole", "name": "Lille Métropole", "short": "LIL", "leagueId": "fr-elite", "strength": 79, "prestige": 76, "colors": ["#b4182b", "#f0d9a9"] },
+    { "id": "as-lumiere", "name": "AS Lumière", "short": "LUM", "leagueId": "fr-elite", "strength": 76, "prestige": 74, "colors": ["#173f8a", "#d22f35"] },
+    { "id": "union-armorique", "name": "Union Armorique", "short": "ARM", "leagueId": "fr-elite", "strength": 72, "prestige": 68, "colors": ["#d71920", "#121212"] },
+
+    { "id": "fc-bastide", "name": "FC Bastide", "short": "BAS", "leagueId": "fr-pro2", "strength": 66, "prestige": 61, "colors": ["#5a2b82", "#ffffff"] },
+    { "id": "sporting-normand", "name": "Sporting Normand", "short": "NOR", "leagueId": "fr-pro2", "strength": 64, "prestige": 59, "colors": ["#1d4d91", "#d72d32"] },
+    { "id": "etoile-alsace", "name": "Étoile Alsace", "short": "ALS", "leagueId": "fr-pro2", "strength": 62, "prestige": 57, "colors": ["#126342", "#e2c15a"] },
+    { "id": "ac-loire", "name": "AC Loire", "short": "LOR", "leagueId": "fr-pro2", "strength": 60, "prestige": 55, "colors": ["#186943", "#ffffff"] },
+    { "id": "red-star-garonne", "name": "Red Star Garonne", "short": "GAR", "leagueId": "fr-pro2", "strength": 58, "prestige": 52, "colors": ["#a31e2d", "#f4d359"] },
+    { "id": "rc-flandres", "name": "RC Flandres", "short": "FLA", "leagueId": "fr-pro2", "strength": 56, "prestige": 50, "colors": ["#222f6b", "#e04c34"] },
+
+    { "id": "london-kings", "name": "London Kings", "short": "LDK", "leagueId": "en-crown", "strength": 92, "prestige": 95, "colors": ["#1c2e70", "#d8af45"] },
+    { "id": "manchester-forge", "name": "Manchester Forge", "short": "FOR", "leagueId": "en-crown", "strength": 89, "prestige": 91, "colors": ["#8c1728", "#f1c75b"] },
+    { "id": "mersey-rovers", "name": "Mersey Rovers", "short": "MER", "leagueId": "en-crown", "strength": 86, "prestige": 89, "colors": ["#b0182b", "#ffffff"] },
+    { "id": "northbridge-united", "name": "Northbridge United", "short": "NBU", "leagueId": "en-crown", "strength": 82, "prestige": 81, "colors": ["#48a9cc", "#ffffff"] },
+    { "id": "thames-athletic", "name": "Thames Athletic", "short": "THA", "leagueId": "en-crown", "strength": 76, "prestige": 72, "colors": ["#5d1c75", "#b7e1ef"] },
+    { "id": "brighton-south", "name": "Brighton South", "short": "BRS", "leagueId": "en-crown", "strength": 71, "prestige": 67, "colors": ["#1463b6", "#ffffff"] },
+
+    { "id": "real-castilla", "name": "Real Castilla", "short": "CAS", "leagueId": "es-sol", "strength": 94, "prestige": 97, "colors": ["#ffffff", "#d5ae43"] },
+    { "id": "barcelona-maritim", "name": "Barcelona Marítim", "short": "BCM", "leagueId": "es-sol", "strength": 91, "prestige": 94, "colors": ["#243a8f", "#9c1d3b"] },
+    { "id": "atletico-capital", "name": "Atlético Capital", "short": "ATC", "leagueId": "es-sol", "strength": 86, "prestige": 87, "colors": ["#cf2035", "#f4f4f4"] },
+    { "id": "sevilla-aurora", "name": "Sevilla Aurora", "short": "SEV", "leagueId": "es-sol", "strength": 80, "prestige": 78, "colors": ["#f6f2e8", "#b82035"] },
+    { "id": "valencia-turia", "name": "Valencia Turia", "short": "VAL", "leagueId": "es-sol", "strength": 76, "prestige": 74, "colors": ["#f0a123", "#171717"] },
+    { "id": "bilbao-harria", "name": "Bilbao Harria", "short": "BIL", "leagueId": "es-sol", "strength": 74, "prestige": 75, "colors": ["#c91d2d", "#ffffff"] },
+
+    { "id": "milano-scala", "name": "Milano Scala", "short": "MLS", "leagueId": "it-supremo", "strength": 90, "prestige": 93, "colors": ["#191919", "#c71f2c"] },
+    { "id": "torino-regale", "name": "Torino Regale", "short": "TOR", "leagueId": "it-supremo", "strength": 88, "prestige": 91, "colors": ["#ffffff", "#181818"] },
+    { "id": "inter-lombardia", "name": "Inter Lombardia", "short": "INT", "leagueId": "it-supremo", "strength": 86, "prestige": 89, "colors": ["#0e3e82", "#111111"] },
+    { "id": "roma-imperiale", "name": "Roma Imperiale", "short": "ROM", "leagueId": "it-supremo", "strength": 81, "prestige": 82, "colors": ["#7e1729", "#e8a92f"] },
+    { "id": "napoli-vesuvio", "name": "Napoli Vesuvio", "short": "NAP", "leagueId": "it-supremo", "strength": 80, "prestige": 79, "colors": ["#1b98cf", "#ffffff"] },
+    { "id": "firenze-viola", "name": "Firenze Viola", "short": "FIR", "leagueId": "it-supremo", "strength": 73, "prestige": 72, "colors": ["#59277e", "#ffffff"] },
+
+    { "id": "munchen-adler", "name": "München Adler", "short": "MUN", "leagueId": "de-meister", "strength": 93, "prestige": 96, "colors": ["#be1e36", "#ffffff"] },
+    { "id": "dortmund-west", "name": "Dortmund West", "short": "DOR", "leagueId": "de-meister", "strength": 87, "prestige": 89, "colors": ["#f2d520", "#181818"] },
+    { "id": "rhein-werk", "name": "Rhein Werk", "short": "RHE", "leagueId": "de-meister", "strength": 83, "prestige": 80, "colors": ["#cc202d", "#151515"] },
+    { "id": "leipzig-energie", "name": "Leipzig Energie", "short": "LEI", "leagueId": "de-meister", "strength": 81, "prestige": 78, "colors": ["#ffffff", "#d3233a"] },
+    { "id": "berlin-union", "name": "Berlin Union", "short": "BER", "leagueId": "de-meister", "strength": 75, "prestige": 71, "colors": ["#c31d2c", "#ffffff"] },
+    { "id": "hamburg-hansa", "name": "Hamburg Hansa", "short": "HAM", "leagueId": "de-meister", "strength": 70, "prestige": 73, "colors": ["#145a9c", "#ffffff"] },
+
+    { "id": "lisboa-imperio", "name": "Lisboa Império", "short": "LIS", "leagueId": "pt-atlantica", "strength": 84, "prestige": 86, "colors": ["#d01d34", "#ffffff"] },
+    { "id": "porto-dragao", "name": "Porto Dragão", "short": "POR", "leagueId": "pt-atlantica", "strength": 83, "prestige": 85, "colors": ["#1455a2", "#ffffff"] },
+    { "id": "sporting-tejo", "name": "Sporting Tejo", "short": "TEJ", "leagueId": "pt-atlantica", "strength": 80, "prestige": 82, "colors": ["#117249", "#ffffff"] },
+    { "id": "braga-arsenal", "name": "Braga Arsenal", "short": "BRA", "leagueId": "pt-atlantica", "strength": 74, "prestige": 70, "colors": ["#cf2430", "#ffffff"] },
+    { "id": "vitoria-minho", "name": "Vitória Minho", "short": "VIM", "leagueId": "pt-atlantica", "strength": 68, "prestige": 64, "colors": ["#111111", "#ffffff"] },
+    { "id": "farense-sul", "name": "Farense Sul", "short": "FAR", "leagueId": "pt-atlantica", "strength": 62, "prestige": 58, "colors": ["#101010", "#f3d43f"] }
+  ]
+}

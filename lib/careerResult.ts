@@ -24,6 +24,9 @@ export function parseLegacySummary(value: Json): LegacyCardData | null {
   if (!requiredNumbers.every((key) => isFiniteNumber(value[key]))) return null;
   if (!(value.nickname === null || typeof value.nickname === "string")) return null;
   if (!Array.isArray(value.honours) || !value.honours.every((item) => typeof item === "string")) return null;
+  if (value.clubs !== undefined && (!Array.isArray(value.clubs) || !value.clubs.every((item) => typeof item === "string"))) return null;
+  if (value.championships !== undefined && (!Array.isArray(value.championships) || !value.championships.every((item) => typeof item === "string"))) return null;
+  if (value.lastClub !== undefined && value.lastClub !== null && typeof value.lastClub !== "string") return null;
 
   return value as LegacyCardData;
 }

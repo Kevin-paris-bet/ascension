@@ -2,6 +2,7 @@ import type { CareerState } from "@/engine/state";
 import { createRng } from "@/engine/rng";
 import type { LegacyResult } from "@/engine/legacy";
 import card from "@/content/fr-football/card.json";
+import { getClub, getLeague, type FootballCareer } from "@/lib/footballCareer";
 
 export type CareerIdentity = {
   name: string;
@@ -25,6 +26,9 @@ export type LegacyCardData = {
   tier: string;
   quote: string;
   seed: string;
+  clubs?: string[];
+  championships?: string[];
+  lastClub?: string | null;
 };
 
 /** Rendements offensifs par poste : [buts, passes] pour 100 matchs. */
@@ -52,13 +56,15 @@ function findThread(state: CareerState, prefix: string): string | null {
 export function buildLegacyCard(
   state: CareerState,
   legacy: LegacyResult,
-  identity: CareerIdentity
+  identity: CareerIdentity,
+  football?: FootballCareer
 ): LegacyCardData {
   const rng = createRng(`${state.seed}:card`);
 
   const turnedPro = state.threads.has("contrat_pro") || state.threads.has("contrat_pro:fragile");
   const proStartAge = turnedPro ? 20 : 22;
-  const seasons = Math.max(0, state.age - proStartAge);
+  const simulatedSeasons = football?.seasons ?? [];
+  const seasons = simulatedSeasons.length > 0 ? simulatedSeasons.length : Math.max(0, state.age - proStartAge);
 
   // Temps de jeu moyen par saison, modulé par ce qui s'est passé dans la carrière.
   let matchesPerSeason = 26;
@@ -69,7 +75,9 @@ export function buildLegacyCard(
   if (state.threads.has("confort")) matchesPerSeason += 2;
   matchesPerSeason = Math.max(8, matchesPerSeason);
 
-  const matches = turnedPro
+  const matches = simulatedSeasons.length > 0
+    ? simulatedSeasons.reduce((total, season) => total + season.appearances, 0)
+    : turnedPro
     ? Math.round(seasons * matchesPerSeason * (0.9 + rng.next() * 0.2))
     : Math.round(seasons * 14 * (0.8 + rng.next() * 0.3));
 
@@ -78,8 +86,12 @@ export function buildLegacyCard(
 
   // La note pilote le rendement : un joueur à 90 convertit mieux qu'un joueur à 65.
   const qualityFactor = 0.55 + (legacy.note / 100) * 0.9;
-  const goals = Math.round((matches * goalRate * qualityFactor) / 100);
-  let assists = Math.round((matches * assistRate * qualityFactor) / 100);
+  const goals = simulatedSeasons.length > 0
+    ? simulatedSeasons.reduce((total, season) => total + season.goals, 0)
+    : Math.round((matches * goalRate * qualityFactor) / 100);
+  let assists = simulatedSeasons.length > 0
+    ? simulatedSeasons.reduce((total, season) => total + season.assists, 0)
+    : Math.round((matches * assistRate * qualityFactor) / 100);
 
   // Un gardien ne marque pas et ne passe pas : sa statistique lisible est le
   // clean sheet. Taux réaliste : 25 % des matchs pour un gardien moyen,
@@ -103,7 +115,9 @@ export function buildLegacyCard(
   // que si la carrière n'a rien de plus marquant à montrer.
   const owned = card.honours.filter((h) => state.threads.has(h.thread)).sort((a, b) => a.priority - b.priority);
   const major = owned.filter((h) => h.priority <= 11);
-  const honours = (major.length > 0 ? major : owned).slice(0, 3).map((h) => h.label);
+  const seasonHonours = simulatedSeasons.flatMap((season) => season.trophies);
+  const narrativeHonours = (major.length > 0 ? major : owned).map((h) => h.label);
+  const honours = [...new Set([...seasonHonours, ...narrativeHonours])].slice(0, 3);
 
   // Un ordre de priorité fixe ferait ressortir le même surnom pour la majorité
   // des cartes (les threads les plus communs gagnent toujours). On tire donc
@@ -116,6 +130,9 @@ export function buildLegacyCard(
   const positionLabels = card.positionLabels as Record<string, string>;
   const originLabels = card.originLabels as Record<string, string>;
   const originThread = findThread(state, "origine:");
+  const clubIds = football?.clubHistory.map((spell) => spell.clubId) ?? [];
+  const clubs = clubIds.map((id) => getClub(id).name);
+  const championships = [...new Set(clubIds.map((id) => getLeague(getClub(id).leagueId).name))];
 
   return {
     name: identity.name.trim() || "SANS NOM",
@@ -134,6 +151,9 @@ export function buildLegacyCard(
     tier: legacy.tier,
     quote: legacy.quote,
     seed: state.seed,
+    clubs,
+    championships,
+    lastClub: football ? getClub(football.currentClubId).name : null,
   };
 }
 
