@@ -27,6 +27,7 @@ export function parseLegacySummary(value: Json): LegacyCardData | null {
   if (value.clubs !== undefined && (!Array.isArray(value.clubs) || !value.clubs.every((item) => typeof item === "string"))) return null;
   if (value.championships !== undefined && (!Array.isArray(value.championships) || !value.championships.every((item) => typeof item === "string"))) return null;
   if (value.lastClub !== undefined && value.lastClub !== null && typeof value.lastClub !== "string") return null;
+  if (value.nationality !== undefined && typeof value.nationality !== "string") return null;
 
   return value as LegacyCardData;
 }

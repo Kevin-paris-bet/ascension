@@ -66,8 +66,9 @@ export function LegacyCard({ data, id = "legacy-card" }: Props) {
       <PlayerAvatar seed={data.seed || data.name} x="84" y="150" width="220" height="244" />
       <text x="335" y="205" fill="#66736d" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="24" letterSpacing="3">FIN DE CARRIÈRE</text>
       <text x="335" y="278" fill="#17382d" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize={name.size}>{name.value}</text>
-      <text x="335" y="328" fill="#6d7973" fontFamily="Arial, Helvetica, sans-serif" fontSize="26">#{data.number}  ·  {data.position}{lastClub ? `  ·  ${lastClub}` : data.origin ? `  ·  ${data.origin}` : ""}</text>
-      {data.nickname ? <text x="335" y="378" fill="#8d6a12" fontFamily="Georgia, serif" fontStyle="italic" fontWeight="700" fontSize="29">« {data.nickname} »</text> : null}
+      <text x="335" y="328" fill="#6d7973" fontFamily="Arial, Helvetica, sans-serif" fontSize="26">#{data.number}  ·  {data.position}{data.nationality ? `  ·  ${data.nationality}` : ""}</text>
+      {lastClub ? <text x="335" y="362" fill="#8a948f" fontFamily="Arial, Helvetica, sans-serif" fontSize="21">Dernier club · {lastClub}</text> : null}
+      {data.nickname ? <text x="335" y="397" fill="#8d6a12" fontFamily="Georgia, serif" fontStyle="italic" fontWeight="700" fontSize="27">« {data.nickname} »</text> : null}
 
       <rect x="842" y="154" width="140" height="140" rx="30" fill="url(#gold)" />
       <text x="912" y="195" textAnchor="middle" fill="#604810" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="18" letterSpacing="2">NOTE</text>

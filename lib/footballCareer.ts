@@ -1,6 +1,7 @@
 import { createRng, type Rng } from "@/engine/rng";
 import type { CareerState } from "@/engine/state";
 import worldData from "@/content/fr-football/world.json";
+import { getNationalTeam, type NationalTeam } from "@/lib/nationalTeams";
 
 export type SquadRole = "Espoir" | "Rotation" | "Titulaire" | "Cadre";
 export type MoveType = "academy" | "stay" | "loan" | "transfer";
@@ -39,6 +40,54 @@ export type ClubSpell = {
   moveType: MoveType;
 };
 
+export type CompetitionResult = {
+  name: string;
+  type: "domestic_cup" | "continental" | "international";
+  stage: string;
+  appearances: number;
+  goals: number;
+  assists: number;
+  won: boolean;
+};
+
+export type InternationalSeason = {
+  season: number;
+  teamId: string;
+  caps: number;
+  goals: number;
+  assists: number;
+  role: SquadRole;
+  tournament?: CompetitionResult;
+};
+
+export type InternationalCareer = {
+  teamId: string;
+  status: "eligible" | "declined" | "active" | "retired";
+  refusals: number;
+  nextOfferSeason: number;
+  role: SquadRole;
+  caps: number;
+  goals: number;
+  assists: number;
+  captain: boolean;
+  seasons: InternationalSeason[];
+  trophies: string[];
+};
+
+export type InternationalOffer = {
+  teamId: string;
+  role: SquadRole;
+  reason: string;
+  previousRefusals: number;
+};
+
+export type LoanDetails = {
+  parentClubId: string;
+  parentLeagueId: string;
+  parentContract: PlayerContract;
+  returnSeason: number;
+};
+
 export type SeasonSummary = {
   season: number;
   age: number;
@@ -49,21 +98,30 @@ export type SeasonSummary = {
   starts: number;
   goals: number;
   assists: number;
+  cleanSheets: number;
   averageRating: number;
   tableFinish: number;
   tableSize: number;
   objective: string;
   objectiveMet: boolean;
   trophies: string[];
+  individualAwards: string[];
+  domesticCup: CompetitionResult;
+  continentalCup?: CompetitionResult;
+  international?: InternationalSeason;
+  divisionChange?: "promotion" | "relegation";
   salaryM: number;
   marketValueM: number;
 };
 
 export type FootballCareer = {
   currentClubId: string;
+  currentLeagueId?: string;
   contract: PlayerContract;
   seasons: SeasonSummary[];
   clubHistory: ClubSpell[];
+  international?: InternationalCareer;
+  loan?: LoanDetails;
 };
 
 export type ClubOffer = {
@@ -158,6 +216,11 @@ function roleForGap(playerOverall: number, clubStrength: number): SquadRole {
   return "Espoir";
 }
 
+function seniorInternationalRole(playerOverall: number, teamStrength: number): SquadRole {
+  const role = roleForGap(playerOverall, teamStrength);
+  return role === "Espoir" ? "Rotation" : role;
+}
+
 function competitionFor(role: SquadRole): number {
   return { Cadre: 28, Titulaire: 45, Rotation: 68, Espoir: 84 }[role];
 }
@@ -178,7 +241,7 @@ export function generateAcademyOffers(state: CareerState): ClubOffer[] {
   }));
 }
 
-export function startFootballCareer(state: CareerState, offer: ClubOffer): { state: CareerState; career: FootballCareer } {
+export function startFootballCareer(state: CareerState, offer: ClubOffer, nationalTeamId = "france"): { state: CareerState; career: FootballCareer } {
   const club = getClub(offer.clubId);
   const league = getLeague(club.leagueId);
   const contract: PlayerContract = {
@@ -193,9 +256,23 @@ export function startFootballCareer(state: CareerState, offer: ClubOffer): { sta
     state: { ...state, org: club.id, orgTier: league.tier },
     career: {
       currentClubId: club.id,
+      currentLeagueId: club.leagueId,
       contract,
       seasons: [],
       clubHistory: [{ clubId: club.id, fromSeason: state.season + 1, toSeason: null, moveType: "academy" }],
+      international: {
+        teamId: nationalTeamId,
+        status: "eligible",
+        refusals: 0,
+        nextOfferSeason: 3,
+        role: "Espoir",
+        caps: 0,
+        goals: 0,
+        assists: 0,
+        captain: false,
+        seasons: [],
+        trophies: [],
+      },
     },
   };
 }
@@ -215,9 +292,103 @@ function objectiveFor(club: Club, tableSize: number): { label: string; maxFinish
   return { label: "Assurer le maintien", maxFinish: Math.max(1, tableSize - 1) };
 }
 
+function competitionOutput(state: CareerState, appearances: number, rng: Rng): { goals: number; assists: number } {
+  const [goalRate, assistRate] = positionRates(state);
+  const quality = Math.max(0.55, computeOverall(state) / 78);
+  return {
+    goals: Math.max(0, Math.round(appearances * goalRate * quality * (0.72 + rng.next() * 0.55))),
+    assists: Math.max(0, Math.round(appearances * assistRate * quality * (0.72 + rng.next() * 0.55))),
+  };
+}
+
+function continentalCompetitionName(country: string): string {
+  if (country === "Brésil" || country === "Argentine") return "Coupe d’Amérique des Clubs";
+  if (country === "Arabie saoudite") return "Coupe d’Asie des Clubs";
+  return "Coupe d’Europe des Clubs";
+}
+
+function simulateCup(state: CareerState, club: Club, league: League, rng: Rng, type: "domestic_cup" | "continental"): CompetitionResult {
+  const strengthWeight = type === "continental" ? 0.7 : 0.62;
+  const score = club.strength * strengthWeight + computeOverall(state) * (1 - strengthWeight) + rng.int(-13, 12);
+  const thresholds = type === "continental" ? [86, 80, 73, 66] : [80, 73, 66, 59];
+  const stages = ["Vainqueur", "Finale", "Demi-finale", "Quarts de finale", "Tours précédents"];
+  const stageIndex = score >= thresholds[0] ? 0 : score >= thresholds[1] ? 1 : score >= thresholds[2] ? 2 : score >= thresholds[3] ? 3 : 4;
+  const appearances = [7, 7, 6, 5, rng.int(1, 3)][stageIndex];
+  const output = competitionOutput(state, appearances, rng);
+  return {
+    name: type === "domestic_cup" ? `Coupe de ${league.country}` : continentalCompetitionName(league.country),
+    type,
+    stage: stages[stageIndex],
+    appearances,
+    ...output,
+    won: stageIndex === 0,
+  };
+}
+
+function internationalTournamentName(team: NationalTeam, season: number): string | null {
+  if (season < 4 || season % 4 !== 0) return null;
+  if (season % 8 === 0) return "Championnat du Monde";
+  return {
+    Europe: "Championnat d’Europe",
+    Afrique: "Coupe d’Afrique",
+    "Amériques": "Coupe des Amériques",
+    Asie: "Coupe d’Asie",
+  }[team.confederation];
+}
+
+function simulateInternationalSeason(state: CareerState, international: InternationalCareer, rng: Rng): { career: InternationalCareer; summary?: InternationalSeason } {
+  if (international.status !== "active") return { career: international };
+  const team = getNationalTeam(international.teamId);
+  const role = seniorInternationalRole(computeOverall(state) + 7, team.strength);
+  const caps = Math.max(1, { Cadre: 9, Titulaire: 8, Rotation: 5, Espoir: 3 }[role] + rng.int(-1, 1));
+  const output = competitionOutput(state, caps, rng);
+  const tournamentName = internationalTournamentName(team, state.season);
+  let tournament: CompetitionResult | undefined;
+  if (tournamentName) {
+    const tournamentScore = team.strength * 0.7 + computeOverall(state) * 0.3 + rng.int(-15, 12);
+    const stages = tournamentScore >= 89 ? ["Vainqueur", 7] : tournamentScore >= 82 ? ["Finale", 7] : tournamentScore >= 75 ? ["Demi-finale", 6] : tournamentScore >= 68 ? ["Quarts de finale", 5] : ["Phase de groupes", 3];
+    const tournamentOutput = competitionOutput(state, stages[1] as number, rng);
+    tournament = {
+      name: tournamentName,
+      type: "international",
+      stage: stages[0] as string,
+      appearances: stages[1] as number,
+      ...tournamentOutput,
+      won: stages[0] === "Vainqueur",
+    };
+  }
+  const summary: InternationalSeason = {
+    season: state.season,
+    teamId: team.id,
+    caps: caps + (tournament?.appearances ?? 0),
+    goals: output.goals + (tournament?.goals ?? 0),
+    assists: output.assists + (tournament?.assists ?? 0),
+    role,
+    tournament,
+  };
+  const captain = international.captain || (role === "Cadre" && international.caps + summary.caps >= 35);
+  const trophies = tournament?.won ? [...international.trophies, tournament.name] : international.trophies;
+  return {
+    summary,
+    career: {
+      ...international,
+      role,
+      caps: international.caps + summary.caps,
+      goals: international.goals + summary.goals,
+      assists: international.assists + summary.assists,
+      captain,
+      seasons: [...international.seasons, summary],
+      trophies,
+    },
+  };
+}
+
 export function simulateSeason(state: CareerState, career: FootballCareer, rng: Rng): FootballCareer {
   const club = getClub(career.currentClubId);
-  const leagueClubs = world.clubs.filter((item) => item.leagueId === club.leagueId);
+  const activeLeagueId = career.currentLeagueId ?? club.leagueId;
+  const activeLeague = getLeague(activeLeagueId);
+  const leagueClubs = world.clubs.filter((item) => item.leagueId === activeLeagueId);
+  const tableClubs = leagueClubs.some((item) => item.id === club.id) ? leagueClubs : [...leagueClubs.slice(0, -1), club];
   const overall = computeOverall(state);
   const role = career.contract.role;
   const roleStarts = { Cadre: 31, Titulaire: 26, Rotation: 14, Espoir: 6 }[role];
@@ -228,15 +399,43 @@ export function simulateSeason(state: CareerState, career: FootballCareer, rng: 
   const outputFactor = Math.max(0.42, 0.72 + (overall - club.strength) / 75 + (state.stats.mental ?? 50) / 260);
   const goals = Math.max(0, Math.round(appearances * goalRate * outputFactor * (0.82 + rng.next() * 0.35)));
   const assists = Math.max(0, Math.round(appearances * assistRate * outputFactor * (0.82 + rng.next() * 0.35)));
+  const cleanSheets = state.threads.has("poste:gardien") ? Math.max(0, Math.round(appearances * (0.2 + overall / 500) * (0.8 + rng.next() * 0.3))) : 0;
   const averageRating = Number(Math.max(5.2, Math.min(9.4, 6.1 + (overall - 55) / 36 + (rng.next() - 0.5) * 0.8)).toFixed(1));
 
-  const sortedStrength = [...leagueClubs].sort((a, b) => b.strength - a.strength);
+  const sortedStrength = [...tableClubs].sort((a, b) => b.strength - a.strength);
   const expected = Math.max(1, sortedStrength.findIndex((item) => item.id === club.id) + 1);
   const playerLift = Math.round((overall - club.strength) / 9);
-  const tableFinish = Math.max(1, Math.min(leagueClubs.length, expected - playerLift + rng.int(-1, 1)));
-  const objective = objectiveFor(club, leagueClubs.length);
-  const trophies = tableFinish === 1 ? [`Champion · ${getLeague(club.leagueId).name}`] : [];
-  if (averageRating >= 8.7 && appearances >= 24) trophies.push("Joueur de la saison");
+  const tableFinish = Math.max(1, Math.min(tableClubs.length, expected - playerLift + rng.int(-1, 1)));
+  const objective = objectiveFor(club, tableClubs.length);
+  const domesticCup = simulateCup(state, club, activeLeague, rng, "domestic_cup");
+  const previousSeason = career.seasons.at(-1);
+  const qualifiedForContinent = activeLeague.tier === 1 && (previousSeason
+    ? previousSeason.leagueId === activeLeagueId && previousSeason.tableFinish <= 2
+    : club.prestige >= 88);
+  const continentalCup = qualifiedForContinent ? simulateCup(state, club, activeLeague, rng, "continental") : undefined;
+  const trophies = tableFinish === 1 ? [`Champion · ${activeLeague.name}`] : [];
+  if (domesticCup.won) trophies.push(domesticCup.name);
+  if (continentalCup?.won) trophies.push(continentalCup.name);
+  const individualAwards: string[] = [];
+  if (averageRating >= 8.25 && appearances >= 24) individualAwards.push("Joueur de la saison");
+  if (state.threads.has("poste:attaquant") && goals >= 20) individualAwards.push("Soulier d’Or");
+  if (state.threads.has("poste:milieu") && assists >= 13) individualAwards.push("Maestro de la saison");
+  if (state.threads.has("poste:gardien") && cleanSheets >= 13) individualAwards.push("Gant d’Or");
+  if (state.age <= 21 && averageRating >= 7.7) individualAwards.push("Révélation de l’année");
+  if (averageRating >= 8.7 && (trophies.length > 0 || continentalCup?.stage === "Finale")) individualAwards.push("Golden Player");
+
+  let nextLeagueId = activeLeagueId;
+  let divisionChange: SeasonSummary["divisionChange"];
+  if (activeLeague.tier === 2 && tableFinish === 1) {
+    const promotedLeague = world.leagues.find((league) => league.country === activeLeague.country && league.tier === 1);
+    if (promotedLeague) { nextLeagueId = promotedLeague.id; divisionChange = "promotion"; trophies.push(`Promotion en ${promotedLeague.name}`); }
+  } else if (activeLeague.tier === 1 && tableFinish === tableClubs.length) {
+    const relegatedLeague = world.leagues.find((league) => league.country === activeLeague.country && league.tier === 2);
+    if (relegatedLeague) { nextLeagueId = relegatedLeague.id; divisionChange = "relegation"; }
+  }
+
+  const internationalResult = career.international ? simulateInternationalSeason(state, career.international, rng) : undefined;
+  if (internationalResult?.summary?.tournament?.won) trophies.push(internationalResult.summary.tournament.name);
 
   const previousValue = career.seasons.at(-1)?.marketValueM ?? Math.max(0.1, (overall - 45) * 0.35);
   const performanceDelta = (averageRating - 6.5) * 2.4 + appearances / 24 + goals / 16 + assists / 20;
@@ -247,22 +446,33 @@ export function simulateSeason(state: CareerState, career: FootballCareer, rng: 
     season: state.season,
     age: Math.max(14, state.age - 1),
     clubId: club.id,
-    leagueId: club.leagueId,
+    leagueId: activeLeagueId,
     role,
     appearances,
     starts,
     goals,
     assists,
+    cleanSheets,
     averageRating,
     tableFinish,
     tableSize: leagueClubs.length,
     objective: objective.label,
     objectiveMet: tableFinish <= objective.maxFinish,
     trophies,
+    individualAwards,
+    domesticCup,
+    continentalCup,
+    international: internationalResult?.summary,
+    divisionChange,
     salaryM: career.contract.salaryM,
     marketValueM,
   };
-  return { ...career, seasons: [...career.seasons, season] };
+  return {
+    ...career,
+    currentLeagueId: nextLeagueId,
+    seasons: [...career.seasons, season],
+    international: internationalResult?.career ?? career.international,
+  };
 }
 
 export function shouldOpenTransferWindow(state: CareerState, career: FootballCareer): boolean {
@@ -271,6 +481,126 @@ export function shouldOpenTransferWindow(state: CareerState, career: FootballCar
   const contractExpiring = career.contract.endSeason <= state.season + 1;
   const breakout = last.averageRating >= 7.8 && last.appearances >= 18;
   return contractExpiring || breakout || state.season % 2 === 0;
+}
+
+export function normalizeFootballCareer(career: FootballCareer, nationalTeamId: string): FootballCareer {
+  const seasons = career.seasons.map((season) => ({
+    ...season,
+    cleanSheets: season.cleanSheets ?? 0,
+    individualAwards: season.individualAwards ?? [],
+    domesticCup: season.domesticCup ?? {
+      name: `Coupe de ${getLeague(season.leagueId).country}`,
+      type: "domestic_cup" as const,
+      stage: "Non disputée",
+      appearances: 0,
+      goals: 0,
+      assists: 0,
+      won: false,
+    },
+  }));
+  return {
+    ...career,
+    seasons,
+    currentLeagueId: career.currentLeagueId ?? getClub(career.currentClubId).leagueId,
+    international: career.international ?? {
+      teamId: nationalTeamId,
+      status: "eligible",
+      refusals: 0,
+      nextOfferSeason: Math.max(3, (career.seasons.at(-1)?.season ?? 0) + 1),
+      role: "Espoir",
+      caps: 0,
+      goals: 0,
+      assists: 0,
+      captain: false,
+      seasons: [],
+      trophies: [],
+    },
+  };
+}
+
+export function generateInternationalOffer(state: CareerState, career: FootballCareer): InternationalOffer | null {
+  const international = career.international;
+  const last = career.seasons.at(-1);
+  if (!international || !last || international.status === "active" || international.status === "retired") return null;
+  if (state.age < 18 || state.season < international.nextOfferSeason) return null;
+  const youthRefusalAge = state.threadPosedAtAge.regret_selection;
+  if (youthRefusalAge !== undefined && state.age - youthRefusalAge < 3) return null;
+  const team = getNationalTeam(international.teamId);
+  const requiredOverall = Math.max(62, team.strength - 20);
+  const qualified = computeOverall(state) >= requiredOverall && last.appearances >= 12 && last.averageRating >= 6.7;
+  if (!qualified) return null;
+  const role = seniorInternationalRole(computeOverall(state) + 7, team.strength);
+  return {
+    teamId: team.id,
+    role,
+    previousRefusals: international.refusals,
+    reason: international.refusals > 0
+      ? "Le sélectionneur revient vers toi : ta porte n’était pas fermée."
+      : last.individualAwards.length > 0
+        ? `Tes performances et ton titre de ${last.individualAwards[0]} ont convaincu le sélectionneur.`
+        : `Ta saison à ${last.averageRating} de moyenne a convaincu le sélectionneur.`,
+  };
+}
+
+function addStateThread(state: CareerState, thread: string): CareerState {
+  const threads = new Set(state.threads);
+  threads.add(thread);
+  return {
+    ...state,
+    threads,
+    threadPosedAtAge: state.threadPosedAtAge[thread] === undefined
+      ? { ...state.threadPosedAtAge, [thread]: state.age }
+      : state.threadPosedAtAge,
+  };
+}
+
+export function acceptInternationalOffer(state: CareerState, career: FootballCareer, offer: InternationalOffer): { state: CareerState; career: FootballCareer } {
+  if (!career.international) return { state, career };
+  const withInternational = addStateThread(addStateThread(state, "selection:formation"), "international");
+  return {
+    state: withInternational,
+    career: {
+      ...career,
+      international: { ...career.international, status: "active", role: offer.role },
+    },
+  };
+}
+
+export function declineInternationalOffer(state: CareerState, career: FootballCareer): { state: CareerState; career: FootballCareer } {
+  if (!career.international) return { state, career };
+  const refusals = career.international.refusals + 1;
+  return {
+    state: addStateThread(state, "selection_refusee"),
+    career: {
+      ...career,
+      international: {
+        ...career.international,
+        status: "declined",
+        refusals,
+        nextOfferSeason: state.season + Math.min(4, 1 + refusals),
+      },
+    },
+  };
+}
+
+export function returnFromLoanIfDue(state: CareerState, career: FootballCareer): { state: CareerState; career: FootballCareer; returned: boolean } {
+  if (!career.loan || state.season < career.loan.returnSeason) return { state, career, returned: false };
+  const loan = career.loan;
+  const history = career.clubHistory.map((spell, index) => index === career.clubHistory.length - 1 ? { ...spell, toSeason: state.season } : spell);
+  history.push({ clubId: loan.parentClubId, fromSeason: state.season + 1, toSeason: null, moveType: "stay" });
+  const parentLeague = getLeague(loan.parentLeagueId);
+  return {
+    returned: true,
+    state: { ...state, org: loan.parentClubId, orgTier: parentLeague.tier },
+    career: {
+      ...career,
+      currentClubId: loan.parentClubId,
+      currentLeagueId: loan.parentLeagueId,
+      contract: { ...loan.parentContract, startSeason: state.season, endSeason: Math.max(state.season + 1, loan.parentContract.endSeason) },
+      clubHistory: history,
+      loan: undefined,
+    },
+  };
 }
 
 function salaryFor(club: Club, role: SquadRole, value: number): number {
@@ -342,12 +672,18 @@ export function acceptClubOffer(state: CareerState, career: FootballCareer, offe
     role: offer.role,
     moveType: offer.moveType,
   };
-  if (offer.clubId === career.currentClubId) return { state, career: { ...career, contract } };
+  if (offer.clubId === career.currentClubId) return { state, career: { ...career, contract, currentLeagueId: career.currentLeagueId ?? club.leagueId } };
 
   const history = career.clubHistory.map((spell, index) => index === career.clubHistory.length - 1 ? { ...spell, toSeason: state.season } : spell);
   history.push({ clubId: club.id, fromSeason: state.season + 1, toSeason: null, moveType: offer.moveType });
+  const loan = offer.moveType === "loan" ? {
+    parentClubId: career.currentClubId,
+    parentLeagueId: career.currentLeagueId ?? getClub(career.currentClubId).leagueId,
+    parentContract: career.contract,
+    returnSeason: state.season + 1,
+  } : undefined;
   return {
     state: { ...state, org: club.id, orgTier: league.tier },
-    career: { ...career, currentClubId: club.id, contract, clubHistory: history },
+    career: { ...career, currentClubId: club.id, currentLeagueId: club.leagueId, contract, clubHistory: history, loan },
   };
 }

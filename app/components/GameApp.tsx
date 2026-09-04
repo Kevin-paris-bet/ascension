@@ -31,21 +31,30 @@ import {
   SeasonReview,
   TransferMarket,
   FootballWorld,
+  InternationalCallUp,
+  NationalityChoice,
 } from "@/app/components/FootballCareerScreens";
 import {
   acceptClubOffer,
+  acceptInternationalOffer,
+  declineInternationalOffer,
   generateAcademyOffers,
+  generateInternationalOffer,
   generateTransferOffers,
+  normalizeFootballCareer,
+  returnFromLoanIfDue,
   shouldOpenTransferWindow,
   simulateSeason,
   startFootballCareer,
   type ClubOffer,
   type FootballCareer,
+  type InternationalOffer,
   type SeasonSummary,
 } from "@/lib/footballCareer";
 import type { PendingStepKind, PersistedScreen } from "@/lib/careerSave";
+import { nationalTeamIdFromSelection } from "@/lib/nationalTeams";
 
-type Screen = "creation" | "identity" | "club_choice" | "playing" | "outcome" | "season_summary" | "transfer_market" | "retirement" | "over";
+type Screen = "creation" | "identity" | "club_choice" | "playing" | "outcome" | "season_summary" | "international_offer" | "transfer_market" | "retirement" | "over";
 type SaveStatus = "idle" | "saving" | "saved" | "local" | "error";
 type AppView = "game" | "world" | "library";
 const LOCAL_SAVE_KEY = "ascension:career:v1";
@@ -53,7 +62,7 @@ const PENDING_CONSENT_KEY = "ascension:pending-marketing-consent";
 
 export function GameApp() {
   const pool = useMemo(() => getEventPool(), []);
-  const steps = useMemo(() => getCreationSteps().filter((item) => item.kind === "choice"), []);
+  const steps = useMemo(() => getCreationSteps().filter((item) => item.kind === "choice" || item.kind === "rewarded"), []);
   const supabase = useMemo(() => getSupabaseBrowserClient(), []);
 
   const [authReady, setAuthReady] = useState(!isSupabaseConfigured());
@@ -79,6 +88,7 @@ export function GameApp() {
   const [initialClubOffers, setInitialClubOffers] = useState<ClubOffer[]>([]);
   const [seasonSummary, setSeasonSummary] = useState<SeasonSummary | null>(null);
   const [transferOffers, setTransferOffers] = useState<ClubOffer[]>([]);
+  const [internationalOffer, setInternationalOffer] = useState<InternationalOffer | null>(null);
   const [pendingStep, setPendingStep] = useState<NextStep | null>(null);
 
   const stateRef = useRef<CareerState | null>(null);
@@ -137,7 +147,18 @@ export function GameApp() {
     return () => { active = false; };
   }, [supabase, user]);
 
-  function chooseCreation(stepId: string, optionId: string) {
+  async function chooseCreation(stepId: string, optionId: string) {
+    const creationStep = steps.find((item) => item.id === stepId);
+    if (creationStep?.kind === "rewarded" && optionId !== "opt_perk_aucun") {
+      setAdNotice("Préparation de l’avantage…");
+      const option = creationStep.options?.find((item) => item.id === optionId);
+      const result = await requestRewardedAd({ reason: "creation_perk", rewardLabel: option?.label ?? "Avantage de départ" });
+      if (result !== "completed") {
+        setAdNotice(result === "unavailable" ? "La publicité récompensée n’est pas disponible sur cette version. Tu peux commencer sans avantage." : "La publicité n’a pas été terminée : l’avantage n’a pas été accordé.");
+        return;
+      }
+    }
+    setAdNotice("");
     const next = { ...selection, [stepId]: optionId };
     setSelection(next);
     if (stepIndex < steps.length - 1) setStepIndex((value) => value + 1);
@@ -168,7 +189,7 @@ export function GameApp() {
 
   function chooseInitialClub(offer: ClubOffer) {
     if (!stateRef.current || !rngRef.current) return;
-    const started = startFootballCareer(stateRef.current, offer);
+    const started = startFootballCareer(stateRef.current, offer, nationalTeamIdFromSelection(selection.nationalite));
     stateRef.current = started.state;
     setCareerState(started.state);
     footballRef.current = started.career;
@@ -287,19 +308,55 @@ export function GameApp() {
 
   function continueAfterSeason() {
     if (!stateRef.current || !rngRef.current || !footballRef.current || !seasonSummary || !pendingStep) return;
-    if (pendingStep.kind === "event" && shouldOpenTransferWindow(stateRef.current, footballRef.current)) {
-      const offers = generateTransferOffers(stateRef.current, footballRef.current);
+    const loanReturn = returnFromLoanIfDue(stateRef.current, footballRef.current);
+    stateRef.current = loanReturn.state;
+    setCareerState(loanReturn.state);
+    footballRef.current = loanReturn.career;
+    setFootball(loanReturn.career);
+
+    const offer = generateInternationalOffer(loanReturn.state, loanReturn.career);
+    if (offer) {
+      setInternationalOffer(offer);
+      setScreen("international_offer");
+      persist(loanReturn.state, rngRef.current, "international_offer", pendingEventId(pendingStep), currentIdentity(), "", undefined, {}, {
+        football: loanReturn.career,
+        seasonSummary,
+        internationalOffer: offer,
+        pendingKind: pendingKind(pendingStep),
+      });
+      return;
+    }
+    finishPostSeason(loanReturn.state, loanReturn.career);
+  }
+
+  function finishPostSeason(activeState: CareerState, activeFootball: FootballCareer) {
+    if (!rngRef.current || !seasonSummary || !pendingStep) return;
+    if (pendingStep.kind === "event" && shouldOpenTransferWindow(activeState, activeFootball)) {
+      const offers = generateTransferOffers(activeState, activeFootball);
       setTransferOffers(offers);
       setScreen("transfer_market");
-      persist(stateRef.current, rngRef.current, "transfer_market", pendingEventId(pendingStep), currentIdentity(), "", undefined, {}, {
-        football: footballRef.current,
+      persist(activeState, rngRef.current, "transfer_market", pendingEventId(pendingStep), currentIdentity(), "", undefined, {}, {
+        football: activeFootball,
         seasonSummary,
         transferOffers: offers,
         pendingKind: pendingKind(pendingStep),
       });
       return;
     }
-    presentStep(pendingStep, stateRef.current, rngRef.current, currentIdentity(), footballRef.current);
+    presentStep(pendingStep, activeState, rngRef.current, currentIdentity(), activeFootball);
+  }
+
+  function chooseInternationalOffer(accept: boolean) {
+    if (!stateRef.current || !footballRef.current || !internationalOffer) return;
+    const decision = accept
+      ? acceptInternationalOffer(stateRef.current, footballRef.current, internationalOffer)
+      : declineInternationalOffer(stateRef.current, footballRef.current);
+    stateRef.current = decision.state;
+    setCareerState(decision.state);
+    footballRef.current = decision.career;
+    setFootball(decision.career);
+    setInternationalOffer(null);
+    finishPostSeason(decision.state, decision.career);
   }
 
   function chooseTransferOffer(offer: ClubOffer) {
@@ -358,8 +415,9 @@ export function GameApp() {
       setResumeSave(null);
       return;
     }
-    footballRef.current = save.football;
-    setFootball(save.football);
+    const restoredFootball = normalizeFootballCareer(save.football, nationalTeamIdFromSelection(save.selection.nationalite));
+    footballRef.current = restoredFootball;
+    setFootball(restoredFootball);
     if (save.screen === "club_choice") {
       const offers = save.initialClubOffers?.length ? save.initialClubOffers : generateAcademyOffers(restored);
       setInitialClubOffers(offers);
@@ -383,12 +441,15 @@ export function GameApp() {
       setResumeSave(null);
       return;
     }
-    if ((save.screen === "season_summary" || save.screen === "transfer_market") && save.seasonSummary) {
+    if ((save.screen === "season_summary" || save.screen === "international_offer" || save.screen === "transfer_market") && save.seasonSummary) {
       const pending = restorePendingStep(save.pendingKind, save.eventId, restored, pool);
       if (pending) {
         setPendingStep(pending);
         setSeasonSummary(save.seasonSummary);
-        if (save.screen === "transfer_market" && save.transferOffers?.length) {
+        if (save.screen === "international_offer" && save.internationalOffer) {
+          setInternationalOffer(save.internationalOffer);
+          setScreen("international_offer");
+        } else if (save.screen === "transfer_market" && save.transferOffers?.length) {
           setTransferOffers(save.transferOffers);
           setScreen("transfer_market");
         } else {
@@ -431,6 +492,7 @@ export function GameApp() {
     setInitialClubOffers([]);
     setSeasonSummary(null);
     setTransferOffers([]);
+    setInternationalOffer(null);
     setPendingStep(null);
     setScreen("creation");
   }
@@ -440,6 +502,7 @@ export function GameApp() {
     initialClubOffers?: ClubOffer[];
     seasonSummary?: SeasonSummary;
     transferOffers?: ClubOffer[];
+    internationalOffer?: InternationalOffer;
     pendingKind?: PendingStepKind;
   } = {}) {
     const payload = createCareerSave({ screen: savedScreen, identity, selection, state, rngState: rng.getState(), eventId, lastOutcome: outcome, lastSuccess: success, lastDeltas: deltas, ...extra });
@@ -476,12 +539,18 @@ export function GameApp() {
       {resumeSave && screen === "creation" && <div className="resume-card"><p>Une carrière de {resumeSave.identity.name} est disponible ({resumeSave.state.age} ans).</p><div className="button-row"><button className="primary-button" onClick={() => resumeCareer(resumeSave)}>Reprendre</button><button className="quiet-button" onClick={clearSave}>Nouvelle carrière</button></div></div>}
       <div className="game-layout">
         <section className="game-stage"><div className="stage-content">
-          {screen === "creation" && current && <><div className="progress" aria-label={`Étape ${stepIndex + 1} sur ${steps.length}`}>{steps.map((item, index) => <span key={item.id} className={index <= stepIndex ? "active" : ""} />)}</div><p className="eyebrow">Crée ton histoire · {pool.length} événements</p><h1 className="display-title">Une carrière.<br />Tes choix.</h1><p className="lede">Pas de bonne réponse. Seulement des conséquences qui te suivront jusque dans le dernier vestiaire.</p><h2 className="question">{current.question}</h2><div className="choice-list two-columns">{(current.options ?? []).map((option) => <button className="choice-button" key={option.id} onClick={() => chooseCreation(current.id, option.id)}><strong>{option.label}</strong>{"flavor" in option && option.flavor ? <small>{option.flavor}</small> : null}</button>)}</div></>}
+          {screen === "creation" && current && <>
+            <div className="progress" aria-label={`Étape ${stepIndex + 1} sur ${steps.length}`}>{steps.map((item, index) => <span key={item.id} className={index <= stepIndex ? "active" : ""} />)}</div>
+            {current.id === "nationalite"
+              ? <NationalityChoice onChoose={(optionId) => void chooseCreation(current.id, optionId)} />
+              : <><p className="eyebrow">Crée ton histoire · {pool.length} événements</p><h1 className="display-title">Une carrière.<br />Tes choix.</h1><p className="lede">Pas de bonne réponse. Seulement des conséquences qui te suivront jusque dans le dernier vestiaire.</p><h2 className="question">{current.question}</h2><div className="choice-list two-columns">{(current.options ?? []).map((option) => <button className={`choice-button${current.kind === "rewarded" && option.id !== "opt_perk_aucun" ? " rewarded" : ""}`} key={option.id} onClick={() => void chooseCreation(current.id, option.id)}><strong>{option.label}</strong>{"flavor" in option && option.flavor ? <small>{option.flavor}</small> : null}</button>)}</div>{adNotice && <p className="notice">{adNotice}</p>}</>}
+          </>}
           {screen === "identity" && <><p className="eyebrow">Dernier détail avant le tunnel</p><h1 className="display-title">Quel nom<br />restera ?</h1><p className="lede">Ce nom apparaîtra dans ta bibliothèque et sur ta carte de fin de carrière.</p><div className="inline-fields"><div className="form-field"><label htmlFor="player-name">Nom du joueur</label><input id="player-name" className="text-input" value={name} onChange={(event) => setName(event.target.value.slice(0,22))} placeholder="K. Diallo" autoComplete="off" /></div><div className="form-field"><label htmlFor="player-number">Numéro</label><input id="player-number" className="text-input" value={number} onChange={(event) => setNumber(event.target.value.replace(/\D/g,"").slice(0,2))} inputMode="numeric" /></div></div><button className="primary-button" onClick={startCareer}>Entrer sur le terrain</button></>}
           {screen === "club_choice" && initialClubOffers.length > 0 && <InitialClubChoice offers={initialClubOffers} onChoose={chooseInitialClub} />}
           {screen === "playing" && step?.kind === "event" && <><div className="event-meta"><span>{state?.age} ans · Acte {step.event.act}</span><span>Saison {Math.max(1,(state?.season ?? 0)+1)}</span></div><p className="eyebrow" style={{ marginTop: 34 }}>Le moment du choix</p><h1 className="question">{step.event.theme ?? "Ta carrière bascule"}</h1><p className="prompt">{step.event.prompt}</p><div className="choice-list">{step.choices.map((choice) => <button className={`choice-button${choice.rewarded ? " rewarded" : ""}`} key={choice.id} onClick={() => void choose(choice.id)}>{choice.label}</button>)}</div>{adNotice && <p className="notice">{adNotice}</p>}</>}
           {screen === "outcome" && <><p className="eyebrow">La conséquence</p><div className={`outcome-card${lastSuccess === false ? " failure" : ""}`}><p className="outcome-text">{lastOutcome}</p></div><div className="delta-row">{Object.entries(lastDeltas).map(([statName, delta]) => <span className={`delta-chip${delta < 0 ? " negative" : ""}`} key={statName}>{statName} {delta > 0 ? "+" : ""}{delta}</span>)}</div><button className="primary-button" onClick={continueAfter}>Saison suivante</button></>}
           {screen === "season_summary" && seasonSummary && <SeasonReview summary={seasonSummary} onContinue={continueAfterSeason} />}
+          {screen === "international_offer" && internationalOffer && <InternationalCallUp offer={internationalOffer} onAccept={() => chooseInternationalOffer(true)} onDecline={() => chooseInternationalOffer(false)} />}
           {screen === "transfer_market" && transferOffers.length > 0 && <TransferMarket offers={transferOffers} onChoose={chooseTransferOffer} />}
           {screen === "retirement" && <><p className="eyebrow">Le corps décide</p><h1 className="display-title">Encore une<br />saison ?</h1><p className="prompt">À {state?.age} ans, ton entourage pense que le moment est venu. Tu peux quitter le terrain maintenant, ou demander une dernière chance.</p><button className="choice-button rewarded" onClick={() => void extendCareer()}>Regarder une publicité pour jouer une saison de plus</button><div className="button-row"><button className="quiet-button" onClick={retireNow}>Prendre ma retraite</button></div>{adNotice && <p className="notice">{adNotice}</p>}</>}
           {screen === "over" && cardData && <><p className="eyebrow">Le dernier coup de sifflet</p><h1 className="question">Voilà ce qu’il reste de ta carrière.</h1><div className="card-wrap" ref={cardRef}><LegacyCard data={cardData} /></div><div className="button-row"><button className="primary-button share-button" onClick={onShare}>{shareState === "working" ? "Préparation…" : shareState === "shared" ? "Carrière partagée ✓" : shareState === "downloaded" ? "Image téléchargée ✓" : "Partager cette carrière"}</button><button className="quiet-button" onClick={restart}>Rejouer</button></div>{shareState === "error" && <p className="notice">L’export a échoué. Une capture d’écran fonctionne aussi.</p>}</>}

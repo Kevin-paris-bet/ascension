@@ -1,7 +1,7 @@
 # Ascension
 
 Simulateur de carrière sportive narratif, mobile-first. Moteur agnostique + pack `fr-football`.
-52 événements, 230 branches, 8 callbacks, 26 championnats, 156 clubs, sauvegarde Supabase et carte de partage 4:5.
+52 événements, 230 branches, 8 callbacks, 26 championnats, 156 clubs, 34 sélections nationales, sauvegarde Supabase et carte de partage 4:5.
 
 ## Installation
 
@@ -60,9 +60,12 @@ dans l'environnement **Preview** pour activer la connexion par lien e-mail.
 - Connexion par lien e-mail et consentement marketing séparé
 - Sauvegarde locale + cloud d'une carrière en cours
 - Monde football original : 26 championnats dans 21 pays et 156 clubs fictifs
+- Choix parmi 34 nationalités et carrière internationale réellement simulée
 - Choix parmi trois centres de formation au début de la carrière
-- Bilan saisonnier : matchs, titularisations, buts, passes, note, classement, objectif, trophées et valeur
+- Bilan saisonnier : championnat, coupe nationale, coupe continentale, matchs, clean sheets, note, objectif, trophées, distinctions et valeur
+- Convocations selon les performances, refus temporaire, nouvelle convocation possible, capitanat et grands tournois
 - Mercato : prolongation et trois offres externes, avec rôle, salaire, durée, prêt ou transfert
+- Promotions, relégations et retour automatique au club propriétaire après un prêt
 - Parcours des clubs et statistiques réelles repris dans la carte sociale finale
 - Bibliothèque des carrières terminées avec recherche, filtres, tri et comparaison
 - Interface responsive et manifeste PWA, préparant l'enveloppe mobile
@@ -71,7 +74,10 @@ dans l'environnement **Preview** pour activer la connexion par lien e-mail.
 ## Reste à faire
 
 - Branchements réels des rewarded ads web puis AdMob natif
-- Sélections nationales, coupes continentales et calendrier de compétitions
 - Classements complets saison par saison et fiches détaillées de clubs
+- Négociation des contrats, indemnités de transfert et intérêt déclaré pour un club
+- Condition physique, moral et relations séparés des attributs permanents
+- Records de club, retraite internationale et historique détaillé des distinctions
 - Défi du jour (le PRNG déterministe est prêt)
+- Mode Histoire, duel par seed, quêtes, badges, boutique et Panthéon
 - Mesure du taux de partage — métrique de survie, seuil 5 %

@@ -3,12 +3,16 @@ import { createInitialState } from "../engine/state";
 import { createRng } from "../engine/rng";
 import {
   acceptClubOffer,
+  acceptInternationalOffer,
+  declineInternationalOffer,
   generateAcademyOffers,
+  generateInternationalOffer,
   generateTransferOffers,
   getClub,
   getClubs,
   getLeague,
   getLeagues,
+  returnFromLoanIfDue,
   simulateSeason,
   startFootballCareer,
 } from "../lib/footballCareer";
@@ -48,7 +52,7 @@ const academyOffers = generateAcademyOffers(base);
 assert.equal(academyOffers.length, 3, "trois clubs doivent recruter le joueur au départ");
 assert.equal(new Set(academyOffers.map((offer) => offer.clubId)).size, 3, "les offres initiales doivent être distinctes");
 
-const started = startFootballCareer(base, academyOffers[0]);
+const started = startFootballCareer(base, academyOffers[0], "mali");
 assert.equal(started.state.org, academyOffers[0].clubId);
 assert.equal(started.career.clubHistory.length, 1);
 
@@ -60,6 +64,29 @@ const summary = seasonA.seasons[0];
 assert(summary.appearances >= summary.starts, "les apparitions ne peuvent pas être inférieures aux titularisations");
 assert(summary.tableFinish >= 1 && summary.tableFinish <= summary.tableSize, "le classement doit rester dans les bornes");
 assert(summary.averageRating >= 5.2 && summary.averageRating <= 9.4, "la note moyenne doit rester réaliste");
+assert(summary.domesticCup.appearances >= 1, "la coupe nationale doit être simulée");
+assert(Array.isArray(summary.individualAwards), "les distinctions individuelles doivent être calculées");
+
+const callUpState = { ...seasonState, stats: { technique: 82, physique: 80, vista: 84, mental: 82, aura: 75, vestiaire: 70 } };
+const eligibleCareer = {
+  ...seasonA,
+  seasons: [{ ...summary, appearances: 30, averageRating: 8.1 }],
+};
+const firstCall = generateInternationalOffer(callUpState, eligibleCareer);
+assert(firstCall, "une grande saison doit ouvrir la sélection nationale");
+assert.notEqual(firstCall.role, "Espoir", "une sélection senior doit proposer un rôle senior");
+const declined = declineInternationalOffer(callUpState, eligibleCareer);
+assert.equal(declined.career.international?.status, "declined");
+assert.equal(generateInternationalOffer(callUpState, declined.career), null, "la sélection ne doit pas rappeler immédiatement après un refus");
+const recalledState = { ...callUpState, season: declined.career.international?.nextOfferSeason ?? callUpState.season + 2 };
+const recalled = generateInternationalOffer(recalledState, declined.career);
+assert(recalled && recalled.previousRefusals === 1, "un refus doit permettre une nouvelle convocation plus tard");
+const selected = acceptInternationalOffer(recalledState, declined.career, recalled);
+assert.equal(selected.career.international?.status, "active");
+assert(selected.state.threads.has("international"));
+const internationalSeason = simulateSeason({ ...recalledState, season: 8, age: 22 }, selected.career, createRng("international-season"));
+assert((internationalSeason.international?.caps ?? 0) > 0, "une sélection acceptée doit produire de vraies sélections");
+assert(internationalSeason.seasons.at(-1)?.international?.tournament, "une saison de tournoi international doit être enregistrée");
 
 const offers = generateTransferOffers(seasonState, seasonA);
 assert.equal(offers.length, 4, "le mercato doit proposer une prolongation et trois clubs");
@@ -69,5 +96,21 @@ const accepted = acceptClubOffer(seasonState, seasonA, offers[1]);
 assert.equal(accepted.career.currentClubId, offers[1].clubId);
 assert.equal(accepted.career.clubHistory.length, 2, "un transfert doit être ajouté au parcours");
 assert.equal(accepted.career.clubHistory[0].toSeason, seasonState.season, "le passage précédent doit être clôturé");
+
+const loanTarget = clubs.find((club) => club.id !== started.career.currentClubId)!;
+const loaned = acceptClubOffer(seasonState, seasonA, {
+  id: `loan:test:${loanTarget.id}`,
+  clubId: loanTarget.id,
+  moveType: "loan",
+  role: "Titulaire",
+  salaryM: 0.5,
+  duration: 1,
+  competition: 45,
+  reason: "Test de prêt",
+});
+assert(loaned.career.loan, "un prêt doit mémoriser le club propriétaire");
+const returned = returnFromLoanIfDue({ ...seasonState, season: seasonState.season + 1 }, loaned.career);
+assert(returned.returned, "le joueur doit revenir automatiquement après son prêt");
+assert.equal(returned.career.currentClubId, started.career.currentClubId);
 
 console.log(`  ✓ football : ${leagues.length} championnats, ${clubs.length} clubs, saisons et mercato déterministes`);

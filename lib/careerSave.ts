@@ -5,9 +5,9 @@ import {
   type SerializedCareerState,
 } from "@/engine/serialization";
 import type { CareerState } from "@/engine/state";
-import type { ClubOffer, FootballCareer, SeasonSummary } from "@/lib/footballCareer";
+import type { ClubOffer, FootballCareer, InternationalOffer, SeasonSummary } from "@/lib/footballCareer";
 
-export type PersistedScreen = "club_choice" | "playing" | "outcome" | "season_summary" | "transfer_market" | "retirement";
+export type PersistedScreen = "club_choice" | "playing" | "outcome" | "season_summary" | "international_offer" | "transfer_market" | "retirement";
 export type PendingStepKind = "event" | "retirement" | "over";
 
 export type CareerSave = {
@@ -26,6 +26,7 @@ export type CareerSave = {
   initialClubOffers?: ClubOffer[];
   seasonSummary?: SeasonSummary;
   transferOffers?: ClubOffer[];
+  internationalOffer?: InternationalOffer;
   pendingKind?: PendingStepKind;
 };
 

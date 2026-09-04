@@ -81,6 +81,25 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .delta-chip.negative { background: #fde9e7; color: var(--danger); }
 .notice { margin-top: 14px; border: 1px solid #e0c46f; border-radius: 12px; background: #fff8e5; color: #705718; padding: 11px 13px; font-size: 12px; line-height: 1.5; }
 
+.region-picker { display: flex; gap: 6px; overflow-x: auto; margin: 20px 0 12px; padding-bottom: 4px; }
+.region-picker button { min-height: 34px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--muted); padding: 7px 12px; font-size: 10px; font-weight: 850; white-space: nowrap; }
+.region-picker button.active { border-color: var(--pitch); background: var(--pitch-soft); color: var(--pitch); }
+.nationality-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; max-height: 360px; overflow-y: auto; padding: 2px 3px 4px 1px; }
+.nationality-button { display: grid; grid-template-columns: 34px minmax(0,1fr); align-items: center; gap: 2px 8px; min-height: 63px; border: 1px solid var(--line); border-radius: 14px; background: #fff; color: var(--text); padding: 9px 11px; text-align: left; }
+.nationality-button:hover { border-color: var(--pitch); background: #f3faf6; }
+.nationality-button > span { grid-row: 1 / 3; font-size: 25px; }
+.nationality-button strong { overflow: hidden; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.nationality-button small { color: var(--muted); font-size: 8px; }
+.random-country { width: 100%; margin-top: 10px; }
+.national-callup { display: grid; grid-template-columns: 96px minmax(0,1fr) auto; align-items: center; gap: 18px; margin: 24px 0; border: 1px solid #dac16f; border-radius: 22px; background: linear-gradient(135deg,#fffaf0,#fff); padding: 20px; box-shadow: 0 14px 34px rgba(75,58,15,.09); }
+.national-flag { display: grid; width: 96px; height: 96px; place-items: center; border-radius: 25px; background: #fff; font-size: 55px; box-shadow: 0 7px 22px rgba(23,56,45,.09); }
+.national-callup h1 { margin: 0 0 5px; font-family: var(--font-display),sans-serif; font-size: 34px; text-transform: uppercase; }
+.national-callup p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+.callup-role { display: grid; gap: 5px; border-left: 1px solid #e1d6b3; color: var(--muted); padding-left: 16px; font-size: 9px; text-transform: uppercase; }
+.callup-role strong { color: #8a6814; font-size: 14px; }
+.callup-actions { display: flex; flex-wrap: wrap; gap: 9px; }
+.callup-note { color: var(--muted); font-size: 10px; line-height: 1.5; }
+
 .club-offer-list { display: grid; gap: 11px; }
 .club-offer { display: grid; grid-template-columns: 64px minmax(0,1fr) auto; align-items: center; gap: 13px; width: 100%; border: 1px solid var(--line); border-radius: 18px; background: #fff; color: var(--text); padding: 13px; text-align: left; box-shadow: 0 7px 18px rgba(17,56,43,.05); transition: 160ms ease; }
 .club-offer:hover { border-color: rgba(11,138,90,.55); background: #f5faf7; transform: translateY(-2px); box-shadow: 0 12px 24px rgba(17,56,43,.09); }
@@ -100,7 +119,7 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .season-hero .eyebrow, .season-hero .question, .season-hero p { margin: 0; }
 .season-hero p:last-child { margin-top: 5px; color: var(--muted); font-size: 11px; }
 .season-rating { display: grid; width: 64px; height: 64px; place-items: center; border-radius: 17px; background: linear-gradient(145deg,#f2d675,#c99a28); color: #523e10; font-family: var(--font-display),sans-serif; font-size: 29px; }
-.season-stat-grid { display: grid; grid-template-columns: repeat(4,1fr); overflow: hidden; border: 1px solid var(--line); border-radius: 17px; background: #fff; }
+.season-stat-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(70px,1fr)); overflow: hidden; border: 1px solid var(--line); border-radius: 17px; background: #fff; }
 .season-stat-grid div { border-right: 1px solid var(--line); padding: 16px 9px; text-align: center; }
 .season-stat-grid div:last-child { border: 0; }
 .season-stat-grid strong { display: block; color: var(--pitch); font-size: 24px; }
@@ -110,9 +129,19 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .season-objective span { color: var(--muted); font-size: 9px; font-weight: 850; text-transform: uppercase; }
 .season-objective strong { margin-top: 5px; font-size: 19px; }
 .season-objective small { margin-top: 3px; color: var(--muted); font-size: 9px; }
+.competition-grid { display: grid; gap: 7px; margin-top: 10px; }
+.competition-grid > div { display: flex; align-items: center; gap: 10px; border: 1px solid var(--line); border-radius: 13px; background: #fff; padding: 10px 12px; }
+.competition-grid > div.won { border-color: #dfc264; background: #fffaf0; }
+.competition-grid > div > span:last-child { display: grid; gap: 2px; }
+.competition-grid small { color: var(--muted); font-size: 9px; }
+.competition-grid strong { font-size: 11px; }
+.division-change { margin-top: 9px; border-radius: 12px; padding: 10px 12px; font-size: 10px; font-weight: 850; }
+.division-change.promotion { background: var(--pitch-soft); color: #086744; }
+.division-change.relegation { background: #fde9e7; color: var(--danger); }
 .success-text { color: var(--pitch); }
 .danger-text { color: var(--danger); }
 .trophy-strip { margin-top: 10px; border: 1px solid #dfc264; border-radius: 14px; background: #fff8dc; color: #705615; padding: 11px 13px; font-size: 11px; font-weight: 850; }
+.award-strip { margin-top: 8px; border: 1px solid #c8a9e5; border-radius: 14px; background: #f7f0ff; color: #694596; padding: 11px 13px; font-size: 11px; font-weight: 850; }
 .market-line { display: grid; grid-template-columns: 1fr auto; gap: 5px 12px; margin-top: 10px; border-top: 1px solid var(--line); padding: 13px 2px; }
 .market-line span { color: var(--muted); font-size: 10px; }
 .market-line strong { text-align: right; font-size: 11px; }
@@ -138,6 +167,13 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .club-line-rich > span:nth-child(2) strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .club-line-rich small { margin-top: 2px; color: var(--muted); font-size: 8px; }
 .contract-line { display: flex; justify-content: space-between; gap: 7px; padding: 0 16px 11px; color: var(--muted); font-size: 8px; font-weight: 750; }
+.international-line { display: grid; grid-template-columns: 32px minmax(0,1fr) auto; align-items: center; gap: 8px; margin: 0 16px 12px; border: 1px solid var(--line); border-radius: 12px; background: #fff; padding: 8px 10px; }
+.international-line.active { border-color: #d7b94e; background: #fffaf0; }
+.international-flag { font-size: 23px; }
+.international-line > span:nth-child(2) { display: grid; gap: 2px; }
+.international-line small { color: var(--muted); font-size: 7px; font-weight: 850; text-transform: uppercase; }
+.international-line strong { overflow: hidden; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.international-line em { border-radius: 99px; background: var(--gold); color: #fff; padding: 4px 6px; font-size: 7px; font-style: normal; font-weight: 900; }
 .career-progress { height: 7px; margin: 0 16px 18px; overflow: hidden; border-radius: 99px; background: #dfe4df; }
 .career-progress span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg,var(--gold),#f2d675,var(--pitch)); }
 .dossier-section-title { margin: 0 16px 9px; text-align: center; font-size: 12px; font-weight: 900; }
@@ -203,6 +239,9 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .world-heading .display-title { color: #fff; }
 .world-heading .eyebrow { color: #bfe8d6; }
 .world-heading p:last-child { margin: 13px 0 0; color: rgba(255,255,255,.7); font-size: 12px; }
+.world-tabs { display: flex; width: max-content; max-width: 100%; gap: 4px; overflow-x: auto; border: 1px solid rgba(255,255,255,.28); border-radius: 999px; background: rgba(4,63,48,.35); padding: 4px; }
+.world-tabs button { min-height: 38px; border: 0; border-radius: 999px; background: transparent; color: rgba(255,255,255,.75); padding: 8px 15px; font-size: 10px; font-weight: 850; white-space: nowrap; }
+.world-tabs button.active { background: #fff; color: var(--stadium); }
 .league-picker { display: grid; grid-template-columns: repeat(7,minmax(120px,1fr)); gap: 8px; overflow-x: auto; padding: 2px 2px 8px; scrollbar-width: thin; }
 .league-picker button { display: grid; min-height: 105px; gap: 2px; border: 1px solid rgba(255,255,255,.28); border-radius: 17px; background: rgba(4,63,48,.42); color: #fff; padding: 12px; text-align: left; backdrop-filter: blur(7px); }
 .league-picker button.active { border-color: #f1d474; background: var(--paper); color: var(--text); box-shadow: 0 10px 30px rgba(0,31,22,.18); }
@@ -210,6 +249,15 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .league-picker strong { align-self: end; font-size: 11px; }
 .league-picker small { color: inherit; font-size: 8px; opacity: .67; }
 .league-board { overflow: hidden; border: 1px solid rgba(255,255,255,.52); border-radius: 24px; background: var(--paper); box-shadow: 0 24px 65px rgba(0,31,22,.2); }
+.national-board { overflow: hidden; border: 1px solid rgba(255,255,255,.52); border-radius: 24px; background: var(--paper); box-shadow: 0 24px 65px rgba(0,31,22,.2); }
+.national-team-table { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); }
+.national-team-table > div { display: grid; grid-template-columns: 38px minmax(0,1fr) 34px; align-items: center; gap: 9px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 12px 15px; }
+.national-team-table > div:nth-child(3n) { border-right: 0; }
+.national-team-table > div > span:nth-child(2) { display: grid; gap: 2px; }
+.national-team-table strong { font-size: 12px; }
+.national-team-table > div > strong { color: var(--pitch); font-family: var(--font-display),sans-serif; font-size: 19px; text-align: right; }
+.national-team-table small { color: var(--muted); font-size: 8px; }
+.national-table-flag { font-size: 25px; }
 .league-board-head { display: flex; align-items: end; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line); padding: 20px 22px; }
 .league-board-head h2 { margin: 0; font-family: var(--font-display),sans-serif; font-size: 29px; text-transform: uppercase; }
 .league-board-head > span { color: var(--muted); font-size: 9px; font-weight: 850; text-transform: uppercase; }
@@ -253,6 +301,13 @@ button:disabled { cursor: not-allowed; opacity: .55; }
   .offer-facts { grid-column: 2; grid-template-columns: repeat(3,auto); justify-content: start; border: 0; padding: 0; text-align: left; }
   .world-heading { align-items: flex-start; flex-direction: column; }
   .world-heading .primary-button { width: 100%; }
+  .national-team-table { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .national-team-table > div:nth-child(3n) { border-right: 1px solid var(--line); }
+  .national-team-table > div:nth-child(2n) { border-right: 0; }
+  .nationality-grid { grid-template-columns: repeat(2,minmax(0,1fr)); max-height: 315px; }
+  .national-callup { grid-template-columns: 74px minmax(0,1fr); }
+  .national-flag { width: 74px; height: 74px; border-radius: 20px; font-size: 42px; }
+  .callup-role { grid-column: 2; border-left: 0; padding-left: 0; }
   .league-picker { grid-template-columns: repeat(7,130px); }
   .league-board-head, .club-table > div { padding-inline: 15px; }
 }
@@ -268,6 +323,10 @@ button:disabled { cursor: not-allowed; opacity: .55; }
   .season-rating { width: 55px; height: 55px; font-size: 24px; }
   .season-stat-grid strong { font-size: 20px; }
   .season-objective { grid-template-columns: 1fr; }
+  .nationality-grid { grid-template-columns: 1fr 1fr; }
+  .nationality-button { grid-template-columns: 29px minmax(0,1fr); padding-inline: 8px; }
+  .national-team-table { grid-template-columns: 1fr; }
+  .national-team-table > div { border-right: 0 !important; }
 }
 @media (min-width: 820px) and (max-width: 1020px) { .career-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
