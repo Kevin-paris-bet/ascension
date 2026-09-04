@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { parseCareerResult, type CareerResult } from "@/lib/careerResult";
 import type { Database } from "@/types/database";
+import { PlayerAvatar } from "@/app/components/PlayerAvatar";
 
 type SortMode = "recent" | "note" | "matches";
 const dateFormatter = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short", year: "numeric" });
@@ -99,7 +100,7 @@ export function CareerLibrary({ supabase, userId, onPlay }: {
             const card = result.summary;
             const isSelected = selected.includes(result.id);
             return <article className={`career-tile${isSelected ? " selected" : ""}`} key={result.id}>
-              <div className="career-tile-top"><span className="career-number">#{card.number}</span><span className="career-note">{card.note}</span></div>
+              <div className="career-tile-top"><PlayerAvatar className="career-avatar" seed={card.seed || card.name} /><span className="career-number">#{card.number}</span><span className="career-note">{card.note}</span></div>
               <p className="career-tier">{card.tier}</p><h2>{card.name}</h2><p className="career-meta">{card.position}{card.origin ? ` · ${card.origin}` : ""}</p>
               <div className="career-stats"><span><strong>{card.matches}</strong> matchs</span><span><strong>{card.goals}</strong> buts</span><span><strong>{card.assists}</strong> passes</span><span><strong>{card.caps}</strong> sélections</span></div>
               <div className="career-tile-footer"><time dateTime={result.completed_at}>{dateFormatter.format(new Date(result.completed_at))}</time><button className="compare-button" aria-pressed={isSelected} onClick={() => toggleSelection(result.id)}>{isSelected ? "Sélectionnée" : "Comparer"}</button></div>

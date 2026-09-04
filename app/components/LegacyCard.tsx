@@ -1,220 +1,97 @@
 "use client";
 
+import { PlayerAvatar } from "@/app/components/PlayerAvatar";
 import type { LegacyCardData } from "@/lib/legacyCard";
-import { getCardLabels } from "@/lib/legacyCard";
 
 export const CARD_WIDTH = 1080;
-export const CARD_HEIGHT = 1920;
+export const CARD_HEIGHT = 1350;
 
-/** Découpe un texte en lignes tenant dans une largeur donnée (approximation par caractères). */
 function wrap(text: string, maxChars: number, maxLines: number): string[] {
   const words = text.replace(/\s+/g, " ").trim().split(" ");
   const lines: string[] = [];
   let current = "";
   for (const word of words) {
-    if ((current + " " + word).trim().length <= maxChars) {
-      current = (current + " " + word).trim();
-    } else {
+    const candidate = `${current} ${word}`.trim();
+    if (candidate.length <= maxChars) current = candidate;
+    else {
       if (current) lines.push(current);
       current = word;
       if (lines.length === maxLines - 1) break;
     }
   }
   if (current && lines.length < maxLines) lines.push(current);
-  const joined = lines.join(" ");
-  if (joined.length < text.replace(/\s+/g, " ").trim().length && lines.length === maxLines) {
-    lines[maxLines - 1] = lines[maxLines - 1].replace(/[,;:.]?$/, "") + "…";
+  if (lines.join(" ").length < text.replace(/\s+/g, " ").trim().length && lines.length === maxLines) {
+    lines[maxLines - 1] = `${lines[maxLines - 1].replace(/[,;:.]?$/, "")}…`;
   }
   return lines;
 }
 
-const NAME_MAX_CHARS = 20;
-
-function fitName(raw: string): string {
-  const name = raw.trim().toUpperCase().replace(/\s+/g, " ");
-  if (name.length <= NAME_MAX_CHARS) return name;
-
-  const parts = name.split(" ");
-  if (parts.length > 1) {
-    const surname = parts[parts.length - 1];
-    const initials = parts.slice(0, -1).map((p) => `${p[0]}.`).join("");
-    const abbreviated = `${initials} ${surname}`;
-    if (abbreviated.length <= NAME_MAX_CHARS) return abbreviated;
-    return surname.length <= NAME_MAX_CHARS ? surname : `${surname.slice(0, NAME_MAX_CHARS - 1)}…`;
-  }
-  return `${name.slice(0, NAME_MAX_CHARS - 1)}…`;
+function fitName(raw: string): { value: string; size: number } {
+  const full = raw.trim().toUpperCase().replace(/\s+/g, " ") || "SANS NOM";
+  const parts = full.split(" ");
+  const abbreviated = full.length > 16 && parts.length > 1
+    ? `${parts.slice(0, -1).map((part) => `${part[0]}.`).join("")} ${parts.at(-1)}`
+    : full;
+  const value = abbreviated.length > 18 ? `${abbreviated.slice(0, 17)}…` : abbreviated;
+  return { value, size: Math.max(40, Math.min(62, Math.floor(610 / value.length))) };
 }
 
 type Props = { data: LegacyCardData; id?: string };
 
-/**
- * La carte est le produit (section 11). Deux éléments sont non négociables :
- * le RANG DE LÉGENDE — les gens partagent un classement, pas des statistiques —
- * et la citation en bas, qui rend deux captures différentes à stats égales.
- */
+/** Carte sociale 4:5 : lisible dans un feed et exportable sans police externe. */
 export function LegacyCard({ data, id = "legacy-card" }: Props) {
-  const labels = getCardLabels();
-  const isKeeper = data.position === "Gardien";
-  const quoteLines = wrap(data.quote, 40, 4);
-
-  // Le nom doit tenir sur une ligne dans les 920 px disponibles. Plutôt que de
-  // couper brutalement un nom long, on abrège les prénoms en initiales — c'est
-  // la convention des feuilles de match, et ça reste lisible.
-  const displayName = fitName(data.name);
-  const nameFontSize = Math.min(104, Math.floor(920 / (displayName.length * 0.62)));
-
-  // Un gardien affiche ses clean sheets ; les autres, buts et passes.
-  const stats: Array<[number, string]> = isKeeper
-    ? [
-        [data.matches, labels.matches],
-        [data.cleanSheets, labels.cleanSheets],
-      ]
-    : [
-        [data.matches, labels.matches],
-        [data.goals, labels.goals],
-        [data.assists, labels.assists],
-      ];
+  const name = fitName(data.name);
+  const quote = wrap(data.quote, 52, 3);
+  const honours = data.honours.length > 0 ? data.honours.slice(0, 3) : ["AUCUN TROPHÉE MAJEUR"];
+  const stats: Array<[number, string]> = data.position === "Gardien"
+    ? [[data.matches, "MATCHS"], [data.cleanSheets, "CLEAN SHEETS"], [data.caps, "SÉLECTIONS"], [data.seasons, "SAISONS"]]
+    : [[data.matches, "MATCHS"], [data.goals, "BUTS"], [data.assists, "PASSES D."], [data.caps, "SÉLECTIONS"]];
 
   return (
-    <svg
-      id={id}
-      viewBox={`0 0 ${CARD_WIDTH} ${CARD_HEIGHT}`}
-      xmlns="http://www.w3.org/2000/svg"
-      style={{ width: "100%", height: "auto", display: "block", borderRadius: 12 }}
-    >
+    <svg id={id} viewBox={`0 0 ${CARD_WIDTH} ${CARD_HEIGHT}`} xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "auto", display: "block", borderRadius: 22 }}>
       <defs>
-        <linearGradient id="bg" x1="0" y1="0" x2="0.4" y2="1">
-          <stop offset="0%" stopColor="#12121a" />
-          <stop offset="55%" stopColor="#0b0b10" />
-          <stop offset="100%" stopColor="#170d10" />
-        </linearGradient>
-        <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#e63946" />
-          <stop offset="100%" stopColor="#f0a13a" />
-        </linearGradient>
+        <linearGradient id="social-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#07583f" /><stop offset="1" stopColor="#0b8a5a" /></linearGradient>
+        <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#f6dc8b" /><stop offset="1" stopColor="#c99a28" /></linearGradient>
       </defs>
+      <rect width="1080" height="1350" fill="url(#social-bg)" />
+      <path d="M0 300 1080 0v190L0 495Z" fill="#0b694a" opacity=".7" />
+      <path d="M0 1110 1080 805v210L0 1320Z" fill="#064a36" opacity=".55" />
+      <circle cx="950" cy="245" r="250" fill="none" stroke="#ffffff" strokeOpacity=".06" strokeWidth="70" />
 
-      <rect width={CARD_WIDTH} height={CARD_HEIGHT} fill="url(#bg)" />
-      <rect x="0" y="0" width={CARD_WIDTH} height="10" fill="url(#accent)" />
+      <text x="62" y="70" fill="#fff" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="30" letterSpacing="8">ASCENSION</text>
+      <text x="1018" y="70" textAnchor="end" fill="#b8ddcd" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="21" letterSpacing="3">CARTE DE LÉGENDE</text>
 
-      {/* En-tête : identité */}
-      <text x="80" y="200" fill="#6a6a78" fontSize="34" letterSpacing="10" fontFamily="Helvetica, Arial, sans-serif">
-        ASCENSION
-      </text>
+      <rect x="50" y="105" width="980" height="1090" rx="44" fill="#fbfaf4" />
+      <PlayerAvatar seed={data.seed || data.name} x="84" y="150" width="220" height="244" />
+      <text x="335" y="205" fill="#66736d" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="24" letterSpacing="3">FIN DE CARRIÈRE</text>
+      <text x="335" y="278" fill="#17382d" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize={name.size}>{name.value}</text>
+      <text x="335" y="328" fill="#6d7973" fontFamily="Arial, Helvetica, sans-serif" fontSize="28">#{data.number}  ·  {data.position}{data.origin ? `  ·  ${data.origin}` : ""}</text>
+      {data.nickname ? <text x="335" y="378" fill="#8d6a12" fontFamily="Georgia, serif" fontStyle="italic" fontWeight="700" fontSize="29">« {data.nickname} »</text> : null}
 
-      <text
-        x="80"
-        y="330"
-        fill="#ffffff"
-        fontSize={nameFontSize}
-        fontWeight="700"
-        fontFamily="Helvetica, Arial, sans-serif"
-      >
-        {displayName}
-      </text>
+      <rect x="842" y="154" width="140" height="140" rx="30" fill="url(#gold)" />
+      <text x="912" y="195" textAnchor="middle" fill="#604810" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="18" letterSpacing="2">NOTE</text>
+      <text x="912" y="263" textAnchor="middle" fill="#17382d" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="70">{data.note}</text>
 
-      {data.nickname && (
-        <text x="80" y="400" fill="#f0a13a" fontSize="44" fontStyle="italic" fontFamily="Georgia, serif">
-          « {data.nickname} »
-        </text>
-      )}
+      <line x1="90" y1="430" x2="990" y2="430" stroke="#d9ddd8" strokeWidth="2" />
+      <text x="90" y="485" fill="#17382d" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="27" letterSpacing="2">STATISTIQUES</text>
+      {stats.map(([value, label], index) => {
+        const x = 90 + index * 225;
+        return <g key={label} transform={`translate(${x}, 535)`}><text fill="#17382d" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="51">{value}</text><text y="36" fill="#7a857f" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="17" letterSpacing="1">{label}</text></g>;
+      })}
 
-      <text x="80" y={data.nickname ? 470 : 410} fill="#9a9aa8" fontSize="40" fontFamily="Helvetica, Arial, sans-serif">
-        {data.position}
-        {data.origin ? ` · ${data.origin}` : ""}
-      </text>
+      <rect x="80" y="630" width="920" height="190" rx="26" fill="#eef3ef" />
+      <text x="110" y="680" fill="#607069" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="18" letterSpacing="3">PALMARÈS</text>
+      {honours.map((honour, index) => <g key={honour} transform={`translate(110, ${728 + index * 39})`}><circle cx="7" cy="-7" r="7" fill="#c99a28" /><text x="28" fill="#17382d" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="24">{honour}</text></g>)}
 
-      {/* Numéro de maillot — compte plus qu'on ne croit pour le partage (section 10.2).
-          Placé en haut à droite, au-dessus du bloc nom, pour ne jamais le chevaucher. */}
-      <text
-        x={CARD_WIDTH - 80}
-        y="215"
-        fill="#3a3a48"
-        fontSize="150"
-        fontWeight="700"
-        textAnchor="end"
-        fontFamily="Helvetica, Arial, sans-serif"
-      >
-        {data.number}
-      </text>
+      <text x="90" y="890" fill="#6b7771" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="18" letterSpacing="3">RANG DE LÉGENDE</text>
+      <text x="90" y="975" fill="#0a7a52" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="74">{data.tier.toUpperCase()}</text>
+      <text x="990" y="970" textAnchor="end" fill="#d0a434" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="40">{data.seasons} SAISONS</text>
+      <line x1="90" y1="1010" x2="990" y2="1010" stroke="#d9ddd8" strokeWidth="2" />
+      {quote.map((line, index) => <text key={line} x="90" y={1060 + index * 36} fill="#606b66" fontFamily="Georgia, serif" fontStyle="italic" fontSize="26">{index === 0 ? `« ${line}` : line}{index === quote.length - 1 ? " »" : ""}</text>)}
 
-      <line x1="80" y1="560" x2={CARD_WIDTH - 80} y2="560" stroke="#26262f" strokeWidth="3" />
-
-      {/* Saisons */}
-      <text x="80" y="670" fill="#ffffff" fontSize="72" fontWeight="700" fontFamily="Helvetica, Arial, sans-serif">
-        {data.seasons}
-      </text>
-      <text x="80" y="720" fill="#7a7a88" fontSize="36" fontFamily="Helvetica, Arial, sans-serif">
-        {labels.seasons}
-      </text>
-
-      {/* Statistiques */}
-      {stats.map(([value, label], i) => (
-        <g key={label} transform={`translate(${80 + i * 320}, 860)`}>
-          <text fill="#ffffff" fontSize="76" fontWeight="700" fontFamily="Helvetica, Arial, sans-serif">
-            {value}
-          </text>
-          <text y="52" fill="#7a7a88" fontSize="34" fontFamily="Helvetica, Arial, sans-serif">
-            {label}
-          </text>
-        </g>
-      ))}
-
-      {data.caps > 0 && (
-        <text x="80" y="1010" fill="#9a9aa8" fontSize="38" fontFamily="Helvetica, Arial, sans-serif">
-          {data.caps} {labels.caps}
-        </text>
-      )}
-
-      {/* Palmarès */}
-      {/* Puce dessinée en vectoriel plutôt qu'un caractère « ★ » : le glyphe
-          n'est pas présent dans toutes les polices système et disparaîtrait
-          silencieusement à la rastérisation. */}
-      {data.honours.map((h, i) => (
-        <g key={h} transform={`translate(0, ${1130 + i * 68})`}>
-          <path d="M 92 -14 L 104 -2 L 92 10 L 80 -2 Z" fill="#f0c674" />
-          <text x="126" y="0" fill="#f0c674" fontSize="42" letterSpacing="2" fontFamily="Helvetica, Arial, sans-serif">
-            {h}
-          </text>
-        </g>
-      ))}
-
-      {/* RANG DE LÉGENDE — l'élément qui déclenche le partage */}
-      <line x1="80" y1="1450" x2={CARD_WIDTH - 80} y2="1450" stroke="#26262f" strokeWidth="3" />
-      <text x="80" y="1530" fill="#7a7a88" fontSize="34" letterSpacing="6" fontFamily="Helvetica, Arial, sans-serif">
-        {labels.legacyRank}
-      </text>
-      <text x="80" y="1630" fill="#ffffff" fontSize="90" fontWeight="700" fontFamily="Helvetica, Arial, sans-serif">
-        {data.tier.toUpperCase()}
-      </text>
-      <text
-        x={CARD_WIDTH - 80}
-        y="1630"
-        fill="#e63946"
-        fontSize="90"
-        fontWeight="700"
-        textAnchor="end"
-        fontFamily="Helvetica, Arial, sans-serif"
-      >
-        {data.note}
-      </text>
-      <line x1="80" y1="1690" x2={CARD_WIDTH - 80} y2="1690" stroke="#26262f" strokeWidth="3" />
-
-      {/* Citation — rend deux captures différentes à statistiques égales */}
-      {quoteLines.map((line, i) => (
-        <text
-          key={i}
-          x="80"
-          y={1770 + i * 44}
-          fill="#8a8a98"
-          fontSize="36"
-          fontStyle="italic"
-          fontFamily="Georgia, serif"
-        >
-          {i === 0 ? `« ${line}` : line}
-          {i === quoteLines.length - 1 ? " »" : ""}
-        </text>
-      ))}
+      <rect x="50" y="1225" width="980" height="82" rx="27" fill="#083e2f" />
+      <text x="90" y="1277" fill="#ffffff" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontSize="27">J’AI OBTENU {data.note}/100. TU PEUX FAIRE MIEUX ?</text>
+      <text x="990" y="1277" textAnchor="end" fill="#f1cf69" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="18" letterSpacing="2">#ASCENSION</text>
     </svg>
   );
 }

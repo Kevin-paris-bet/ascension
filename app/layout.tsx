@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#060a0d",
+  themeColor: "#075f43",
 };
 
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-body", display: "swap" });

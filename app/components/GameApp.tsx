@@ -5,7 +5,6 @@ import type { User } from "@supabase/supabase-js";
 import {
   createCareer,
   findNextStep,
-  getConfig,
   getCreationSteps,
   getEventPool,
   finishCareer,
@@ -26,6 +25,7 @@ import { createCareerSave, parseCareerSave, restoreCareerState, type CareerSave 
 import { getSupabaseBrowserClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { requestRewardedAd } from "@/lib/rewardedAds";
 import { CareerLibrary } from "@/app/components/CareerLibrary";
+import { PlayerDossier } from "@/app/components/PlayerDossier";
 
 type Screen = "creation" | "identity" | "playing" | "outcome" | "retirement" | "over";
 type SaveStatus = "idle" | "saving" | "saved" | "local" | "error";
@@ -34,7 +34,6 @@ const LOCAL_SAVE_KEY = "ascension:career:v1";
 const PENDING_CONSENT_KEY = "ascension:pending-marketing-consent";
 
 export function GameApp() {
-  const config = useMemo(() => getConfig(), []);
   const pool = useMemo(() => getEventPool(), []);
   const steps = useMemo(() => getCreationSteps().filter((item) => item.kind === "choice"), []);
   const supabase = useMemo(() => getSupabaseBrowserClient(), []);
@@ -56,7 +55,7 @@ export function GameApp() {
   const [careerState, setCareerState] = useState<CareerState | null>(null);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
   const [adNotice, setAdNotice] = useState("");
-  const [shareState, setShareState] = useState<"idle" | "working" | "done" | "error">("idle");
+  const [shareState, setShareState] = useState<"idle" | "working" | "shared" | "downloaded" | "error">("idle");
   const [view, setView] = useState<AppView>("game");
 
   const stateRef = useRef<CareerState | null>(null);
@@ -279,8 +278,8 @@ export function GameApp() {
     if (!svg || !cardData) return;
     setShareState("working");
     try {
-      await shareCard(svg as SVGSVGElement, cardData.name);
-      setShareState("done");
+      const channel = await shareCard(svg as SVGSVGElement, cardData.name, cardData.note);
+      setShareState(channel === "share" ? "shared" : "downloaded");
     } catch {
       setShareState("error");
     }
@@ -328,7 +327,6 @@ export function GameApp() {
 
   const current = steps[stepIndex];
   const state = careerState;
-  const visibleStats = config.stats.visible.filter((item) => item.id !== "compte").slice(0, 4);
 
   return (
     <AppFrame user={user} view={view} onViewChange={setView} onSignOut={supabase && user ? () => void supabase.auth.signOut() : undefined}>
@@ -341,9 +339,9 @@ export function GameApp() {
           {screen === "playing" && step?.kind === "event" && <><div className="event-meta"><span>{state?.age} ans · Acte {step.event.act}</span><span>Saison {Math.max(1,(state?.season ?? 0)+1)}</span></div><p className="eyebrow" style={{ marginTop: 34 }}>Le moment du choix</p><h1 className="question">{step.event.theme ?? "Ta carrière bascule"}</h1><p className="prompt">{step.event.prompt}</p><div className="choice-list">{step.choices.map((choice) => <button className={`choice-button${choice.rewarded ? " rewarded" : ""}`} key={choice.id} onClick={() => void choose(choice.id)}>{choice.label}</button>)}</div>{adNotice && <p className="notice">{adNotice}</p>}</>}
           {screen === "outcome" && <><p className="eyebrow">La conséquence</p><div className={`outcome-card${lastSuccess === false ? " failure" : ""}`}><p className="outcome-text">{lastOutcome}</p></div><div className="delta-row">{Object.entries(lastDeltas).map(([statName, delta]) => <span className={`delta-chip${delta < 0 ? " negative" : ""}`} key={statName}>{statName} {delta > 0 ? "+" : ""}{delta}</span>)}</div><button className="primary-button" onClick={continueAfter}>Saison suivante</button></>}
           {screen === "retirement" && <><p className="eyebrow">Le corps décide</p><h1 className="display-title">Encore une<br />saison ?</h1><p className="prompt">À {state?.age} ans, ton entourage pense que le moment est venu. Tu peux quitter le terrain maintenant, ou demander une dernière chance.</p><button className="choice-button rewarded" onClick={() => void extendCareer()}>Regarder une publicité pour jouer une saison de plus</button><div className="button-row"><button className="quiet-button" onClick={retireNow}>Prendre ma retraite</button></div>{adNotice && <p className="notice">{adNotice}</p>}</>}
-          {screen === "over" && cardData && <><p className="eyebrow">Le dernier coup de sifflet</p><h1 className="question">Voilà ce qu’il reste de ta carrière.</h1><div className="card-wrap" ref={cardRef}><LegacyCard data={cardData} /></div><div className="button-row"><button className="primary-button" onClick={onShare}>{shareState === "working" ? "Préparation…" : shareState === "done" ? "Carte partagée" : "Partager ma légende"}</button><button className="quiet-button" onClick={restart}>Rejouer</button></div>{shareState === "error" && <p className="notice">L’export a échoué. Une capture d’écran fonctionne aussi.</p>}</>}
+          {screen === "over" && cardData && <><p className="eyebrow">Le dernier coup de sifflet</p><h1 className="question">Voilà ce qu’il reste de ta carrière.</h1><div className="card-wrap" ref={cardRef}><LegacyCard data={cardData} /></div><div className="button-row"><button className="primary-button share-button" onClick={onShare}>{shareState === "working" ? "Préparation…" : shareState === "shared" ? "Carrière partagée ✓" : shareState === "downloaded" ? "Image téléchargée ✓" : "Partager cette carrière"}</button><button className="quiet-button" onClick={restart}>Rejouer</button></div>{shareState === "error" && <p className="notice">L’export a échoué. Une capture d’écran fonctionne aussi.</p>}</>}
         </div></section>
-        <aside className={`side-panel${state ? " compact" : ""}`}><p className="panel-title">Dossier du joueur</p><div className="stat-grid">{visibleStats.map((item) => <div className="stat" key={item.id}><span className="stat-label">{item.label}</span><span className="stat-value">{state?.stats[item.id] ?? "—"}</span></div>)}</div><p className="save-status">{saveStatus === "saving" ? "Sauvegarde…" : saveStatus === "saved" ? "Sauvegardé dans ton compte" : saveStatus === "local" ? "Sauvegardé sur cet appareil" : saveStatus === "error" ? "Sauvegarde cloud à réessayer" : user ? "Compte connecté" : "Mode découverte"}</p></aside>
+        <div className="dossier-column"><PlayerDossier state={state} name={name} number={number} selection={selection} /><p className="save-status">{saveStatus === "saving" ? "Sauvegarde…" : saveStatus === "saved" ? "✓ Sauvegardé dans ton compte" : saveStatus === "local" ? "✓ Sauvegardé sur cet appareil" : saveStatus === "error" ? "Sauvegarde cloud à réessayer" : user ? "Compte connecté" : "Mode découverte"}</p></div>
       </div>
       </>}
     </AppFrame>

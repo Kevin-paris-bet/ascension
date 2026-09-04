@@ -61,7 +61,7 @@ export function downloadBlob(blob: Blob, filename: string) {
  * Renvoie le canal réellement utilisé pour permettre de mesurer le taux de
  * partage — la métrique de survie du projet (≥ 5 %, section 11).
  */
-export async function shareCard(svgElement: SVGSVGElement, playerName: string): Promise<"share" | "download"> {
+export async function shareCard(svgElement: SVGSVGElement, playerName: string, note: number): Promise<"share" | "download"> {
   const blob = await cardToPngBlob(svgElement);
   const filename = `ascension-${playerName.toLowerCase().replace(/[^a-z0-9]+/g, "-") || "carriere"}.png`;
   const file = new File([blob], filename, { type: "image/png" });
@@ -69,7 +69,7 @@ export async function shareCard(svgElement: SVGSVGElement, playerName: string): 
   const nav = navigator as Navigator & { canShare?: (data: ShareData) => boolean };
   if (typeof nav.share === "function" && nav.canShare?.({ files: [file] })) {
     try {
-      await nav.share({ files: [file], title: "Ascension" });
+      await nav.share({ files: [file], title: "Ma carrière Ascension", text: `J’ai obtenu ${note}/100 sur Ascension. Tu peux faire mieux ?` });
       return "share";
     } catch (err) {
       // L'utilisateur a annulé la feuille de partage : on ne retombe pas sur
