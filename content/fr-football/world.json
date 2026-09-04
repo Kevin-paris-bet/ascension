@@ -1,30 +1,212 @@
 {
   "leagues": [
-    { "id": "fr-elite", "name": "Hexagone Élite", "country": "France", "flag": "🇫🇷", "tier": 1, "strengthBase": 91, "clubs": ["Paris Athlétique", "Olympique Massilia", "Racing Riviera", "Lille Métropole", "AS Lumière", "Union Armorique"] },
-    { "id": "fr-pro2", "name": "Hexagone 2", "country": "France", "flag": "🇫🇷", "tier": 2, "strengthBase": 70, "clubs": ["FC Bastide", "Sporting Normand", "Étoile Alsace", "AC Loire", "Red Star Garonne", "RC Flandres"] },
-    { "id": "en-crown", "name": "Crown League", "country": "Angleterre", "flag": "🏴", "tier": 1, "strengthBase": 93, "clubs": ["London Kings", "Manchester Forge", "Mersey Rovers", "Northbridge United", "Thames Athletic", "Brighton South"] },
-    { "id": "en-championship", "name": "Crown Championship", "country": "Angleterre", "flag": "🏴", "tier": 2, "strengthBase": 72, "clubs": ["Leeds Albion", "Birmingham Iron", "Bristol Harbour", "Norwich Canaries", "Sheffield Foundry", "Sunderland Coast"] },
-    { "id": "es-sol", "name": "Liga del Sol", "country": "Espagne", "flag": "🇪🇸", "tier": 1, "strengthBase": 94, "clubs": ["Real Castilla", "Barcelona Marítim", "Atlético Capital", "Sevilla Aurora", "Valencia Turia", "Bilbao Harria"] },
-    { "id": "es-plata", "name": "Liga Plata", "country": "Espagne", "flag": "🇪🇸", "tier": 2, "strengthBase": 70, "clubs": ["Zaragoza Imperial", "Málaga Costa", "Granada Sierra", "Gijón Norte", "Tenerife Atlántico", "Córdoba Califal"] },
-    { "id": "it-supremo", "name": "Calcio Supremo", "country": "Italie", "flag": "🇮🇹", "tier": 1, "strengthBase": 92, "clubs": ["Milano Scala", "Torino Regale", "Inter Lombardia", "Roma Imperiale", "Napoli Vesuvio", "Firenze Viola"] },
-    { "id": "it-due", "name": "Calcio Due", "country": "Italie", "flag": "🇮🇹", "tier": 2, "strengthBase": 70, "clubs": ["Palermo Trinacria", "Bari Adriatico", "Venezia Laguna", "Parma Ducale", "Pisa Torre", "Modena Motori"] },
-    { "id": "de-meister", "name": "Meisterliga", "country": "Allemagne", "flag": "🇩🇪", "tier": 1, "strengthBase": 93, "clubs": ["München Adler", "Dortmund West", "Rhein Werk", "Leipzig Energie", "Berlin Union", "Hamburg Hansa"] },
-    { "id": "de-zweite", "name": "Zweite Meisterliga", "country": "Allemagne", "flag": "🇩🇪", "tier": 2, "strengthBase": 71, "clubs": ["Köln Dom", "Düsseldorf Rhein", "Hannover Rot", "Nürnberg Burg", "Karlsruhe Blau", "Dresden Dynamo"] },
-    { "id": "pt-atlantica", "name": "Liga Atlântica", "country": "Portugal", "flag": "🇵🇹", "tier": 1, "strengthBase": 85, "clubs": ["Lisboa Império", "Porto Dragão", "Sporting Tejo", "Braga Arsenal", "Vitória Minho", "Farense Sul"] },
-    { "id": "nl-oranje", "name": "Oranje Liga", "country": "Pays-Bas", "flag": "🇳🇱", "tier": 1, "strengthBase": 84, "clubs": ["Amsterdam Oranje", "Rotterdam Haven", "Eindhoven Licht", "Utrecht Dom", "Alkmaar Kaas", "Twente Ros"] },
-    { "id": "be-diamant", "name": "Ligue Diamant", "country": "Belgique", "flag": "🇧🇪", "tier": 1, "strengthBase": 79, "clubs": ["Bruxelles Royal", "Bruges Canaux", "Anderlecht Mauve", "Anvers Maritime", "Liège Ardente", "Gand Lys"] },
-    { "id": "sco-highland", "name": "Highland Premiership", "country": "Écosse", "flag": "🏴", "tier": 1, "strengthBase": 80, "clubs": ["Glasgow Celtic Crown", "Glasgow Rangers Union", "Edinburgh Hearts", "Aberdeen Granite", "Dundee Tayside", "Motherwell Steel"] },
-    { "id": "tr-bosphore", "name": "Bosphore Süper Ligue", "country": "Turquie", "flag": "🇹🇷", "tier": 1, "strengthBase": 82, "clubs": ["Istanbul Galata", "Fener Bosphore", "Besiktas Aigles", "Trabzon Mer Noire", "Bursa Vert", "Ankara Capital"] },
-    { "id": "at-alpen", "name": "Alpenliga", "country": "Autriche", "flag": "🇦🇹", "tier": 1, "strengthBase": 77, "clubs": ["Salzburg Alpen", "Wien Kaiser", "Graz Sturm", "Linz Donau", "Innsbruck Tirol", "Klagenfurt Wörther"] },
-    { "id": "ch-helvetique", "name": "Ligue Helvétique", "country": "Suisse", "flag": "🇨🇭", "tier": 1, "strengthBase": 76, "clubs": ["Basel Rhein", "Zürich Helvetia", "Bern Young Stars", "Genève Léman", "Lugano Ticino", "Lausanne Vaud"] },
-    { "id": "gr-hellenic", "name": "Hellenic League", "country": "Grèce", "flag": "🇬🇷", "tier": 1, "strengthBase": 78, "clubs": ["Athènes Olympion", "Piraeus Armada", "Thessaloniki Aigle", "Crète Minos", "Patras Achaïe", "Larissa Thessalie"] },
-    { "id": "dk-nordic", "name": "Nordic Superliga", "country": "Danemark", "flag": "🇩🇰", "tier": 1, "strengthBase": 75, "clubs": ["Copenhagen Royal", "Aarhus Viking", "Odense Fyn", "Aalborg Nord", "Brøndby Vest", "Midtjylland Loups"] },
-    { "id": "no-fjord", "name": "Fjordliga", "country": "Norvège", "flag": "🇳🇴", "tier": 1, "strengthBase": 74, "clubs": ["Oslo Fjord", "Bergen Bryggen", "Trondheim Nordlys", "Stavanger Oilers", "Molde Romsdal", "Tromsø Arctic"] },
-    { "id": "se-nordic-crown", "name": "Nordic Crown", "country": "Suède", "flag": "🇸🇪", "tier": 1, "strengthBase": 74, "clubs": ["Stockholm Krona", "Malmö Öresund", "Göteborg Hamn", "Uppsala Vikings", "Norrköping Industri", "Helsingborg Sund"] },
-    { "id": "pl-ekstraliga", "name": "Polska Ekstraliga", "country": "Pologne", "flag": "🇵🇱", "tier": 1, "strengthBase": 74, "clubs": ["Warszawa Legion", "Kraków Kings", "Poznań Rail", "Gdańsk Baltic", "Wrocław Silesia", "Łódź Textile"] },
-    { "id": "cz-bohemian", "name": "Bohemian League", "country": "Tchéquie", "flag": "🇨🇿", "tier": 1, "strengthBase": 74, "clubs": ["Praha Sparta", "Praha Slavia Crown", "Plzeň Brewery", "Ostrava Steel", "Liberec North", "Brno Moravia"] },
-    { "id": "sa-desert", "name": "Desert Pro League", "country": "Arabie saoudite", "flag": "🇸🇦", "tier": 1, "strengthBase": 84, "clubs": ["Riyadh Crescent", "Jeddah Union", "Riyadh Victory", "Dammam Gulf", "Mecca Unity", "Medina Stars"] },
-    { "id": "br-aurora", "name": "Campeonato Aurora", "country": "Brésil", "flag": "🇧🇷", "tier": 1, "strengthBase": 85, "clubs": ["Rio Carioca", "São Paulo Paulista", "Santos Maré", "Porto Alegre Gaúcho", "Belo Horizonte Minas", "Salvador Bahia"] },
-    { "id": "ar-plata", "name": "Liga del Plata", "country": "Argentine", "flag": "🇦🇷", "tier": 1, "strengthBase": 84, "clubs": ["Buenos Aires Azul", "Buenos Aires Millonarios", "Avellaneda Rojo", "Rosario Central Sur", "Córdoba Taller", "Mendoza Andes"] }
+    { "id": "fr-elite", "name": "Hexagone Élite", "country": "France", "flag": "🇫🇷", "tier": 1, "strengthBase": 91, "clubs": [
+      { "id": "paris-athletique", "name": "Paris Saint-Germain" },
+      { "id": "olympique-massilia", "name": "Olympique de Marseille" },
+      { "id": "racing-riviera", "name": "AS Monaco" },
+      { "id": "lille-metropole", "name": "LOSC Lille" },
+      { "id": "as-lumiere", "name": "Olympique Lyonnais" },
+      { "id": "union-armorique", "name": "Stade Rennais FC" }
+    ] },
+    { "id": "fr-pro2", "name": "Hexagone 2", "country": "France", "flag": "🇫🇷", "tier": 2, "strengthBase": 70, "clubs": [
+      { "id": "fc-bastide", "name": "AS Saint-Étienne" },
+      { "id": "sporting-normand", "name": "FC Nantes" },
+      { "id": "etoile-alsace", "name": "Stade de Reims" },
+      { "id": "ac-loire", "name": "FC Metz" },
+      { "id": "red-star-garonne", "name": "Montpellier HSC" },
+      { "id": "rc-flandres", "name": "FC Sochaux-Montbéliard" }
+    ] },
+    { "id": "en-crown", "name": "Crown League", "country": "Angleterre", "flag": "🏴", "tier": 1, "strengthBase": 93, "clubs": [
+      { "id": "london-kings", "name": "Arsenal" },
+      { "id": "manchester-forge", "name": "Manchester City" },
+      { "id": "mersey-rovers", "name": "Liverpool" },
+      { "id": "northbridge-united", "name": "Manchester United" },
+      { "id": "thames-athletic", "name": "Chelsea" },
+      { "id": "brighton-south", "name": "Brighton & Hove Albion" }
+    ] },
+    { "id": "en-championship", "name": "Crown Championship", "country": "Angleterre", "flag": "🏴", "tier": 2, "strengthBase": 72, "clubs": [
+      { "id": "leeds-albion", "name": "Wolverhampton Wanderers" },
+      { "id": "birmingham-iron", "name": "Birmingham City" },
+      { "id": "bristol-harbour", "name": "Bristol City" },
+      { "id": "norwich-canaries", "name": "Norwich City" },
+      { "id": "sheffield-foundry", "name": "Sheffield United" },
+      { "id": "sunderland-coast", "name": "Burnley" }
+    ] },
+    { "id": "es-sol", "name": "Liga del Sol", "country": "Espagne", "flag": "🇪🇸", "tier": 1, "strengthBase": 94, "clubs": [
+      { "id": "real-castilla", "name": "Real Madrid CF" },
+      { "id": "barcelona-maritim", "name": "FC Barcelona" },
+      { "id": "atletico-capital", "name": "Atlético de Madrid" },
+      { "id": "sevilla-aurora", "name": "Sevilla FC" },
+      { "id": "valencia-turia", "name": "Valencia CF" },
+      { "id": "bilbao-harria", "name": "Athletic Club" }
+    ] },
+    { "id": "es-plata", "name": "Liga Plata", "country": "Espagne", "flag": "🇪🇸", "tier": 2, "strengthBase": 70, "clubs": [
+      { "id": "zaragoza-imperial", "name": "RCD Mallorca" },
+      { "id": "malaga-costa", "name": "Girona FC" },
+      { "id": "granada-sierra", "name": "Real Oviedo" },
+      { "id": "gijon-norte", "name": "Granada CF" },
+      { "id": "tenerife-atlantico", "name": "Real Sporting de Gijón" },
+      { "id": "cordoba-califal", "name": "CD Tenerife" }
+    ] },
+    { "id": "it-supremo", "name": "Calcio Supremo", "country": "Italie", "flag": "🇮🇹", "tier": 1, "strengthBase": 92, "clubs": [
+      { "id": "milano-scala", "name": "Inter Milan" },
+      { "id": "torino-regale", "name": "Juventus FC" },
+      { "id": "inter-lombardia", "name": "AC Milan" },
+      { "id": "roma-imperiale", "name": "AS Roma" },
+      { "id": "napoli-vesuvio", "name": "SSC Napoli" },
+      { "id": "firenze-viola", "name": "ACF Fiorentina" }
+    ] },
+    { "id": "it-due", "name": "Calcio Due", "country": "Italie", "flag": "🇮🇹", "tier": 2, "strengthBase": 70, "clubs": [
+      { "id": "palermo-trinacria", "name": "Palermo FC" },
+      { "id": "bari-adriatico", "name": "Sampdoria" },
+      { "id": "venezia-laguna", "name": "Pisa Sporting Club" },
+      { "id": "parma-ducale", "name": "Hellas Verona" },
+      { "id": "pisa-torre", "name": "US Cremonese" },
+      { "id": "modena-motori", "name": "Modena FC" }
+    ] },
+    { "id": "de-meister", "name": "Meisterliga", "country": "Allemagne", "flag": "🇩🇪", "tier": 1, "strengthBase": 93, "clubs": [
+      { "id": "munchen-adler", "name": "FC Bayern München" },
+      { "id": "dortmund-west", "name": "Borussia Dortmund" },
+      { "id": "rhein-werk", "name": "Bayer 04 Leverkusen" },
+      { "id": "leipzig-energie", "name": "RB Leipzig" },
+      { "id": "berlin-union", "name": "1. FC Union Berlin" },
+      { "id": "hamburg-hansa", "name": "Hamburger SV" }
+    ] },
+    { "id": "de-zweite", "name": "Zweite Meisterliga", "country": "Allemagne", "flag": "🇩🇪", "tier": 2, "strengthBase": 71, "clubs": [
+      { "id": "koln-dom", "name": "Hertha BSC" },
+      { "id": "dusseldorf-rhein", "name": "VfL Bochum" },
+      { "id": "hannover-rot", "name": "Hannover 96" },
+      { "id": "nurnberg-burg", "name": "1. FC Nürnberg" },
+      { "id": "karlsruhe-blau", "name": "VfL Wolfsburg" },
+      { "id": "dresden-dynamo", "name": "1. FC Kaiserslautern" }
+    ] },
+    { "id": "pt-atlantica", "name": "Liga Atlântica", "country": "Portugal", "flag": "🇵🇹", "tier": 1, "strengthBase": 85, "clubs": [
+      { "id": "lisboa-imperio", "name": "SL Benfica" },
+      { "id": "porto-dragao", "name": "FC Porto" },
+      { "id": "sporting-tejo", "name": "Sporting CP" },
+      { "id": "braga-arsenal", "name": "SC Braga" },
+      { "id": "vitoria-minho", "name": "Vitória SC" },
+      { "id": "farense-sul", "name": "FC Famalicão" }
+    ] },
+    { "id": "nl-oranje", "name": "Oranje Liga", "country": "Pays-Bas", "flag": "🇳🇱", "tier": 1, "strengthBase": 84, "clubs": [
+      { "id": "amsterdam-oranje", "name": "Ajax" },
+      { "id": "rotterdam-haven", "name": "Feyenoord" },
+      { "id": "eindhoven-licht", "name": "PSV Eindhoven" },
+      { "id": "utrecht-dom", "name": "FC Utrecht" },
+      { "id": "alkmaar-kaas", "name": "AZ Alkmaar" },
+      { "id": "twente-ros", "name": "FC Twente" }
+    ] },
+    { "id": "be-diamant", "name": "Ligue Diamant", "country": "Belgique", "flag": "🇧🇪", "tier": 1, "strengthBase": 79, "clubs": [
+      { "id": "bruxelles-royal", "name": "RSC Anderlecht" },
+      { "id": "bruges-canaux", "name": "Club Brugge KV" },
+      { "id": "anderlecht-mauve", "name": "Royal Antwerp FC" },
+      { "id": "anvers-maritime", "name": "Union Saint-Gilloise" },
+      { "id": "liege-ardente", "name": "Standard de Liège" },
+      { "id": "gand-lys", "name": "KAA Gent" }
+    ] },
+    { "id": "sco-highland", "name": "Highland Premiership", "country": "Écosse", "flag": "🏴", "tier": 1, "strengthBase": 80, "clubs": [
+      { "id": "glasgow-celtic-crown", "name": "Celtic FC" },
+      { "id": "glasgow-rangers-union", "name": "Rangers FC" },
+      { "id": "edinburgh-hearts", "name": "Heart of Midlothian FC" },
+      { "id": "aberdeen-granite", "name": "Aberdeen FC" },
+      { "id": "dundee-tayside", "name": "Dundee United FC" },
+      { "id": "motherwell-steel", "name": "Motherwell FC" }
+    ] },
+    { "id": "tr-bosphore", "name": "Bosphore Süper Ligue", "country": "Turquie", "flag": "🇹🇷", "tier": 1, "strengthBase": 82, "clubs": [
+      { "id": "istanbul-galata", "name": "Galatasaray SK" },
+      { "id": "fener-bosphore", "name": "Fenerbahçe SK" },
+      { "id": "besiktas-aigles", "name": "Beşiktaş JK" },
+      { "id": "trabzon-mer-noire", "name": "Trabzonspor" },
+      { "id": "bursa-vert", "name": "İstanbul Başakşehir FK" },
+      { "id": "ankara-capital", "name": "Samsunspor" }
+    ] },
+    { "id": "at-alpen", "name": "Alpenliga", "country": "Autriche", "flag": "🇦🇹", "tier": 1, "strengthBase": 77, "clubs": [
+      { "id": "salzburg-alpen", "name": "FC Red Bull Salzburg" },
+      { "id": "wien-kaiser", "name": "SK Rapid Wien" },
+      { "id": "graz-sturm", "name": "SK Sturm Graz" },
+      { "id": "linz-donau", "name": "LASK" },
+      { "id": "innsbruck-tirol", "name": "FK Austria Wien" },
+      { "id": "klagenfurt-worther", "name": "Wolfsberger AC" }
+    ] },
+    { "id": "ch-helvetique", "name": "Ligue Helvétique", "country": "Suisse", "flag": "🇨🇭", "tier": 1, "strengthBase": 76, "clubs": [
+      { "id": "basel-rhein", "name": "FC Basel 1893" },
+      { "id": "zurich-helvetia", "name": "FC Zürich" },
+      { "id": "bern-young-stars", "name": "BSC Young Boys" },
+      { "id": "geneve-leman", "name": "Servette FC" },
+      { "id": "lugano-ticino", "name": "FC Lugano" },
+      { "id": "lausanne-vaud", "name": "FC Lausanne-Sport" }
+    ] },
+    { "id": "gr-hellenic", "name": "Hellenic League", "country": "Grèce", "flag": "🇬🇷", "tier": 1, "strengthBase": 78, "clubs": [
+      { "id": "athenes-olympion", "name": "Olympiacos FC" },
+      { "id": "piraeus-armada", "name": "Panathinaikos FC" },
+      { "id": "thessaloniki-aigle", "name": "PAOK FC" },
+      { "id": "crete-minos", "name": "AEK Athens FC" },
+      { "id": "patras-achaie", "name": "Aris Thessaloniki FC" },
+      { "id": "larissa-thessalie", "name": "OFI Crete FC" }
+    ] },
+    { "id": "dk-nordic", "name": "Nordic Superliga", "country": "Danemark", "flag": "🇩🇰", "tier": 1, "strengthBase": 75, "clubs": [
+      { "id": "copenhagen-royal", "name": "FC Copenhagen" },
+      { "id": "aarhus-viking", "name": "FC Midtjylland" },
+      { "id": "odense-fyn", "name": "Brøndby IF" },
+      { "id": "aalborg-nord", "name": "AGF" },
+      { "id": "br-ndby-vest", "name": "FC Nordsjælland" },
+      { "id": "midtjylland-loups", "name": "Randers FC" }
+    ] },
+    { "id": "no-fjord", "name": "Fjordliga", "country": "Norvège", "flag": "🇳🇴", "tier": 1, "strengthBase": 74, "clubs": [
+      { "id": "oslo-fjord", "name": "FK Bodø/Glimt" },
+      { "id": "bergen-bryggen", "name": "SK Brann" },
+      { "id": "trondheim-nordlys", "name": "Rosenborg BK" },
+      { "id": "stavanger-oilers", "name": "Viking FK" },
+      { "id": "molde-romsdal", "name": "Molde FK" },
+      { "id": "troms-arctic", "name": "Tromsø IL" }
+    ] },
+    { "id": "se-nordic-crown", "name": "Nordic Crown", "country": "Suède", "flag": "🇸🇪", "tier": 1, "strengthBase": 74, "clubs": [
+      { "id": "stockholm-krona", "name": "AIK" },
+      { "id": "malmo-oresund", "name": "Malmö FF" },
+      { "id": "goteborg-hamn", "name": "IFK Göteborg" },
+      { "id": "uppsala-vikings", "name": "Djurgårdens IF" },
+      { "id": "norrkoping-industri", "name": "Hammarby IF" },
+      { "id": "helsingborg-sund", "name": "IF Elfsborg" }
+    ] },
+    { "id": "pl-ekstraliga", "name": "Polska Ekstraliga", "country": "Pologne", "flag": "🇵🇱", "tier": 1, "strengthBase": 74, "clubs": [
+      { "id": "warszawa-legion", "name": "Legia Warszawa" },
+      { "id": "krakow-kings", "name": "Lech Poznań" },
+      { "id": "poznan-rail", "name": "Raków Częstochowa" },
+      { "id": "gdansk-baltic", "name": "Jagiellonia Białystok" },
+      { "id": "wroc-aw-silesia", "name": "Pogoń Szczecin" },
+      { "id": "odz-textile", "name": "Górnik Zabrze" }
+    ] },
+    { "id": "cz-bohemian", "name": "Bohemian League", "country": "Tchéquie", "flag": "🇨🇿", "tier": 1, "strengthBase": 74, "clubs": [
+      { "id": "praha-sparta", "name": "AC Sparta Praha" },
+      { "id": "praha-slavia-crown", "name": "SK Slavia Praha" },
+      { "id": "plzen-brewery", "name": "FC Viktoria Plzeň" },
+      { "id": "ostrava-steel", "name": "FC Baník Ostrava" },
+      { "id": "liberec-north", "name": "FC Slovan Liberec" },
+      { "id": "brno-moravia", "name": "SK Sigma Olomouc" }
+    ] },
+    { "id": "sa-desert", "name": "Desert Pro League", "country": "Arabie saoudite", "flag": "🇸🇦", "tier": 1, "strengthBase": 84, "clubs": [
+      { "id": "riyadh-crescent", "name": "Al-Hilal SFC" },
+      { "id": "jeddah-union", "name": "Al-Ittihad Club" },
+      { "id": "riyadh-victory", "name": "Al-Nassr FC" },
+      { "id": "dammam-gulf", "name": "Al-Qadsiah FC" },
+      { "id": "mecca-unity", "name": "Al-Ahli Saudi FC" },
+      { "id": "medina-stars", "name": "Al-Ettifaq FC" }
+    ] },
+    { "id": "br-aurora", "name": "Campeonato Aurora", "country": "Brésil", "flag": "🇧🇷", "tier": 1, "strengthBase": 85, "clubs": [
+      { "id": "rio-carioca", "name": "CR Flamengo" },
+      { "id": "sao-paulo-paulista", "name": "SE Palmeiras" },
+      { "id": "santos-mare", "name": "Santos FC" },
+      { "id": "porto-alegre-gaucho", "name": "SC Internacional" },
+      { "id": "belo-horizonte-minas", "name": "Clube Atlético Mineiro" },
+      { "id": "salvador-bahia", "name": "EC Bahia" }
+    ] },
+    { "id": "ar-plata", "name": "Liga del Plata", "country": "Argentine", "flag": "🇦🇷", "tier": 1, "strengthBase": 84, "clubs": [
+      { "id": "buenos-aires-azul", "name": "Boca Juniors" },
+      { "id": "buenos-aires-millonarios", "name": "River Plate" },
+      { "id": "avellaneda-rojo", "name": "Independiente" },
+      { "id": "rosario-central-sur", "name": "Rosario Central" },
+      { "id": "cordoba-taller", "name": "Talleres de Córdoba" },
+      { "id": "mendoza-andes", "name": "Racing Club" }
+    ] }
   ]
 }

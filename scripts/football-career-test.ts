@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { createInitialState } from "../engine/state";
@@ -26,6 +27,13 @@ assert.equal(leagues.length, 26, "le monde doit proposer 26 championnats");
 assert.equal(clubs.length, 156, "le monde doit proposer 156 clubs");
 assert.equal(new Set(leagues.map((league) => league.id)).size, leagues.length, "les ids de championnats doivent être uniques");
 assert.equal(new Set(clubs.map((club) => club.id)).size, clubs.length, "les ids de clubs doivent être uniques");
+const legacyClubIdFingerprint = createHash("sha256").update(clubs.map((club) => club.id).join("\n")).digest("hex");
+assert.equal(
+  legacyClubIdFingerprint,
+  "681488c9e9dbb86233453a38cdaf05dc9c045b4a801f4ae8c5d156dfe24425c2",
+  "les 156 ids historiques doivent rester strictement stables pour les anciennes sauvegardes"
+);
+assert.equal(new Set(clubs.map((club) => club.name)).size, clubs.length, "les noms affichés des clubs doivent être uniques");
 for (const club of clubs) assert.doesNotThrow(() => getLeague(club.leagueId), `${club.name} référence un championnat inconnu`);
 const previousClubIds = [
   "paris-athletique", "olympique-massilia", "racing-riviera", "lille-metropole", "as-lumiere", "union-armorique",

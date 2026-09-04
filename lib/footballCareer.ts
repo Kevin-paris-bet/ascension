@@ -137,7 +137,16 @@ export type ClubOffer = {
   reason: string;
 };
 
-type RawLeague = League & { strengthBase: number; clubs: string[] };
+type RawClub = {
+  /**
+   * Identifiant historique conservé pour que les sauvegardes créées avant
+   * l'arrivée des noms réels continuent à retrouver exactement le même club.
+   */
+  id: string;
+  name: string;
+};
+
+type RawLeague = League & { strengthBase: number; clubs: RawClub[] };
 
 const CLUB_PALETTES: Array<[string, string]> = [
   ["#173f8a", "#e4b83f"], ["#aa1f32", "#ffffff"], ["#0c6f52", "#f1d05c"],
@@ -147,10 +156,6 @@ const CLUB_PALETTES: Array<[string, string]> = [
 ];
 const STRENGTH_DROPS = [0, 3, 7, 11, 16, 21];
 
-function slugify(value: string): string {
-  return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-}
-
 function shortName(value: string): string {
   const words = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").split(/\s+/).filter(Boolean);
   return (words.length > 1 ? words.map((word) => word[0]).join("") : words[0]?.slice(0, 3) ?? "FC").slice(0, 3).toUpperCase();
@@ -159,12 +164,12 @@ function shortName(value: string): string {
 const rawLeagues = worldData.leagues as RawLeague[];
 const world: { leagues: League[]; clubs: Club[] } = {
   leagues: rawLeagues.map((league) => ({ id: league.id, name: league.name, country: league.country, flag: league.flag, flagCode: getCountryFlagCode(league.country), tier: league.tier })),
-  clubs: rawLeagues.flatMap((league, leagueIndex) => league.clubs.map((name, clubIndex) => {
+  clubs: rawLeagues.flatMap((league, leagueIndex) => league.clubs.map((rawClub, clubIndex) => {
     const strength = Math.max(48, league.strengthBase - (STRENGTH_DROPS[clubIndex] ?? clubIndex * 4));
     return {
-      id: slugify(name),
-      name,
-      short: shortName(name),
+      id: rawClub.id,
+      name: rawClub.name,
+      short: shortName(rawClub.name),
       leagueId: league.id,
       strength,
       prestige: Math.min(99, strength + (clubIndex < 2 ? 3 : 1)),

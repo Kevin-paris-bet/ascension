@@ -59,7 +59,7 @@ dans l'environnement **Preview** pour activer la connexion par lien e-mail.
 
 - Connexion par lien e-mail et consentement marketing séparé
 - Sauvegarde locale + cloud d'une carrière en cours
-- Monde football original : 26 championnats dans 21 pays et 156 clubs fictifs
+- Monde football : 26 championnats dans 21 pays et 156 clubs aux noms réels
 - Choix parmi 34 nationalités et carrière internationale réellement simulée
 - Choix parmi trois centres de formation au début de la carrière
 - Bilan saisonnier : championnat, coupe nationale, coupe continentale, matchs, clean sheets, note, objectif, trophées, distinctions et valeur
@@ -76,6 +76,11 @@ dans l'environnement **Preview** pour activer la connexion par lien e-mail.
 Les drapeaux SVG sont fournis par [flag-icons](https://github.com/lipis/flag-icons),
 distribué sous licence MIT. Ils sont embarqués dans l'application : aucun CDN
 externe n'est appelé pendant le jeu.
+
+Les noms de clubs sont utilisés uniquement pour identifier les équipes dans le
+jeu. Les écussons, couleurs et visuels restent des créations originales
+d'Ascension. Le projet n'est ni affilié, ni approuvé, ni sponsorisé par ces
+clubs ou par leurs compétitions.
 
 ## Reste à faire
 
