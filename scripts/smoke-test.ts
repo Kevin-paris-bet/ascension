@@ -8,6 +8,18 @@ import { applyChoice } from "../engine/progression";
 import { computeLegacy } from "../engine/legacy";
 import { createRng } from "../engine/rng";
 import { deserializeCareerState, serializeCareerState } from "../engine/serialization";
+import { parseLegacySummary } from "../lib/careerResult";
+
+{
+  const validSummary = {
+    name: "K. Diallo", number: 10, nickname: null, position: "Milieu", origin: "Paris",
+    seasons: 14, matches: 382, goals: 74, assists: 129, caps: 61, cleanSheets: 0,
+    honours: ["Champion"], note: 91, tier: "Légende", quote: "Une trace durable.", seed: "archive-1",
+  };
+  assert.deepEqual(parseLegacySummary(validSummary), validSummary, "un résumé de carrière valide doit être accepté");
+  assert.equal(parseLegacySummary({ ...validSummary, note: "91" }), null, "une donnée JSON mal typée doit être rejetée");
+  console.log("  [library] validation des archives JSON vérifiée");
+}
 
 const eventsDir = join("content/fr-football/events");
 const pool: Event[] = readdirSync(eventsDir)

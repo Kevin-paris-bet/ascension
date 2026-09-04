@@ -51,9 +51,20 @@ Copier `.env.example` vers `.env.local`, puis renseigner l'URL et la clé
 **publishable** du projet. Ne jamais utiliser de clé `secret` dans le navigateur.
 La migration versionnée dans `supabase/migrations/` active RLS sur chaque table.
 
+Ajouter également `https://<domaine>/auth/callback` aux URL de redirection autorisées
+dans Supabase Auth. Les previews Vercel ont besoin de leurs deux variables publiques
+dans l'environnement **Preview** pour activer la connexion par lien e-mail.
+
+## Déjà disponible
+
+- Connexion par lien e-mail et consentement marketing séparé
+- Sauvegarde locale + cloud d'une carrière en cours
+- Bibliothèque des carrières terminées avec recherche, filtres, tri et comparaison
+- Interface responsive et manifeste PWA, préparant l'enveloppe mobile
+- Emplacements de publicité récompensée sans attribution de récompense factice
+
 ## Reste à faire
 
-- Bibliothèque et comparaison des carrières terminées
 - Branchements réels des rewarded ads web puis AdMob natif
 - Défi du jour (le PRNG déterministe est prêt)
 - Mesure du taux de partage — métrique de survie, seuil 5 %

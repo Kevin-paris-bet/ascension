@@ -25,9 +25,11 @@ import { shareCard } from "@/lib/shareCard";
 import { createCareerSave, parseCareerSave, restoreCareerState, type CareerSave } from "@/lib/careerSave";
 import { getSupabaseBrowserClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { requestRewardedAd } from "@/lib/rewardedAds";
+import { CareerLibrary } from "@/app/components/CareerLibrary";
 
 type Screen = "creation" | "identity" | "playing" | "outcome" | "retirement" | "over";
 type SaveStatus = "idle" | "saving" | "saved" | "local" | "error";
+type AppView = "game" | "library";
 const LOCAL_SAVE_KEY = "ascension:career:v1";
 const PENDING_CONSENT_KEY = "ascension:pending-marketing-consent";
 
@@ -55,6 +57,7 @@ export function GameApp() {
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
   const [adNotice, setAdNotice] = useState("");
   const [shareState, setShareState] = useState<"idle" | "working" | "done" | "error">("idle");
+  const [view, setView] = useState<AppView>("game");
 
   const stateRef = useRef<CareerState | null>(null);
   const rngRef = useRef<Rng | null>(null);
@@ -317,7 +320,7 @@ export function GameApp() {
   if (!user && !demoMode) {
     return <AppFrame user={null}><AuthGate configured={Boolean(supabase)} onDemo={() => setDemoMode(true)} onSubmit={async (email, marketingConsent) => {
       if (!supabase) return "Supabase n’est pas encore configuré sur cet environnement.";
-      const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.origin, data: { marketing_consent: marketingConsent } } });
+      const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: `${window.location.origin}/auth/callback`, data: { marketing_consent: marketingConsent }, shouldCreateUser: true } });
       if (!error) window.localStorage.setItem(PENDING_CONSENT_KEY, String(marketingConsent));
       return error ? error.message : null;
     }} /></AppFrame>;
@@ -328,7 +331,8 @@ export function GameApp() {
   const visibleStats = config.stats.visible.filter((item) => item.id !== "compte").slice(0, 4);
 
   return (
-    <AppFrame user={user} onSignOut={supabase && user ? () => void supabase.auth.signOut() : undefined}>
+    <AppFrame user={user} view={view} onViewChange={setView} onSignOut={supabase && user ? () => void supabase.auth.signOut() : undefined}>
+      {view === "library" && supabase && user ? <CareerLibrary supabase={supabase} userId={user.id} onPlay={() => setView("game")} /> : <>
       {resumeSave && screen === "creation" && <div className="resume-card"><p>Une carrière de {resumeSave.identity.name} est disponible ({resumeSave.state.age} ans).</p><div className="button-row"><button className="primary-button" onClick={() => resumeCareer(resumeSave)}>Reprendre</button><button className="quiet-button" onClick={clearSave}>Nouvelle carrière</button></div></div>}
       <div className="game-layout">
         <section className="game-stage"><div className="stage-content">
@@ -341,12 +345,13 @@ export function GameApp() {
         </div></section>
         <aside className={`side-panel${state ? " compact" : ""}`}><p className="panel-title">Dossier du joueur</p><div className="stat-grid">{visibleStats.map((item) => <div className="stat" key={item.id}><span className="stat-label">{item.label}</span><span className="stat-value">{state?.stats[item.id] ?? "—"}</span></div>)}</div><p className="save-status">{saveStatus === "saving" ? "Sauvegarde…" : saveStatus === "saved" ? "Sauvegardé dans ton compte" : saveStatus === "local" ? "Sauvegardé sur cet appareil" : saveStatus === "error" ? "Sauvegarde cloud à réessayer" : user ? "Compte connecté" : "Mode découverte"}</p></aside>
       </div>
+      </>}
     </AppFrame>
   );
 }
 
-function AppFrame({ children, user, onSignOut }: { children: ReactNode; user: User | null; onSignOut?: () => void }) {
-  return <main className="app-shell"><header className="topbar"><div className="brand"><span className="brand-mark">A</span><span className="brand-name">Ascension</span></div>{user ? <button className="account-pill" onClick={onSignOut} title="Se déconnecter">{user.email}</button> : <span className="account-pill">Carrière narrative</span>}</header>{children}</main>;
+function AppFrame({ children, user, view = "game", onViewChange, onSignOut }: { children: ReactNode; user: User | null; view?: AppView; onViewChange?: (view: AppView) => void; onSignOut?: () => void }) {
+  return <main className="app-shell"><header className="topbar"><div className="brand"><span className="brand-mark">A</span><span className="brand-name">Ascension</span></div>{user && onViewChange ? <nav className="app-nav" aria-label="Navigation principale"><button className={view === "game" ? "active" : ""} onClick={() => onViewChange("game")}>Jouer</button><button className={view === "library" ? "active" : ""} onClick={() => onViewChange("library")}>Mes carrières</button></nav> : null}{user ? <button className="account-pill" onClick={onSignOut} title="Se déconnecter">{user.email}</button> : <span className="account-pill">Carrière narrative</span>}</header>{children}</main>;
 }
 
 function AuthGate({ configured, onDemo, onSubmit }: { configured: boolean; onDemo: () => void; onSubmit: (email: string, marketingConsent: boolean) => Promise<string | null> }) {
