@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
+import { resolve } from "node:path";
 import { createInitialState } from "../engine/state";
 import { createRng } from "../engine/rng";
 import {
@@ -16,6 +18,7 @@ import {
   simulateSeason,
   startFootballCareer,
 } from "../lib/footballCareer";
+import { getNationalTeams } from "../lib/nationalTeams";
 
 const leagues = getLeagues();
 const clubs = getClubs();
@@ -39,6 +42,16 @@ for (const country of ["France", "Angleterre", "Espagne", "Italie", "Allemagne"]
 }
 for (const country of ["Arabie saoudite", "Brésil", "Argentine"]) {
   assert(leagues.some((league) => league.country === country && league.tier === 1), `${country} doit avoir une première division`);
+}
+const displayedFlagCodes = new Set([
+  ...leagues.map((league) => league.flagCode),
+  ...getNationalTeams().map((team) => team.flagCode),
+]);
+for (const code of displayedFlagCodes) {
+  assert(
+    existsSync(resolve("node_modules", "flag-icons", "flags", "4x3", `${code}.svg`)),
+    `le drapeau SVG ${code} doit exister dans flag-icons`
+  );
 }
 
 const base = createInitialState({
@@ -113,4 +126,4 @@ const returned = returnFromLoanIfDue({ ...seasonState, season: seasonState.seaso
 assert(returned.returned, "le joueur doit revenir automatiquement après son prêt");
 assert.equal(returned.career.currentClubId, started.career.currentClubId);
 
-console.log(`  ✓ football : ${leagues.length} championnats, ${clubs.length} clubs, saisons et mercato déterministes`);
+console.log(`  ✓ football : ${leagues.length} championnats, ${clubs.length} clubs, ${displayedFlagCodes.size} drapeaux SVG, saisons et mercato déterministes`);

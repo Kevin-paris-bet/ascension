@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope, Oswald } from "next/font/google";
 import type { ReactNode } from "react";
+import "./flags.css";
 import "./globals.css";
 
 export const metadata: Metadata = {

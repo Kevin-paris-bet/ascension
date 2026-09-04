@@ -1,6 +1,7 @@
 import { createRng, type Rng } from "@/engine/rng";
 import type { CareerState } from "@/engine/state";
 import worldData from "@/content/fr-football/world.json";
+import { getCountryFlagCode } from "@/lib/countryFlags";
 import { getNationalTeam, type NationalTeam } from "@/lib/nationalTeams";
 
 export type SquadRole = "Espoir" | "Rotation" | "Titulaire" | "Cadre";
@@ -11,6 +12,7 @@ export type League = {
   name: string;
   country: string;
   flag: string;
+  flagCode: string;
   tier: number;
 };
 
@@ -156,7 +158,7 @@ function shortName(value: string): string {
 
 const rawLeagues = worldData.leagues as RawLeague[];
 const world: { leagues: League[]; clubs: Club[] } = {
-  leagues: rawLeagues.map((league) => ({ id: league.id, name: league.name, country: league.country, flag: league.flag, tier: league.tier })),
+  leagues: rawLeagues.map((league) => ({ id: league.id, name: league.name, country: league.country, flag: league.flag, flagCode: getCountryFlagCode(league.country), tier: league.tier })),
   clubs: rawLeagues.flatMap((league, leagueIndex) => league.clubs.map((name, clubIndex) => {
     const strength = Math.max(48, league.strengthBase - (STRENGTH_DROPS[clubIndex] ?? clubIndex * 4));
     return {

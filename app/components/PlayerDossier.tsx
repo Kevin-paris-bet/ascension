@@ -1,6 +1,7 @@
 "use client";
 
 import { PlayerAvatar } from "@/app/components/PlayerAvatar";
+import { CountryFlag } from "@/app/components/CountryFlag";
 import type { CareerState } from "@/engine/state";
 import type { CreationSelection } from "@/lib/engineBridge";
 import { computeOverall, getClub, getLeague, type FootballCareer } from "@/lib/footballCareer";
@@ -50,13 +51,13 @@ export function PlayerDossier({ state, name, number, selection, football }: {
         <div className="dossier-identity"><span className="dossier-kicker">DOSSIER JOUEUR</span><h2>{playerName}</h2><p>#{number || "10"} · {age} ans</p></div>
         <div className="rating-badge"><span>NOTE</span><strong>{score ?? "—"}</strong></div>
       </div>
-      <div className="dossier-tags"><span>{position}</span><span>{origin}</span>{nationalTeam ? <span>{nationalTeam.flag} {nationalTeam.name}</span> : <span>Sélection à choisir</span>}</div>
+      <div className="dossier-tags"><span>{position}</span><span>{origin}</span>{nationalTeam ? <span className="dossier-country"><CountryFlag code={nationalTeam.flagCode} label={nationalTeam.name} className="inline-country-flag" /> {nationalTeam.name}</span> : <span>Sélection à choisir</span>}</div>
       <div className="club-line club-line-rich">
-        {club ? <><ClubCrest clubId={club.id} size="small" /><span><strong>{club.name}</strong><small>{league?.flag} {league?.name}</small></span></> : <span>{state ? "Les clubs préparent leurs offres" : "En attente du premier contrat"}</span>}
+        {club ? <><ClubCrest clubId={club.id} size="small" /><span><strong>{club.name}</strong><small>{league && <CountryFlag code={league.flagCode} label={league.country} className="inline-country-flag" />} {league?.name}</small></span></> : <span>{state ? "Les clubs préparent leurs offres" : "En attente du premier contrat"}</span>}
         <strong>{state ? `S${Math.max(1, state.season + 1)}` : "U15"}</strong>
       </div>
       {football && <div className="contract-line"><span>{football.contract.role}</span><span>{football.contract.salaryM < 1 ? `${Math.round(football.contract.salaryM * 1000)} k€` : `${football.contract.salaryM.toFixed(1)} M€`}/an</span><span>jusqu’en S{football.contract.endSeason}</span></div>}
-      {international && nationalTeam && <div className={`international-line ${international.status}`}><span className="international-flag">{nationalTeam.flag}</span><span><small>Sélection nationale</small><strong>{international.status === "active" ? `${international.role} · ${international.caps} sélections` : international.status === "declined" ? "Convocation refusée · toujours éligible" : "Éligible, pas encore convoqué"}</strong></span>{international.captain && <em>CAP.</em>}</div>}
+      {international && nationalTeam && <div className={`international-line ${international.status}`}><CountryFlag code={nationalTeam.flagCode} label={nationalTeam.name} className="international-flag" /><span><small>Sélection nationale</small><strong>{international.status === "active" ? `${international.role} · ${international.caps} sélections` : international.status === "declined" ? "Convocation refusée · toujours éligible" : "Éligible, pas encore convoqué"}</strong></span>{international.captain && <em>CAP.</em>}</div>}
       <div className="career-progress" aria-label={`Progression de carrière ${Math.round(progress)} %`}><span style={{ width: `${progress}%` }} /></div>
       <p className="dossier-section-title">Attributs</p>
       <div className="dossier-stats">{stats.map(([label, value]) => <div key={label}><span>{label}</span><strong>{value ?? "—"}</strong></div>)}</div>

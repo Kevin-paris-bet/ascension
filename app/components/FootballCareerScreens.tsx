@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type CSSProperties } from "react";
+import { CountryFlag } from "@/app/components/CountryFlag";
 import {
   getClub,
   getClubs,
@@ -48,7 +49,7 @@ export function NationalityChoice({ onChoose }: { onChoose: (optionId: string) =
       {regions.map((item) => <button key={item} className={region === item ? "active" : ""} onClick={() => setRegion(item)}>{item}</button>)}
     </div>
     <div className="nationality-grid">
-      {visible.map((team) => <button key={team.id} className="nationality-button" onClick={() => onChoose(`opt_nat_${team.id}`)}><span>{team.flag}</span><strong>{team.name}</strong><small>{team.confederation}</small></button>)}
+      {visible.map((team) => <button key={team.id} className="nationality-button" onClick={() => onChoose(`opt_nat_${team.id}`)}><CountryFlag code={team.flagCode} label={team.name} className="nationality-flag" /><strong>{team.name}</strong><small>{team.confederation}</small></button>)}
     </div>
     <button className="quiet-button random-country" onClick={() => onChoose(`opt_nat_${teams[Math.floor(Math.random() * teams.length)].id}`)}>🎲 Choisir pour moi</button>
   </>;
@@ -59,7 +60,7 @@ export function InternationalCallUp({ offer, onAccept, onDecline }: { offer: Int
   return <>
     <p className="eyebrow">Convocation internationale</p>
     <div className="national-callup">
-      <span className="national-flag">{team.flag}</span>
+      <span className="national-flag"><CountryFlag code={team.flagCode} label={team.name} className="national-callup-flag" /></span>
       <div><h1>{team.name}</h1><p>{offer.reason}</p></div>
       <span className="callup-role">Rôle proposé<strong>{offer.role}</strong></span>
     </div>
@@ -76,7 +77,7 @@ export function SeasonReview({ summary, onContinue }: { summary: SeasonSummary; 
   const club = getClub(summary.clubId);
   const league = getLeague(summary.leagueId);
   return <>
-    <div className="event-meta"><span>Saison {summary.season}</span><span>{summary.age} ans · {league.flag} {league.country}</span></div>
+    <div className="event-meta"><span>Saison {summary.season}</span><span>{summary.age} ans · <CountryFlag code={league.flagCode} label={league.country} className="inline-country-flag" /> {league.country}</span></div>
     <div className="season-hero">
       <ClubCrest clubId={club.id} size="large" />
       <div><p className="eyebrow">Bilan de saison</p><h1 className="question">{club.name}</h1><p>{league.name} · {summary.role}</p></div>
@@ -135,16 +136,16 @@ export function FootballWorld({ currentClubId, onPlay }: { currentClubId?: strin
     </header>
     <div className="world-tabs"><button className={worldView === "clubs" ? "active" : ""} onClick={() => setWorldView("clubs")}>Championnats & clubs</button><button className={worldView === "nations" ? "active" : ""} onClick={() => setWorldView("nations")}>Sélections nationales</button></div>
     {worldView === "clubs" ? <><div className="league-picker" aria-label="Choisir un championnat">
-      {leagues.map((league) => <button key={league.id} className={selectedLeagueId === league.id ? "active" : ""} onClick={() => setSelectedLeagueId(league.id)}><span>{league.flag}</span><strong>{league.name}</strong><small>{league.country} · D{league.tier}</small></button>)}
+      {leagues.map((league) => <button key={league.id} className={selectedLeagueId === league.id ? "active" : ""} onClick={() => setSelectedLeagueId(league.id)}><CountryFlag code={league.flagCode} label={league.country} className="league-country-flag" /><strong>{league.name}</strong><small>{league.country} · D{league.tier}</small></button>)}
     </div>
     <article className="league-board">
-      <div className="league-board-head"><div><p className="eyebrow">{selectedLeague.flag} {selectedLeague.country}</p><h2>{selectedLeague.name}</h2></div><span>Indice club</span></div>
+      <div className="league-board-head"><div><p className="eyebrow"><CountryFlag code={selectedLeague.flagCode} label={selectedLeague.country} className="inline-country-flag" /> {selectedLeague.country}</p><h2>{selectedLeague.name}</h2></div><span>Indice club</span></div>
       <div className="club-table">
         {leagueClubs.map((club, index) => <div className={club.id === currentClubId ? "current" : ""} key={club.id}>
           <span className="table-rank">{index + 1}</span><ClubCrest clubId={club.id} size="small" /><span className="table-club"><strong>{club.name}</strong><small>{club.id === currentClubId ? "Ton club actuel" : `Prestige ${club.prestige}`}</small></span><strong className="strength-score">{club.strength}</strong>
         </div>)}
       </div>
-    </article></> : <article className="national-board"><div className="league-board-head"><div><p className="eyebrow">Carrière internationale</p><h2>34 sélections jouables</h2></div><span>Indice sélection</span></div><div className="national-team-table">{getNationalTeams().map((team) => <div key={team.id}><span className="national-table-flag">{team.flag}</span><span><strong>{team.name}</strong><small>{team.confederation}</small></span><strong>{team.strength}</strong></div>)}</div></article>}
+    </article></> : <article className="national-board"><div className="league-board-head"><div><p className="eyebrow">Carrière internationale</p><h2>34 sélections jouables</h2></div><span>Indice sélection</span></div><div className="national-team-table">{getNationalTeams().map((team) => <div key={team.id}><CountryFlag code={team.flagCode} label={team.name} className="national-table-flag" /><span><strong>{team.name}</strong><small>{team.confederation}</small></span><strong>{team.strength}</strong></div>)}</div></article>}
   </section>;
 }
 
@@ -153,7 +154,7 @@ function ClubOfferButton({ offer, onChoose }: { offer: ClubOffer; onChoose: (off
   const league = getLeague(club.leagueId);
   return <button className={`club-offer${offer.moveType === "stay" ? " stay" : ""}`} onClick={() => onChoose(offer)}>
     <ClubCrest clubId={club.id} />
-    <span className="offer-main"><small>{MOVE_LABELS[offer.moveType]} · {league.flag} {league.name}</small><strong>{club.name}</strong><em>{offer.reason}</em></span>
+    <span className="offer-main"><small>{MOVE_LABELS[offer.moveType]} · <CountryFlag code={league.flagCode} label={league.country} className="inline-country-flag" /> {league.name}</small><strong>{club.name}</strong><em>{offer.reason}</em></span>
     <span className="offer-facts"><strong>{offer.role}</strong><small>{offer.duration} an{offer.duration > 1 ? "s" : ""} · {formatMoney(offer.salaryM)}/an</small><span>Concurrence {offer.competition}%</span></span>
   </button>;
 }

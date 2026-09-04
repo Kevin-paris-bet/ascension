@@ -71,6 +71,12 @@ dans l'environnement **Preview** pour activer la connexion par lien e-mail.
 - Interface responsive et manifeste PWA, préparant l'enveloppe mobile
 - Emplacements de publicité récompensée sans attribution de récompense factice
 
+## Crédits visuels
+
+Les drapeaux SVG sont fournis par [flag-icons](https://github.com/lipis/flag-icons),
+distribué sous licence MIT. Ils sont embarqués dans l'application : aucun CDN
+externe n'est appelé pendant le jeu.
+
 ## Reste à faire
 
 - Branchements réels des rewarded ads web puis AdMob natif
