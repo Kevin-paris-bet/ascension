@@ -74,6 +74,7 @@ export function TransferMarket({ offers, onChoose }: { offers: ClubOffer[]; onCh
 export function FootballWorld({ currentClubId, onPlay }: { currentClubId?: string; onPlay: () => void }) {
   const leagues = getLeagues();
   const clubs = getClubs();
+  const countryCount = new Set(leagues.map((league) => league.country)).size;
   const currentLeagueId = currentClubId ? getClub(currentClubId).leagueId : undefined;
   const [selectedLeagueId, setSelectedLeagueId] = useState(currentLeagueId ?? leagues[0].id);
   const selectedLeague = getLeague(selectedLeagueId);
@@ -81,7 +82,7 @@ export function FootballWorld({ currentClubId, onPlay }: { currentClubId?: strin
 
   return <section className="world-page">
     <header className="world-heading">
-      <div><p className="eyebrow">Le monde d’Ascension</p><h1 className="display-title">Championnats<br />& clubs.</h1><p>7 compétitions · 6 pays · 42 équipes originales</p></div>
+      <div><p className="eyebrow">Le monde d’Ascension</p><h1 className="display-title">Championnats<br />& clubs.</h1><p>{leagues.length} compétitions · {countryCount} pays · {clubs.length} équipes originales</p></div>
       <button className="primary-button" onClick={onPlay}>Reprendre ma carrière</button>
     </header>
     <div className="league-picker" aria-label="Choisir un championnat">

@@ -5,6 +5,7 @@ import {
   acceptClubOffer,
   generateAcademyOffers,
   generateTransferOffers,
+  getClub,
   getClubs,
   getLeague,
   getLeagues,
@@ -14,11 +15,27 @@ import {
 
 const leagues = getLeagues();
 const clubs = getClubs();
-assert.equal(leagues.length, 7, "le monde doit proposer 7 championnats");
-assert.equal(clubs.length, 42, "le monde doit proposer 42 clubs");
+assert.equal(leagues.length, 26, "le monde doit proposer 26 championnats");
+assert.equal(clubs.length, 156, "le monde doit proposer 156 clubs");
 assert.equal(new Set(leagues.map((league) => league.id)).size, leagues.length, "les ids de championnats doivent être uniques");
 assert.equal(new Set(clubs.map((club) => club.id)).size, clubs.length, "les ids de clubs doivent être uniques");
 for (const club of clubs) assert.doesNotThrow(() => getLeague(club.leagueId), `${club.name} référence un championnat inconnu`);
+const previousClubIds = [
+  "paris-athletique", "olympique-massilia", "racing-riviera", "lille-metropole", "as-lumiere", "union-armorique",
+  "fc-bastide", "sporting-normand", "etoile-alsace", "ac-loire", "red-star-garonne", "rc-flandres",
+  "london-kings", "manchester-forge", "mersey-rovers", "northbridge-united", "thames-athletic", "brighton-south",
+  "real-castilla", "barcelona-maritim", "atletico-capital", "sevilla-aurora", "valencia-turia", "bilbao-harria",
+  "milano-scala", "torino-regale", "inter-lombardia", "roma-imperiale", "napoli-vesuvio", "firenze-viola",
+  "munchen-adler", "dortmund-west", "rhein-werk", "leipzig-energie", "berlin-union", "hamburg-hansa",
+  "lisboa-imperio", "porto-dragao", "sporting-tejo", "braga-arsenal", "vitoria-minho", "farense-sul",
+];
+for (const id of previousClubIds) assert.doesNotThrow(() => getClub(id), `une ancienne sauvegarde ne retrouve plus le club ${id}`);
+for (const country of ["France", "Angleterre", "Espagne", "Italie", "Allemagne"]) {
+  assert.deepEqual(leagues.filter((league) => league.country === country).map((league) => league.tier).sort(), [1, 2], `${country} doit avoir une D1 et une D2`);
+}
+for (const country of ["Arabie saoudite", "Brésil", "Argentine"]) {
+  assert(leagues.some((league) => league.country === country && league.tier === 1), `${country} doit avoir une première division`);
+}
 
 const base = createInitialState({
   seed: "football-system-001",

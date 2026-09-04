@@ -77,7 +77,41 @@ export type ClubOffer = {
   reason: string;
 };
 
-const world = worldData as { leagues: League[]; clubs: Club[] };
+type RawLeague = League & { strengthBase: number; clubs: string[] };
+
+const CLUB_PALETTES: Array<[string, string]> = [
+  ["#173f8a", "#e4b83f"], ["#aa1f32", "#ffffff"], ["#0c6f52", "#f1d05c"],
+  ["#191919", "#d43a37"], ["#1768a6", "#ffffff"], ["#63277f", "#e9c65b"],
+  ["#cf6f1b", "#202020"], ["#142d63", "#d73142"], ["#087b87", "#f3f0df"],
+  ["#7d152a", "#e7ae32"], ["#245139", "#ffffff"], ["#3d3d3d", "#cfb04d"],
+];
+const STRENGTH_DROPS = [0, 3, 7, 11, 16, 21];
+
+function slugify(value: string): string {
+  return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
+function shortName(value: string): string {
+  const words = value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").split(/\s+/).filter(Boolean);
+  return (words.length > 1 ? words.map((word) => word[0]).join("") : words[0]?.slice(0, 3) ?? "FC").slice(0, 3).toUpperCase();
+}
+
+const rawLeagues = worldData.leagues as RawLeague[];
+const world: { leagues: League[]; clubs: Club[] } = {
+  leagues: rawLeagues.map((league) => ({ id: league.id, name: league.name, country: league.country, flag: league.flag, tier: league.tier })),
+  clubs: rawLeagues.flatMap((league, leagueIndex) => league.clubs.map((name, clubIndex) => {
+    const strength = Math.max(48, league.strengthBase - (STRENGTH_DROPS[clubIndex] ?? clubIndex * 4));
+    return {
+      id: slugify(name),
+      name,
+      short: shortName(name),
+      leagueId: league.id,
+      strength,
+      prestige: Math.min(99, strength + (clubIndex < 2 ? 3 : 1)),
+      colors: CLUB_PALETTES[(leagueIndex * 3 + clubIndex) % CLUB_PALETTES.length],
+    } satisfies Club;
+  })),
+};
 const leagueById = new Map(world.leagues.map((league) => [league.id, league]));
 const clubById = new Map(world.clubs.map((club) => [club.id, club]));
 
