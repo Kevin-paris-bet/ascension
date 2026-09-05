@@ -73,6 +73,7 @@ export function createCareer(selection: CreationSelection, seed?: string): { sta
 
 export type NextStep =
   | { kind: "event"; event: Event; choices: Choice[] }
+  | { kind: "retirement_offer" }
   | { kind: "over"; legacy: LegacyResult };
 
 const retirementConfig = config.career.retirement as RetirementConfig;
@@ -110,16 +111,38 @@ export function findNextStep(state: CareerState, pool: Event[], rng: Rng): { ste
       return { step: { kind: "event", event, choices }, state: cursor };
     }
     cursor = advanceSeason(advanceAge(cursor, 1));
+    if (cursor.threads.has("rewarded:career_extension")) {
+      const threads = new Set(cursor.threads);
+      threads.delete("rewarded:career_extension");
+      cursor = { ...cursor, threads };
+      continue;
+    }
     // La retraite se joue entre deux saisons, une fois les événements de
     // l'année écoulés — sinon on couperait une carrière au milieu d'un arc.
-    if (shouldRetire(cursor, retirementConfig, rng)) break;
+    if (shouldRetire(cursor, retirementConfig, rng)) {
+      if (cursor.age >= retirementConfig.minAge && cursor.age < retirementConfig.maxAge && !cursor.threads.has("rewarded:career_extension_used")) {
+        return { step: { kind: "retirement_offer" }, state: cursor };
+      }
+      break;
+    }
   }
 
-  const legacy = computeLegacy(cursor, {
+  return { step: finishCareer(cursor), state: cursor };
+}
+
+export function finishCareer(state: CareerState): Extract<NextStep, { kind: "over" }> {
+  const legacy = computeLegacy(state, {
     statWeights: config.stats.note.weights,
     tiers: config.legacyTiers,
   });
-  return { step: { kind: "over", legacy }, state: cursor };
+  return { kind: "over", legacy };
+}
+
+export function grantCareerExtension(state: CareerState): CareerState {
+  const threads = new Set(state.threads);
+  threads.add("rewarded:career_extension");
+  threads.add("rewarded:career_extension_used");
+  return { ...state, threads };
 }
 
 export function pickChoice(state: CareerState, event: Event, choice: Choice, rng: Rng) {

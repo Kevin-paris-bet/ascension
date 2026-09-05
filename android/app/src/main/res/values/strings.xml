@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Ascension</string>
+    <string name="title_activity_main">Ascension</string>
+    <string name="package_name">com.ascension.football</string>
+    <string name="custom_url_scheme">com.ascension.football</string>
+</resources>

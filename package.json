@@ -7,31 +7,55 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "validate": "tsx scripts/validate-content.ts",
+    "lint": "eslint .",
+    "check": "npm run lint && npm run typecheck && npm run validate && npm run test && npm run build",
+    "validate": "node --import tsx scripts/validate-content.ts",
     "typecheck": "tsc --noEmit",
-    "test": "tsx scripts/smoke-test.ts",
-    "play": "tsx scripts/playthrough.ts",
-    "card": "tsx scripts/card-test.ts",
-    "render-card": "tsx --tsconfig tsconfig.render.json scripts/render-card.tsx"
+    "test": "node --import tsx scripts/smoke-test.ts && node --import tsx scripts/football-career-test.ts && npm run test:journeys && npm run test:ads && node --import tsx scripts/share-test.ts",
+    "test:football": "node --import tsx scripts/football-career-test.ts",
+    "play": "node --import tsx scripts/playthrough.ts",
+    "card": "node --import tsx scripts/card-test.ts",
+    "render-card": "node --import tsx scripts/render-card.tsx",
+    "build:mobile": "vite build --config mobile/vite.config.ts",
+    "android:sync": "npm run build:mobile && cap sync android",
+    "android:open": "cap open android",
+    "test:journeys": "node --import tsx scripts/journey-test.ts",
+    "test:ads": "node --import tsx scripts/rewarded-ads-test.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "next": "14.2.35",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "zod": "^4.5.4",
-    "typescript": "5.4.5",
+    "@capacitor-community/admob": "^8.1.0",
+    "@capacitor/android": "^8.5.1",
+    "@capacitor/core": "^8.5.1",
+    "@capacitor/filesystem": "^8.1.3",
+    "@capacitor/share": "^8.0.1",
+    "@supabase/ssr": "^0.12.5",
+    "@supabase/supabase-js": "^2.115.0",
     "@types/node": "^22.10.2",
-    "@types/react": "18.3.31",
-    "@types/react-dom": "18.3.7"
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7",
+    "flag-icons": "^7.5.0",
+    "next": "16.3.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "typescript": "5.4.5",
+    "zod": "^4.5.4"
   },
   "devDependencies": {
-    "tsx": "^4.19.2"
+    "@capacitor/cli": "^8.5.1",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.4",
+    "tsx": "^4.19.2",
+    "vite": "^8.2.2"
   },
   "type": "module",
   "engines": {
-    "node": ">=18.18.0"
+    "node": ">=20.9.0"
+  },
+  "overrides": {
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7"
   }
 }

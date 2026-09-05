@@ -1,7 +1,7 @@
 # Ascension
 
-Simulateur de carrière sportive narratif. Moteur agnostique + pack `fr-football`.
-52 événements, 230 branches, 8 callbacks, carte de partage 9:16.
+Simulateur de carrière sportive narratif, mobile-first. Moteur agnostique + pack `fr-football`.
+52 événements, 230 branches, 8 callbacks, 26 championnats à 20 équipes, 156 clubs majeurs, 34 sélections nationales, sauvegarde Supabase et carte de partage 4:5.
 
 ## Installation
 
@@ -14,18 +14,20 @@ npm run dev        # localhost:3000
 
 ```bash
 npm run typecheck   # avant chaque push
+npm run lint        # qualité React / Next.js
 npm run validate    # 0 erreur attendu
 npm run test        # smoke test moteur
 npm run play        # 300 carrières, vérifie les callbacks
 npm run card        # 200 cartes, vérifie les stats
+npm run check       # exécute toute la CI locale
 ```
 
 ## Structure — ne pas réorganiser
 
 ```
 engine/               moteur agnostique (aucun vocabulaire sportif)
-content/fr-football/  config, création, nommage, callbacks, 52 événements
-lib/                  pont moteur ↔ UI, carte, partage
+content/fr-football/  config, monde football, callbacks, 52 événements
+lib/                  pont moteur ↔ UI, saisons, mercato, carte, partage
 app/                  Next.js App Router
 types/                déclarations globales (imports CSS)
 scripts/              validateur, tests, simulations
@@ -43,8 +45,50 @@ En complément : `react-dom` est passé en dépendance de production (c'en est u
 
 Le build a été vérifié dans les deux modes, dont celui qui échouait (`npm ci` avec `NODE_ENV=production`).
 
+## Configuration Supabase
+
+Copier `.env.example` vers `.env.local`, puis renseigner l'URL et la clé
+**publishable** du projet. Ne jamais utiliser de clé `secret` dans le navigateur.
+La migration versionnée dans `supabase/migrations/` active RLS sur chaque table.
+
+Ajouter également `https://<domaine>/auth/callback` aux URL de redirection autorisées
+dans Supabase Auth. Les previews Vercel ont besoin de leurs deux variables publiques
+dans l'environnement **Preview** pour activer la connexion par lien e-mail.
+
+## Déjà disponible
+
+- Connexion par lien e-mail et consentement marketing séparé
+- Sauvegarde locale + cloud d'une carrière en cours
+- Monde football : 26 championnats dans 21 pays, tous simulés sur 20 équipes, et 156 clubs majeurs aux noms réels
+- Choix parmi 34 nationalités et carrière internationale réellement simulée
+- Choix parmi trois centres de formation au début de la carrière
+- Bilan saisonnier : championnat, coupe nationale, coupe continentale, matchs, clean sheets, note, objectif, trophées, distinctions et valeur
+- Convocations selon les performances, refus temporaire, nouvelle convocation possible, capitanat et grands tournois
+- Mercato : prolongation et trois offres externes, avec rôle, salaire, durée, prêt ou transfert
+- Promotions, relégations et retour automatique au club propriétaire après un prêt
+- Parcours des clubs et statistiques réelles repris dans la carte sociale finale
+- Bibliothèque des carrières terminées avec recherche, filtres, tri et comparaison
+- Interface responsive et manifeste PWA, préparant l'enveloppe mobile
+- Emplacements de publicité récompensée sans attribution de récompense factice
+
+## Crédits visuels
+
+Les drapeaux SVG sont fournis par [flag-icons](https://github.com/lipis/flag-icons),
+distribué sous licence MIT. Ils sont embarqués dans l'application : aucun CDN
+externe n'est appelé pendant le jeu.
+
+Les noms de clubs sont utilisés uniquement pour identifier les équipes dans le
+jeu. Les écussons, couleurs et visuels restent des créations originales
+d'Ascension. Le projet n'est ni affilié, ni approuvé, ni sponsorisé par ces
+clubs ou par leurs compétitions.
+
 ## Reste à faire
 
-- Persistance Supabase (projet `ascension`, ref `gaozhffmbvfmzvlgpoug`, vide)
+- Branchements réels des rewarded ads web puis AdMob natif
+- Classements complets saison par saison et fiches détaillées de clubs
+- Négociation des contrats, indemnités de transfert et intérêt déclaré pour un club
+- Condition physique, moral et relations séparés des attributs permanents
+- Records de club, retraite internationale et historique détaillé des distinctions
 - Défi du jour (le PRNG déterministe est prêt)
+- Mode Histoire, duel par seed, quêtes, badges, boutique et Panthéon
 - Mesure du taux de partage — métrique de survie, seuil 5 %

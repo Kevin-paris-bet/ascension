@@ -1,5 +1,11 @@
 "use client";
 
+declare global {
+  interface Window {
+    AscensionNativeShare?: (blob: Blob, filename: string, text: string) => Promise<"share" | "cancelled">;
+  }
+}
+
 import { CARD_WIDTH, CARD_HEIGHT } from "@/app/components/LegacyCard";
 
 /**
@@ -53,7 +59,8 @@ export function downloadBlob(blob: Blob, filename: string) {
   document.body.appendChild(a);
   a.click();
   a.remove();
-  URL.revokeObjectURL(url);
+  // Let Android's download manager consume the URL before releasing it.
+  setTimeout(() => URL.revokeObjectURL(url), 30_000);
 }
 
 /**
@@ -61,20 +68,27 @@ export function downloadBlob(blob: Blob, filename: string) {
  * Renvoie le canal réellement utilisé pour permettre de mesurer le taux de
  * partage — la métrique de survie du projet (≥ 5 %, section 11).
  */
-export async function shareCard(svgElement: SVGSVGElement, playerName: string): Promise<"share" | "download"> {
+export async function shareCard(svgElement: SVGSVGElement, playerName: string, note: number): Promise<"share" | "download" | "cancelled"> {
   const blob = await cardToPngBlob(svgElement);
+  return shareCardBlob(blob, playerName, note);
+}
+
+export async function shareCardBlob(blob: Blob, playerName: string, note: number): Promise<"share" | "download" | "cancelled"> {
   const filename = `ascension-${playerName.toLowerCase().replace(/[^a-z0-9]+/g, "-") || "carriere"}.png`;
+  if (window.AscensionNativeShare) {
+    return window.AscensionNativeShare(blob, filename, `J’ai obtenu ${note}/100 sur Ascension. Tu peux faire mieux ?`);
+  }
   const file = new File([blob], filename, { type: "image/png" });
 
   const nav = navigator as Navigator & { canShare?: (data: ShareData) => boolean };
   if (typeof nav.share === "function" && nav.canShare?.({ files: [file] })) {
     try {
-      await nav.share({ files: [file], title: "Ascension" });
+      await nav.share({ files: [file], title: "Ma carrière Ascension", text: `J’ai obtenu ${note}/100 sur Ascension. Tu peux faire mieux ?` });
       return "share";
     } catch (err) {
       // L'utilisateur a annulé la feuille de partage : on ne retombe pas sur
       // un téléchargement qu'il n'a pas demandé.
-      if (err instanceof DOMException && err.name === "AbortError") return "share";
+      if (err instanceof DOMException && err.name === "AbortError") return "cancelled";
     }
   }
 

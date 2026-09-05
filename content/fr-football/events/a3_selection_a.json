@@ -5,19 +5,20 @@
   "category": "core",
   "theme": "selection",
   "ageWindow": [23, 31],
+  "requires": { "threads": ["international"] },
   "once": true,
-  "prompt": "Première convocation en sélection A. À vingt-six ans, ce qui est tard, ce que tout le monde souligne.\n\nLe sélectionneur t'annonce en conférence de presse comme « une solution intéressante ». Pas comme un titulaire. Comme une solution.",
+  "prompt": "Après tes premières apparitions en sélection A, le sélectionneur te décrit en conférence de presse comme « une solution intéressante ». Pas encore comme un titulaire. Comme une solution.",
   "choices": [
     {
       "id": "accepter_selection",
-      "label": "Y aller et prendre ce qu'on te donne.",
+      "label": "Accepter ce rôle et prendre ce qu'on te donne.",
       "outcome": "Douze minutes contre une équipe de deuxième rang. Tu touches le ballon six fois. Tu ranges le maillot dans une vitrine.",
       "effects": { "stats": { "aura": 14, "mental": 8 }, "threads": ["international", "selection:assume"] }
     },
     {
       "id": "refuser_selection",
-      "label": "Refuser d'y aller pour un rôle de figurant.",
-      "outcome": "La presse te démolit pendant une semaine. Tu ne seras plus jamais rappelé.",
+      "label": "Refuser ce rassemblement pour ne pas être figurant.",
+      "outcome": "La presse te démolit pendant une semaine. Le sélectionneur désapprouve, mais la porte n'est pas définitivement fermée.",
       "effects": { "stats": { "aura": -14, "mental": 12 }, "threads": ["intransigeant", "regret_selection"] }
     },
     {
