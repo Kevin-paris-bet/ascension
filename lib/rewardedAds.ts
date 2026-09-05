@@ -1,4 +1,4 @@
-export type RewardedReason = "injury_recovery" | "career_extension" | "creation_perk";
+export type RewardedReason = "injury_recovery" | "career_extension" | "creation_perk" | "second_chance";
 
 export type RewardedAdRequest = {
   reason: RewardedReason;
@@ -22,13 +22,18 @@ declare global {
  * Point d'entrée unique pour le futur SDK AdMob/native. Une récompense n'est
  * accordée que si le provider confirme explicitement `completed`.
  */
+let showing = false;
 export async function requestRewardedAd(request: RewardedAdRequest): Promise<RewardedAdResult> {
-  const provider = window.AscensionRewardedAds;
-  if (!provider?.isAvailable()) return "unavailable";
-
+  if (typeof window === "undefined" || showing) return "unavailable";
+  showing = true;
   try {
-    return await provider.show(request);
+    const provider = window.AscensionRewardedAds;
+    if (!provider?.isAvailable()) return "unavailable";
+    const result = await provider.show(request);
+    return ["completed", "dismissed", "unavailable", "error"].includes(result) ? result : "error";
   } catch {
     return "error";
+  } finally {
+    showing = false;
   }
 }

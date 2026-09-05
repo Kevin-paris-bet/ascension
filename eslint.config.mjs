@@ -9,6 +9,8 @@ const eslintConfig = [
       "node_modules/**",
       ".next/**",
       "out/**",
+      "dist/**",
+      "android/app/src/main/assets/**",
       "build/**",
       "next-env.d.ts",
     ],

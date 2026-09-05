@@ -94,6 +94,14 @@ export function GameApp() {
   const stateRef = useRef<CareerState | null>(null);
   const rngRef = useRef<Rng | null>(null);
   const footballRef = useRef<FootballCareer | null>(null);
+  const actionBusy = useRef(false);
+  const [busy, setBusy] = useState(false);
+  async function exclusiveAction(action: () => Promise<void>) {
+    if (actionBusy.current) return;
+    actionBusy.current = true;
+    setBusy(true);
+    try { await action(); } finally { actionBusy.current = false; setBusy(false); }
+  }
   const cardRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -289,12 +297,12 @@ export function GameApp() {
     if (choice.rewarded) {
       setAdNotice("Préparation de la seconde chance…");
       const result = await requestRewardedAd({
-        reason: step.event.id.includes("blessure") ? "injury_recovery" : "career_extension",
+        reason: step.event.id.includes("blessure") ? "injury_recovery" : "second_chance",
         rewardLabel: choice.label,
       });
       if (result !== "completed") {
         setAdNotice(result === "unavailable"
-          ? "La régie publicitaire n’est pas encore branchée sur cette version web. Aucune récompense n’a été accordée."
+          ? "Aucune vidéo disponible pour le moment. Tu peux choisir une autre option."
           : "La publicité n’a pas été terminée : la récompense reste verrouillée.");
         return;
       }
@@ -375,7 +383,7 @@ export function GameApp() {
     setAdNotice("Préparation de la seconde chance…");
     const result = await requestRewardedAd({ reason: "career_extension", rewardLabel: "Une saison supplémentaire" });
     if (result !== "completed") {
-      setAdNotice(result === "unavailable" ? "La régie publicitaire n’est pas encore branchée. Tu peux terminer ta carrière normalement." : "La publicité n’a pas été terminée : la saison supplémentaire reste verrouillée.");
+      setAdNotice(result === "unavailable" ? "Aucune vidéo disponible pour le moment. Tu peux terminer ta carrière normalement." : "La publicité n’a pas été terminée : la saison supplémentaire reste verrouillée.");
       return;
     }
     const extended = grantCareerExtension(stateRef.current);
@@ -470,7 +478,7 @@ export function GameApp() {
     setShareState("working");
     try {
       const channel = await shareCard(svg as SVGSVGElement, cardData.name, cardData.note);
-      setShareState(channel === "share" ? "shared" : "downloaded");
+      setShareState(channel === "cancelled" ? "idle" : channel === "share" ? "shared" : "downloaded");
     } catch {
       setShareState("error");
     }
@@ -534,7 +542,7 @@ export function GameApp() {
   const state = careerState;
 
   return (
-    <AppFrame user={user} view={view} onViewChange={setView} onSignOut={supabase && user ? () => void supabase.auth.signOut() : undefined}>
+    <AppFrame busy={busy} user={user} view={view} onViewChange={setView} onSignOut={supabase && user ? () => void supabase.auth.signOut() : undefined}>
       {view === "world" ? <FootballWorld currentClubId={football?.currentClubId} onPlay={() => setView("game")} /> : view === "library" && supabase && user ? <CareerLibrary supabase={supabase} userId={user.id} onPlay={() => setView("game")} /> : <>
       {resumeSave && screen === "creation" && <div className="resume-card"><p>Une carrière de {resumeSave.identity.name} est disponible ({resumeSave.state.age} ans).</p><div className="button-row"><button className="primary-button" onClick={() => resumeCareer(resumeSave)}>Reprendre</button><button className="quiet-button" onClick={clearSave}>Nouvelle carrière</button></div></div>}
       <div className="game-layout">
@@ -542,18 +550,18 @@ export function GameApp() {
           {screen === "creation" && current && <>
             <div className="progress" aria-label={`Étape ${stepIndex + 1} sur ${steps.length}`}>{steps.map((item, index) => <span key={item.id} className={index <= stepIndex ? "active" : ""} />)}</div>
             {current.id === "nationalite"
-              ? <NationalityChoice onChoose={(optionId) => void chooseCreation(current.id, optionId)} />
-              : <><p className="eyebrow">Crée ton histoire · {pool.length} événements</p><h1 className="display-title">Une carrière.<br />Tes choix.</h1><p className="lede">Pas de bonne réponse. Seulement des conséquences qui te suivront jusque dans le dernier vestiaire.</p><h2 className="question">{current.question}</h2><div className="choice-list two-columns">{(current.options ?? []).map((option) => <button className={`choice-button${current.kind === "rewarded" && option.id !== "opt_perk_aucun" ? " rewarded" : ""}`} key={option.id} onClick={() => void chooseCreation(current.id, option.id)}><strong>{option.label}</strong>{"flavor" in option && option.flavor ? <small>{option.flavor}</small> : null}</button>)}</div>{adNotice && <p className="notice">{adNotice}</p>}</>}
+              ? <NationalityChoice onChoose={(optionId) => void exclusiveAction(() => chooseCreation(current.id, optionId))} />
+              : <><p className="eyebrow">Crée ton histoire · {pool.length} événements</p><h1 className="display-title">Une carrière.<br />Tes choix.</h1><p className="lede">Pas de bonne réponse. Seulement des conséquences qui te suivront jusque dans le dernier vestiaire.</p><h2 className="question">{current.question}</h2><div className="choice-list two-columns">{(current.options ?? []).map((option) => <button className={`choice-button${current.kind === "rewarded" && option.id !== "opt_perk_aucun" ? " rewarded" : ""}`} key={option.id} onClick={() => void exclusiveAction(() => chooseCreation(current.id, option.id))}><strong>{option.label}</strong>{"flavor" in option && option.flavor ? <small>{option.flavor}</small> : null}</button>)}</div>{adNotice && <p className="notice">{adNotice}</p>}</>}
           </>}
           {screen === "identity" && <><p className="eyebrow">Dernier détail avant le tunnel</p><h1 className="display-title">Quel nom<br />restera ?</h1><p className="lede">Ce nom apparaîtra dans ta bibliothèque et sur ta carte de fin de carrière.</p><div className="inline-fields"><div className="form-field"><label htmlFor="player-name">Nom du joueur</label><input id="player-name" className="text-input" value={name} onChange={(event) => setName(event.target.value.slice(0,22))} placeholder="K. Diallo" autoComplete="off" /></div><div className="form-field"><label htmlFor="player-number">Numéro</label><input id="player-number" className="text-input" value={number} onChange={(event) => setNumber(event.target.value.replace(/\D/g,"").slice(0,2))} inputMode="numeric" /></div></div><button className="primary-button" onClick={startCareer}>Entrer sur le terrain</button></>}
           {screen === "club_choice" && initialClubOffers.length > 0 && <InitialClubChoice offers={initialClubOffers} onChoose={chooseInitialClub} />}
-          {screen === "playing" && step?.kind === "event" && <><div className="event-meta"><span>{state?.age} ans · Acte {step.event.act}</span><span>Saison {Math.max(1,(state?.season ?? 0)+1)}</span></div><p className="eyebrow" style={{ marginTop: 34 }}>Le moment du choix</p><h1 className="question">{step.event.theme ?? "Ta carrière bascule"}</h1><p className="prompt">{step.event.prompt}</p><div className="choice-list">{step.choices.map((choice) => <button className={`choice-button${choice.rewarded ? " rewarded" : ""}`} key={choice.id} onClick={() => void choose(choice.id)}>{choice.label}</button>)}</div>{adNotice && <p className="notice">{adNotice}</p>}</>}
+          {screen === "playing" && step?.kind === "event" && <><div className="event-meta"><span>{state?.age} ans · Acte {step.event.act}</span><span>Saison {Math.max(1,(state?.season ?? 0)+1)}</span></div><p className="eyebrow" style={{ marginTop: 34 }}>Le moment du choix</p><h1 className="question">{step.event.theme ?? "Ta carrière bascule"}</h1><p className="prompt">{step.event.prompt}</p><div className="choice-list">{step.choices.map((choice) => <button className={`choice-button${choice.rewarded ? " rewarded" : ""}`} key={choice.id} onClick={() => void exclusiveAction(() => choose(choice.id))}>{choice.label}</button>)}</div>{adNotice && <p className="notice">{adNotice}</p>}</>}
           {screen === "outcome" && <><p className="eyebrow">La conséquence</p><div className={`outcome-card${lastSuccess === false ? " failure" : ""}`}><p className="outcome-text">{lastOutcome}</p></div><div className="delta-row">{Object.entries(lastDeltas).map(([statName, delta]) => <span className={`delta-chip${delta < 0 ? " negative" : ""}`} key={statName}>{statName} {delta > 0 ? "+" : ""}{delta}</span>)}</div><button className="primary-button" onClick={continueAfter}>Saison suivante</button></>}
           {screen === "season_summary" && seasonSummary && <SeasonReview summary={seasonSummary} onContinue={continueAfterSeason} />}
           {screen === "international_offer" && internationalOffer && <InternationalCallUp offer={internationalOffer} onAccept={() => chooseInternationalOffer(true)} onDecline={() => chooseInternationalOffer(false)} />}
           {screen === "transfer_market" && transferOffers.length > 0 && <TransferMarket offers={transferOffers} onChoose={chooseTransferOffer} />}
-          {screen === "retirement" && <><p className="eyebrow">Le corps décide</p><h1 className="display-title">Encore une<br />saison ?</h1><p className="prompt">À {state?.age} ans, ton entourage pense que le moment est venu. Tu peux quitter le terrain maintenant, ou demander une dernière chance.</p><button className="choice-button rewarded" onClick={() => void extendCareer()}>Regarder une publicité pour jouer une saison de plus</button><div className="button-row"><button className="quiet-button" onClick={retireNow}>Prendre ma retraite</button></div>{adNotice && <p className="notice">{adNotice}</p>}</>}
-          {screen === "over" && cardData && <><p className="eyebrow">Le dernier coup de sifflet</p><h1 className="question">Voilà ce qu’il reste de ta carrière.</h1><div className="card-wrap" ref={cardRef}><LegacyCard data={cardData} /></div><div className="button-row"><button className="primary-button share-button" onClick={onShare}>{shareState === "working" ? "Préparation…" : shareState === "shared" ? "Carrière partagée ✓" : shareState === "downloaded" ? "Image téléchargée ✓" : "Partager cette carrière"}</button><button className="quiet-button" onClick={restart}>Rejouer</button></div>{shareState === "error" && <p className="notice">L’export a échoué. Une capture d’écran fonctionne aussi.</p>}</>}
+          {screen === "retirement" && <><p className="eyebrow">Le corps décide</p><h1 className="display-title">Encore une<br />saison ?</h1><p className="prompt">À {state?.age} ans, ton entourage pense que le moment est venu. Tu peux quitter le terrain maintenant, ou demander une dernière chance.</p><button className="choice-button rewarded" onClick={() => void exclusiveAction(extendCareer)}>Regarder une publicité pour jouer une saison de plus</button><div className="button-row"><button className="quiet-button" onClick={retireNow}>Prendre ma retraite</button></div>{adNotice && <p className="notice">{adNotice}</p>}</>}
+          {screen === "over" && cardData && <><p className="eyebrow">Le dernier coup de sifflet</p><h1 className="question">Voilà ce qu’il reste de ta carrière.</h1><div className="card-wrap" ref={cardRef}><LegacyCard data={cardData} /></div><div className="button-row"><button className="primary-button share-button" onClick={() => void exclusiveAction(onShare)}>{shareState === "working" ? "Préparation…" : shareState === "shared" ? "Partage ouvert ✓" : shareState === "downloaded" ? "Image téléchargée ✓" : "Partager cette carrière"}</button><button className="quiet-button" onClick={restart}>Rejouer</button></div>{shareState === "error" && <p className="notice">L’export a échoué. Une capture d’écran fonctionne aussi.</p>}</>}
         </div></section>
         <div className="dossier-column"><PlayerDossier state={state} name={name} number={number} selection={selection} football={football} /><p className="save-status">{saveStatus === "saving" ? "Sauvegarde…" : saveStatus === "saved" ? "✓ Sauvegardé dans ton compte" : saveStatus === "local" ? "✓ Sauvegardé sur cet appareil" : saveStatus === "error" ? "Sauvegarde cloud à réessayer" : user ? "Compte connecté" : "Mode découverte"}</p></div>
       </div>
@@ -562,8 +570,8 @@ export function GameApp() {
   );
 }
 
-function AppFrame({ children, user, view = "game", onViewChange, onSignOut }: { children: ReactNode; user: User | null; view?: AppView; onViewChange?: (view: AppView) => void; onSignOut?: () => void }) {
-  return <main className="app-shell"><header className="topbar"><div className="brand"><span className="brand-mark">A</span><span className="brand-name">Ascension</span></div>{onViewChange ? <nav className="app-nav" aria-label="Navigation principale"><button className={view === "game" ? "active" : ""} onClick={() => onViewChange("game")}>Jouer</button><button className={view === "world" ? "active" : ""} onClick={() => onViewChange("world")}>Monde</button>{user ? <button className={view === "library" ? "active" : ""} onClick={() => onViewChange("library")}>Mes carrières</button> : null}</nav> : null}{user ? <button className="account-pill" onClick={onSignOut} title="Se déconnecter">{user.email}</button> : <span className="account-pill">Carrière narrative</span>}</header>{children}</main>;
+function AppFrame({ children, user, busy = false, view = "game", onViewChange, onSignOut }: { children: ReactNode; user: User | null; busy?: boolean; view?: AppView; onViewChange?: (view: AppView) => void; onSignOut?: () => void }) {
+  return <fieldset disabled={busy} aria-busy={busy} style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}><main className="app-shell"><header className="topbar"><div className="brand"><span className="brand-mark">A</span><span className="brand-name">Ascension</span></div>{onViewChange ? <nav className="app-nav" aria-label="Navigation principale"><button className={view === "game" ? "active" : ""} onClick={() => onViewChange("game")}>Jouer</button><button className={view === "world" ? "active" : ""} onClick={() => onViewChange("world")}>Monde</button>{user ? <button className={view === "library" ? "active" : ""} onClick={() => onViewChange("library")}>Mes carrières</button> : null}</nav> : null}{user ? <button className="account-pill" onClick={onSignOut} title="Se déconnecter">{user.email}</button> : <span className="account-pill">Carrière narrative</span>}</header>{children}</main></fieldset>;
 }
 
 function AuthGate({ configured, onDemo, onSubmit }: { configured: boolean; onDemo: () => void; onSubmit: (email: string, marketingConsent: boolean) => Promise<string | null> }) {
