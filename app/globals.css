@@ -218,6 +218,56 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .resume-card p { margin: 0 0 10px; }
 .card-wrap { max-width: 540px; margin: 0 auto 16px; filter: drop-shadow(0 20px 34px rgba(0,42,28,.18)); }
 
+/* Premium mobile direction: original Ascension portraits and cinematic cards. */
+.academy-portrait { display: block; overflow: hidden; background-image: url("/images/academy-portraits.webp"); background-position: var(--portrait-x,0%) var(--portrait-y,0%); background-repeat: no-repeat; background-size: 300% 300%; }
+.premium-home { display: grid; width: min(100%,920px); max-width: none; overflow: hidden; grid-template-columns: minmax(270px,.9fr) minmax(330px,1.1fr); border-color: rgba(238,204,99,.4); background: #071019; color: #f8faf9; padding: 0; box-shadow: 0 38px 100px rgba(0,18,14,.48); }
+.home-visual { position: relative; min-height: 610px; overflow: hidden; background: #061827; }
+.home-visual .academy-portrait { position: absolute; inset: 0; width: 100%; height: 100%; background-size: 300% 300%; filter: saturate(.88) contrast(1.04); transform: scale(1.38); transform-origin: 38% 30%; }
+.home-visual::after { position: absolute; inset: 0; background: linear-gradient(180deg,transparent 35%,rgba(3,10,15,.12) 55%,#071019 100%),linear-gradient(90deg,transparent 60%,#071019 100%); content: ""; }
+.home-season { position: absolute; z-index: 1; right: 24px; bottom: 24px; left: 24px; color: #f0cf6b; font-size: 9px; font-weight: 900; letter-spacing: .17em; }
+.home-copy { display: grid; align-content: center; padding: 48px 42px; }
+.premium-home .home-copy > p:not(.eyebrow,.notice) { color: rgba(238,244,242,.68); font-size: 15px; line-height: 1.65; }
+.premium-home h1 { color: #fff; font-size: clamp(43px,6vw,70px); line-height: .94; }
+.home-actions .primary-button { width: 100%; min-height: 62px; margin: 20px 0 12px; background: linear-gradient(135deg,#19e49a,#04bd78); color: #041b13; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; box-shadow: 0 15px 38px rgba(16,211,139,.22); }
+.account-access { border-top: 1px solid rgba(255,255,255,.11); color: rgba(255,255,255,.66); padding-top: 14px; }
+.account-access summary { cursor: pointer; font-size: 11px; font-weight: 800; text-align: center; }
+.account-access form { margin-top: 17px; }
+.account-access .form-field label,.account-access .consent { color: rgba(255,255,255,.55); }
+.account-access .text-input { border-color: rgba(255,255,255,.15); background: rgba(255,255,255,.07); color: #fff; }
+.account-access .quiet-button { width: 100%; border-color: rgba(255,255,255,.2); background: rgba(255,255,255,.07); color: #fff; }
+
+.identity-flow { display: grid; gap: 18px; }
+.identity-heading { display: grid; grid-template-columns: minmax(0,1fr) 230px; align-items: end; gap: 22px; }
+.identity-heading .lede { margin-bottom: 0; }
+.identity-preview { position: relative; min-height: 270px; overflow: hidden; border: 1px solid rgba(224,184,62,.55); border-radius: 24px; background: #081828; box-shadow: 0 22px 46px rgba(7,24,22,.2); }
+.identity-preview > .academy-portrait { position: absolute; inset: 0; width: 100%; height: 100%; }
+.identity-preview::after { position: absolute; inset: 0; background: linear-gradient(180deg,transparent 38%,rgba(3,10,16,.92) 100%); content: ""; }
+.identity-preview > span { position: absolute; z-index: 1; right: 17px; bottom: 17px; left: 17px; display: grid; color: #fff; }
+.identity-preview small { color: #edcb64; font-size: 7px; font-weight: 900; letter-spacing: .16em; }
+.identity-preview strong { margin-top: 4px; font-family: var(--font-display),sans-serif; font-size: 26px; text-transform: uppercase; }
+.identity-preview em { color: rgba(255,255,255,.58); font-size: 8px; font-style: normal; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+.portrait-picker { display: grid; grid-template-columns: repeat(9,1fr); gap: 8px; }
+.portrait-picker button { position: relative; aspect-ratio: .82; overflow: hidden; border: 1px solid var(--line); border-radius: 15px; background: #0a1724; padding: 0; transition: 160ms ease; }
+.portrait-picker button.selected { border-color: #d5a92f; box-shadow: 0 0 0 2px #f7da78,0 12px 26px rgba(100,76,12,.18); transform: translateY(-3px); }
+.portrait-picker button.selected::after { position: absolute; right: 6px; bottom: 6px; display: grid; width: 18px; height: 18px; place-items: center; border-radius: 99px; background: #19d996; color: #041b13; content: "✓"; font-size: 10px; font-weight: 950; }
+.portrait-picker .academy-portrait { width: 100%; height: 100%; }
+.identity-fields { display: grid; grid-template-columns: 1fr 100px; gap: 12px; }
+.identity-continue { width: 100%; min-height: 60px; text-transform: uppercase; }
+.dossier-photo { border: 1px solid rgba(244,215,121,.35); border-radius: 22px; background-color: #081827; }
+
+.premium-event { display: grid; gap: 15px; }
+.event-hero { position: relative; min-height: 380px; overflow: hidden; border: 1px solid rgba(203,159,42,.46); border-radius: 25px; background: #071522; box-shadow: 0 22px 45px rgba(8,32,26,.16); }
+.event-hero > .academy-portrait { position: absolute; inset: 0; width: 100%; height: 100%; transform: scale(1.05); }
+.event-hero::after { position: absolute; inset: 0; background: linear-gradient(180deg,rgba(4,12,18,.03) 18%,rgba(4,11,17,.35) 50%,rgba(4,11,17,.98) 100%); content: ""; }
+.event-hero-copy { position: absolute; z-index: 1; right: 24px; bottom: 22px; left: 24px; color: #fff; }
+.event-hero-copy .eyebrow { color: #49dfa8; }
+.event-hero-copy .question { margin-bottom: 8px; color: #fff; font-family: var(--font-display),sans-serif; font-size: clamp(31px,7vw,49px); text-transform: uppercase; }
+.event-hero-copy .prompt { margin: 0; color: rgba(255,255,255,.75); font-size: 14px; line-height: 1.5; }
+.premium-choices .choice-button { display: grid; grid-template-columns: 36px minmax(0,1fr) auto; align-items: center; gap: 10px; min-height: 68px; border-color: rgba(13,93,70,.24); font-size: 14px; font-weight: 850; }
+.premium-choices .choice-button:nth-child(odd) { border-color: rgba(201,154,40,.5); background: linear-gradient(110deg,#fffaf0,#fff); }
+.premium-choices .choice-index { display: grid; width: 32px; height: 32px; place-items: center; border-radius: 10px; background: #102a24; color: #f2d16e; font-size: 10px; }
+.premium-choices .choice-button > span:last-child { color: var(--pitch); font-size: 24px; }
+
 .library-page { display: grid; gap: 20px; }
 .library-heading { display: flex; align-items: end; justify-content: space-between; gap: 18px; color: #fff; }
 .library-heading .eyebrow { color: #caeadc; }
@@ -306,6 +356,13 @@ button:disabled { cursor: not-allowed; opacity: .55; }
   .choice-list.two-columns { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 819px) {
+  .premium-home { grid-template-columns: 1fr; }
+  .home-visual { min-height: 430px; }
+  .home-visual::after { background: linear-gradient(180deg,transparent 30%,rgba(3,10,15,.15) 52%,#071019 100%); }
+  .home-copy { padding: 30px 25px 34px; }
+  .identity-heading { grid-template-columns: 1fr; }
+  .identity-preview { min-height: 360px; }
+  .portrait-picker { grid-template-columns: repeat(5,1fr); }
   .topbar { flex-wrap: wrap; }
   .app-nav { order: 3; width: 100%; }
   .app-nav button { flex: 1; }
@@ -335,6 +392,16 @@ button:disabled { cursor: not-allowed; opacity: .55; }
   .league-board-head, .club-table > div { padding-inline: 15px; }
 }
 @media (max-width: 420px) {
+  .auth-wrap { display: block; min-height: auto; }
+  .premium-home { border-radius: 23px; }
+  .home-visual { min-height: 350px; }
+  .home-copy { padding: 27px 20px 30px; }
+  .premium-home h1 { font-size: 40px; }
+  .identity-preview { min-height: 320px; }
+  .portrait-picker { grid-template-columns: repeat(3,1fr); gap: 7px; }
+  .identity-fields { grid-template-columns: minmax(0,1fr) 82px; }
+  .event-hero { min-height: 430px; }
+  .event-hero-copy { right: 18px; bottom: 18px; left: 18px; }
   .dossier-topline { padding-inline: 12px; }
   .dossier-head { grid-template-columns: 84px minmax(0,1fr) 58px; gap: 9px; padding-inline: 12px; }
   .dossier-avatar { width: 84px; height: 94px; }

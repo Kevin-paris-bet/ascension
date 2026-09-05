@@ -3,6 +3,7 @@
 import { ClubCrest } from "@/app/components/FootballCareerScreens";
 import { CountryFlag } from "@/app/components/CountryFlag";
 import { PlayerAvatar } from "@/app/components/PlayerAvatar";
+import { AcademyPortrait, portraitIndex } from "@/app/components/AcademyPortrait";
 import type { CareerState } from "@/engine/state";
 import type { CreationSelection } from "@/lib/engineBridge";
 import { computeOverall, getClub, getLeague, type FootballCareer } from "@/lib/footballCareer";
@@ -55,7 +56,9 @@ export function PlayerDossier({ state, name, number, selection, football }: {
       <div className="dossier-topline"><span>ASCENSION // PLAYER ID</span><em>{state ? "PROFIL ACTIF" : "PROFIL ESPOIR"}</em></div>
 
       <div className="dossier-head">
-        <PlayerAvatar className="dossier-avatar" seed={state?.seed ?? playerName} />
+        {selection.portrait
+          ? <AcademyPortrait className="dossier-avatar dossier-photo" index={portraitIndex(selection.portrait)} label={`Portrait de ${playerName}`} />
+          : <PlayerAvatar className="dossier-avatar" seed={state?.seed ?? playerName} />}
         <div className="dossier-identity">
           <span className="dossier-kicker">DOSSIER JOUEUR</span>
           <h2>{playerName}</h2>
